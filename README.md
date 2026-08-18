@@ -293,11 +293,14 @@ is a bug and reports are wanted.
 
 ## Privacy
 
-The gallery is static and tracking-free: no analytics, no cookies, no accounts.
-Three preferences live in `localStorage` on the visitor's device; shipped fonts
-are self-hosted (the only third-party requests are demo media from the
-letbe-media CDN and, on explicit choice, a Google Fonts family in the theme
-editor). Full statement on the gallery's [Privacy page](./privacy/).
+The gallery is static: no cookies, no accounts, no cross-site tracking. Page
+views are counted by Plausible Analytics — cookieless, no persistent
+identifier, EU-hosted — and only when served from letbe.design (local copies
+and forks send nothing). Three preferences live in `localStorage` on the
+visitor's device; shipped fonts are self-hosted (the other third-party
+requests are demo media from the letbe-media CDN and, on explicit choice, a
+Google Fonts family in the theme editor). Full statement on the gallery's
+[Privacy page](./privacy/).
 
 ## License
 

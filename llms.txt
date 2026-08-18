@@ -162,4 +162,4 @@ exactly what the code does — claims are verified against the source.
 - [LICENSE](/LICENSE) + [NOTICE](/NOTICE): MIT incl. demo media; brand + third-party excluded
 - [tokens/source-tokens.json](/tokens/source-tokens.json): DTCG token source
 - [components/meta.json](/components/meta.json): machine-readable component inventory (this file is generated from it)
-- [privacy/](/privacy/): what the site does with visitor data — no tracking, no analytics, three device-local preferences, self-hosted fonts
+- [privacy/](/privacy/): what the site does with visitor data — no cookies, no cross-site tracking; cookieless EU-hosted page analytics (Plausible) on letbe.design only; three device-local preferences; self-hosted fonts

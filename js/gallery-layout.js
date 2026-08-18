@@ -793,4 +793,25 @@
   } else {
     init();
   }
+
+  // ─── Site analytics (letbe.design only) ─────────────────
+  // Plausible Analytics — cookieless, no localStorage, no persistent
+  // identifier, EU-hosted; what it records is stated on /privacy/.
+  // Injected here (site chrome) rather than in 86 <head>s or in lb.js so
+  // (a) the DS runtime people vendor never carries analytics code and
+  // (b) it runs ONLY on the published domain: local previews, the
+  // *.pages.dev alias and forks of this repo send nothing. This is the
+  // exact snippet Plausible issues for the site; keep it in sync there.
+  (function siteAnalytics() {
+    const host = location.hostname;
+    if (host !== 'letbe.design' && host !== 'www.letbe.design') return;
+    if (document.querySelector('script[src^="https://plausible.io/js/"]')) return;
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://plausible.io/js/pa-mqXTmiAwFs8vkp3Wvxwml.js';
+    document.head.appendChild(s);
+    window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
+    window.plausible.init = window.plausible.init || function (i) { window.plausible.o = i || {}; };
+    window.plausible.init();
+  })();
 })();

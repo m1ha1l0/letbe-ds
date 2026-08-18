@@ -106,7 +106,7 @@ push('- [CHANGELOG.md](/CHANGELOG.md): versioned changes; token NAMES are API (r
 push('- [LICENSE](/LICENSE) + [NOTICE](/NOTICE): MIT incl. demo media; brand + third-party excluded');
 push('- [tokens/source-tokens.json](/tokens/source-tokens.json): DTCG token source');
 push('- [components/meta.json](/components/meta.json): machine-readable component inventory (this file is generated from it)');
-push('- [privacy/](/privacy/): what the site does with visitor data — no tracking, no analytics, three device-local preferences, self-hosted fonts');
+push('- [privacy/](/privacy/): what the site does with visitor data — no cookies, no cross-site tracking; cookieless EU-hosted page analytics (Plausible) on letbe.design only; three device-local preferences; self-hosted fonts');
 push();
 
 fs.writeFileSync(DEST, lines.join('\n'));
