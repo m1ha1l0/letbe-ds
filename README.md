@@ -106,8 +106,22 @@ chrome — consumers never need them.
 
 Theme your copy by layering **your own** stylesheet after `theme.css` and
 re-declaring token values (`--lb-bg-accent`, fonts, radii, type sizes…) — never
-edit the vendored files, so a future update is a clean file swap. A pinned-CDN
-install path ships with the public v1.0.0 release.
+edit the vendored files, so a future update is a clean file swap.
+
+**Or skip vendoring entirely — install from the CDN**, pinned to a release tag:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/tokens/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/tokens/fonts.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/components/components.css">
+<script src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/js/lb.js"></script>
+<script>LB.setIconBasePath('https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/assets/icons');</script>
+```
+
+Pin to a tag (`@v1.0.0`), never `@main` — tagged URLs are immutable and cache
+forever. Opt-in controllers load the same way from `js/components/`. See
+[`examples/cdn-only.html`](./examples/cdn-only.html) for a page whose only
+dependency is that block.
 
 ## Theming — your brand in one file
 
