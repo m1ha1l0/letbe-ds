@@ -812,6 +812,10 @@
     document.head.appendChild(s);
     window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments); };
     window.plausible.init = window.plausible.init || function (i) { window.plausible.o = i || {}; };
-    window.plausible.init();
+    // Strip the URL fragment from analytics: #theme= carries the visitor's
+    // theme diff and must never reach plausible.io (per the plugin's
+    // security disclosure — the server never sees fragments; analytics
+    // shouldn't either).
+    window.plausible.init({ transformRequest: function (p) { if (p && p.u) p.u = p.u.split('#')[0]; return p; } });
   })();
 })();
