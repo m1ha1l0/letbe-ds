@@ -220,8 +220,10 @@ tokens/source-tokens.json  →  tokens/theme.css  →  components
 
 A single JSON is the source of truth: `tokens/source-tokens.json`, authored in
 this repo. `scripts/build-tokens.js` generates `theme.css` from it, components
-consume the tokens, and the letbe Figma plugin registers them as variables so
-the Figma library tracks the code. That library is published on
+consume the tokens, and the
+[letbe tokens Figma plugin](https://www.figma.com/community/plugin/1671570185456177314/letbe-tokens)
+registers them as variables so the Figma library tracks the code. That library
+is published on
 [Figma Community](https://www.figma.com/community/file/1672532598361033237) —
 the components rebuilt as Figma component sets, bound to the same variables.
 

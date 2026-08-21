@@ -1543,7 +1543,7 @@
           <ul class="theme-editor__help-list">
             <li><strong>Import</strong> — load a Figma-plugin JSON export. The file becomes the active baseline; existing overrides are cleared.</li>
             <li><strong>Export</strong> — download a JSON merging canonical + baseline + overrides. Importable back into the plugin or back here.</li>
-            <li><strong>Share link</strong> — copies a URL that opens this exact theme for anyone: <code>#theme=…</code> carries the theme as a small diff against the defaults, so links stay short. The Figma plugin generates the same links; opening one imports it automatically.</li>
+            <li><strong>Share link</strong> — copies a URL that opens this exact theme for anyone: <code>#theme=…</code> carries the theme as a small diff against the defaults, so links stay short. The <a class="lb-link" href="https://www.figma.com/community/plugin/1671570185456177314/letbe-tokens">letbe tokens plugin</a> generates the same links; opening one imports it automatically.</li>
             <li><strong>Copy / Paste</strong> — the same JSON without the file dance: Copy puts the merged theme on the clipboard; Paste reads the clipboard and applies it as the new baseline (browsers that block clipboard reads will ask you to press Ctrl/⌘+V instead).</li>
           </ul>
           <p class="theme-editor__help-note">
@@ -1618,6 +1618,7 @@ ${HELP_CONTENT}
         <div class="theme-editor__help-link-row">
           <button type="button" class="lb-link theme-editor__help-link" data-help-toggle>How it works?</button>
         </div>
+        <p class="theme-editor__io-note">Round-trips with the <a class="lb-link" href="https://www.figma.com/community/plugin/1671570185456177314/letbe-tokens">letbe tokens</a> plugin for Figma.</p>
       </div>`;
   }
 

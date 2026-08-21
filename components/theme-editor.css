@@ -418,6 +418,12 @@
 
 /* ── Help link (opens the How-it-works modal) ── */
 .theme-editor__help-link-row { margin-top: var(--lb-size-3x); }
+.theme-editor__io-note {
+  margin: var(--lb-size-2x) 0 0;
+  font-size: var(--lb-t-caption-m-font-size);
+  line-height: var(--lb-t-caption-m-line-height);
+  color: var(--lb-fg-subtle);
+}
 .theme-editor__help-link {
   background: none;
   border: 0;
