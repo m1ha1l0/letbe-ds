@@ -40,7 +40,9 @@ AND icons (icons draw with currentColor), `border-*` = boundaries and
 focus only; cross-role binding is forbidden outside documented cases.
 Native light/dark themes (`[data-theme="dark"]`), responsive
 S/M/L typography modes, ~500 tokens. The same tokens round-trip into Figma
-variables through the letbe plugin.
+variables through the letbe plugin; the Figma component library built on
+those variables is published on Figma Community:
+https://www.figma.com/community/file/1672532598361033237
 
 Theming: layer your own stylesheet after `theme.css` and re-declare token
 values — the whole system re-themes, both modes, zero forks. Text on
