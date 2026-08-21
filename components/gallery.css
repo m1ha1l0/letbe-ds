@@ -647,7 +647,7 @@ body.gallery-ready { visibility: visible; }
       .gallery-header__theme-toggle { display: none; }
       .gallery-header__theme-icon-btn { display: inline-flex; }
 
-      /* Mobile: Edit theme button drops its text label, shows only
+      /* Mobile: Theme Editor button drops its text label, shows only
          the pencil glyph. lb-btn already centers the icon. */
       .gallery-header__edit-theme-label { display: none; }
       .gallery-header__edit-theme {

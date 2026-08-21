@@ -90,16 +90,16 @@
     const brandMark = basePath('assets/brand/letbe-logo-square.svg');
     const hdr = document.createElement('header');
     hdr.className = 'gallery-header';
-    // Header simplified: brand on left, theme switch + Edit theme on
+    // Header simplified: brand on left, theme switch + Theme Editor button on
     // right. Import / Export moved INTO the theme editor panel
     // (above the accordions) since they're configuration-side
     // actions, not gallery-navigation actions. The hidden file input
     // stays here so it remains addressable by id from anywhere.
     //
-    // Order on desktop (right side): light/dark switch, then Edit theme.
+    // Order on desktop (right side): light/dark switch, then the Theme Editor button.
     // On mobile (≤768px) the dark toggle becomes a sun/moon icon
     // button (handled in CSS via .gallery-header__theme-icon-btn) and
-    // the Edit theme button drops its label, showing only the pencil
+    // the Theme Editor button drops its label, showing only the pencil
     // glyph (.lb-btn--mobile-icon-only modifier on the button itself).
     hdr.innerHTML = `
       <div class="gallery-header__brand">
@@ -126,7 +126,7 @@
 
       <button type="button" class="lb-btn lb-btn--primary lb-btn--small gallery-header__edit-theme" id="theme-edit-btn" title="Open theme editor" aria-label="Open theme editor">
         <span class="lb-btn__icon" aria-hidden="true" data-lb-icon="pencil"></span>
-        <span class="gallery-header__edit-theme-label">Edit theme</span>
+        <span class="gallery-header__edit-theme-label">Theme Editor</span>
       </button>
     `;
     document.body.insertBefore(hdr, document.body.firstChild);
