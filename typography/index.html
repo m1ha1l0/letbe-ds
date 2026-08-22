@@ -33,11 +33,11 @@
 
       <div class="type-family-map__role">display</div>
       <div class="type-family-map__slot">typography.family.display</div>
-      <div class="type-family-map__font" data-slot-for="display">Slot 1 — <span data-slot-name="1"></span></div>
+      <div class="type-family-map__font" data-slot-for="display">Slot 2 — <span data-slot-name="2"></span></div>
 
       <div class="type-family-map__role">heading</div>
       <div class="type-family-map__slot">typography.family.heading</div>
-      <div class="type-family-map__font" data-slot-for="heading">Slot 1 — <span data-slot-name="1"></span></div>
+      <div class="type-family-map__font" data-slot-for="heading">Slot 2 — <span data-slot-name="2"></span></div>
 
       <div class="type-family-map__role">body</div>
       <div class="type-family-map__slot">typography.family.body</div>
@@ -45,7 +45,7 @@
 
       <div class="type-family-map__role">action</div>
       <div class="type-family-map__slot">typography.family.action</div>
-      <div class="type-family-map__font" data-slot-for="action">Slot 2 — <span data-slot-name="2"></span></div>
+      <div class="type-family-map__font" data-slot-for="action">Slot 1 — <span data-slot-name="1"></span></div>
 
       <div class="type-family-map__role">label</div>
       <div class="type-family-map__slot">typography.family.label</div>
@@ -150,11 +150,11 @@
 
     <!-- ────────────────── Action ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Action</h2>
-    <p class="type-role-intro">Interactive elements — buttons, tabs, links, breadcrumbs. Weight medium. Letter-spacing slightly-wide (action-s widens further at +0.02em). <strong>Action is the role designed to swap face.</strong> It's the only role pointing at <code class="lb-code">font.family.2</code> by default — change slot 2 in the theme editor and every button/tab/link label switches typography while body stays unchanged.</p>
+    <p class="type-role-intro">Interactive elements — buttons, tabs, links, breadcrumbs. Weight medium. Letter-spacing slightly-wide (action-s widens further at +0.02em). Action shares the text face (<code class="lb-code">font.family.1</code>) with body by default — the norm across brands and platforms, where buttons follow the body font and differentiate by weight and spacing. A brand that wants a distinct UI voice remaps the <code class="lb-code">action</code> role to its own slot in the theme editor's role map; the demo below previews what an action-only face swap looks like.</p>
 
     <div class="type-swap-demo">
       <span class="type-swap-demo__label">Try it</span>
-      <label for="action-swap-select" style="font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-default);">font.family.2 →</label>
+      <label for="action-swap-select" style="font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-default);">action face →</label>
       <select id="action-swap-select" class="lb-input lb-input--small" style="max-width: 200px;">
         <option value="Inter">Inter (default)</option>
         <option value="DM Sans">DM Sans</option>

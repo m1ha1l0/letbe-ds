@@ -331,10 +331,10 @@
   --lb-code-8: var(--lb-cyan-600);
 
   /* ─── L2 — Typography family aliases ─── */
-  --lb-typography-family-display: var(--lb-font-family-1);
-  --lb-typography-family-heading: var(--lb-font-family-1);
+  --lb-typography-family-display: var(--lb-font-family-2);
+  --lb-typography-family-heading: var(--lb-font-family-2);
   --lb-typography-family-body: var(--lb-font-family-1);
-  --lb-typography-family-action: var(--lb-font-family-2);
+  --lb-typography-family-action: var(--lb-font-family-1);
   --lb-typography-family-label: var(--lb-font-family-1);
   --lb-typography-family-caption: var(--lb-font-family-1);
   --lb-typography-family-code: var(--lb-font-family-3);

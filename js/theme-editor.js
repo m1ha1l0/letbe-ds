@@ -261,32 +261,25 @@
     { name: 'Letbe', dot: '#7C3AED', factory: true, knobs: {} },
     { name: 'Mono',  dot: '#605d59',
       knobs: { brand: '#605d59', radius: 0, strokeDecorative: 1, strokeIcon: 0,
-               fontSlots: { 1: 'Inter', 2: 'Space Grotesk', 3: 'Space Mono' },
-               familyMap: { display: 2, heading: 2, action: 1 } } },
+               fontSlots: { 1: 'Inter', 2: 'Space Grotesk', 3: 'Space Mono' } } },
     { name: 'Neon',  dot: '#007c00',
       knobs: { brand: '#007c00', radius: 0, strokeDecorative: 1, strokeIcon: 0,
-               fontSlots: { 1: 'IBM Plex Sans', 2: 'Space Grotesk', 3: 'JetBrains Mono' },
-               familyMap: { display: 2, heading: 2, action: 1 } } },
+               fontSlots: { 1: 'IBM Plex Sans', 2: 'Space Grotesk', 3: 'JetBrains Mono' } } },
     { name: 'Candy', dot: '#c73a72',
       knobs: { brand: '#c73a72', radius: 3, strokeDecorative: 2, strokeIcon: 2,
-               fontSlots: { 1: 'Nunito', 2: 'Baloo 2', 3: 'JetBrains Mono' },
-               familyMap: { display: 2, heading: 2, action: 1 } } },
+               fontSlots: { 1: 'Nunito', 2: 'Baloo 2', 3: 'JetBrains Mono' } } },
     { name: 'Terra', dot: '#b8542f',
       knobs: { brand: '#b8542f', radius: 1, strokeDecorative: 1, strokeIcon: 1,
-               fontSlots: { 1: 'Nunito Sans', 2: 'Fraunces', 3: 'IBM Plex Mono' },
-               familyMap: { display: 2, heading: 2, action: 1 } } },
+               fontSlots: { 1: 'Nunito Sans', 2: 'Fraunces', 3: 'IBM Plex Mono' } } },
     { name: 'Ocean', dot: '#364fc7',
       knobs: { brand: '#364fc7', radius: 2, strokeDecorative: 1, strokeIcon: 1,
-               fontSlots: { 1: 'Inter', 2: 'Schibsted Grotesk', 3: 'JetBrains Mono' },
-               familyMap: { display: 2, heading: 2, action: 1 } } },
+               fontSlots: { 1: 'Inter', 2: 'Schibsted Grotesk', 3: 'JetBrains Mono' } } },
     { name: 'Editorial', dot: '#8a3042',
       knobs: { brand: '#8a3042', radius: 0, strokeDecorative: 1, strokeIcon: 0,
-               fontSlots: { 1: 'Libre Franklin', 2: 'Bodoni Moda', 3: 'Courier Prime' },
-               familyMap: { display: 2, heading: 2, action: 1 } } },
+               fontSlots: { 1: 'Libre Franklin', 2: 'Bodoni Moda', 3: 'Courier Prime' } } },
     { name: 'Ink',   dot: '#3b3e82',
       knobs: { brand: '#3b3e82', radius: 0, strokeDecorative: 2, strokeIcon: 2,
-               fontSlots: { 1: 'Atkinson Hyperlegible Next', 2: 'Lexend', 3: 'JetBrains Mono' },
-               familyMap: { display: 2, heading: 2, action: 1 } } },
+               fontSlots: { 1: 'Atkinson Hyperlegible Next', 2: 'Lexend', 3: 'JetBrains Mono' } } },
   ];
 
   const STROKE_ICON_PRESETS = [
@@ -349,10 +342,14 @@
 
   // Roles bound by default to each slot. Used by the editor's role-map
   // UI to show "what's affected" hints next to each slot.
+  // Two-face default (canonicalized 2026-08-21): slot 1 = the text face
+  // (body + UI), slot 2 = the headline face (display + heading), slot 3 =
+  // mono. Matches every shipped preset and the industry norm (headline
+  // font + body font; buttons share the body font).
   const DEFAULT_SLOT_ROLES = {
-    1: ['display', 'heading', 'body', 'label', 'caption'],
-    2: ['action'],
-    3: ['code'], // future role; today nothing binds at L2 but components use font-family-3 directly
+    1: ['body', 'action', 'label', 'caption'],
+    2: ['display', 'heading'],
+    3: ['code'],
   };
 
   // L2 typography roles in display order — used by the role-map UI.
@@ -1708,15 +1705,15 @@ ${HELP_CONTENT}
           <span>Show font previews in the list</span>
         </label>
 
-        ${_fontpickerMarkup(1, '— display, heading, body, label, caption')}
-        ${_fontpickerMarkup(2, '— action')}
+        ${_fontpickerMarkup(1, '— body, action, label, caption')}
+        ${_fontpickerMarkup(2, '— display, heading')}
         ${_fontpickerMarkup(3, '— code')}
       </div>
 
       <!-- ── Role map (which slot each text role wears) ── -->
       <div class="theme-editor__section">
         <h4 class="theme-editor__label">Role map</h4>
-        <div class="theme-editor__hint" style="margin-bottom: var(--lb-size-2x);">Each text role maps to one of the three family slots — the slot captions above update as you remap. Overline follows Label. Code also covers monospace micro-UI (timestamps, hex inputs). Default: text roles on slot 1, action on slot 2, code on slot 3.</div>
+        <div class="theme-editor__hint" style="margin-bottom: var(--lb-size-2x);">Each text role maps to one of the three family slots — the slot captions above update as you remap. Overline follows Label. Code also covers monospace micro-UI (timestamps, hex inputs). Default: display + heading on slot 2 (the headline face), other text roles on slot 1, code on slot 3.</div>
         ${TYPO_ROLES.map(role => `
           <div class="theme-editor__row theme-editor__row--rolemap">
             <label class="theme-editor__sublabel" for="te-rolemap-${role}" style="min-width: 80px; text-transform: capitalize;">${role}</label>

@@ -943,7 +943,7 @@
             "sans-serif"
           ],
           "$type": "fontFamily",
-          "$description": "Primary font family slot (L1). Default Inter. Used by display / heading / body / label / caption roles by default."
+          "$description": "Text font family slot (L1). Default Inter. Worn by body / action / label / caption (and overline) by default — the reading-and-UI face."
         },
         "2": {
           "$value": [
@@ -955,7 +955,7 @@
             "sans-serif"
           ],
           "$type": "fontFamily",
-          "$description": "Secondary font family slot (L1). Default matches slot 1 — invisible until user remaps. Reserved for the action role (buttons / tabs / links) when the brand wants typographic distinction from body copy."
+          "$description": "Headline font family slot (L1). Default matches slot 1 — invisible until a brand picks a display face. Worn by display + heading by default; pick a font here to change headlines without touching body text."
         },
         "3": {
           "$value": [
@@ -2282,14 +2282,14 @@
     "typography": {
       "family": {
         "display": {
-          "$value": "{font.family.1}",
+          "$value": "{font.family.2}",
           "$type": "fontFamily",
-          "$description": "Family used by display.* roles. Defaults to font.family.1 (Inter). Theme editor lets you remap to slot 2 or 3."
+          "$description": "Family used by display.* roles. Defaults to font.family.2 — the headline/display face (same Inter as slot 1 until a brand remaps it). Theme editor role map can re-point any role."
         },
         "heading": {
-          "$value": "{font.family.1}",
+          "$value": "{font.family.2}",
           "$type": "fontFamily",
-          "$description": "Family used by heading.* roles. Defaults to font.family.1 (Inter)."
+          "$description": "Family used by heading.* roles. Defaults to font.family.2 — shares the headline face with display."
         },
         "body": {
           "$value": "{font.family.1}",
@@ -2297,9 +2297,9 @@
           "$description": "Family used by body.* roles. Defaults to font.family.1 (Inter)."
         },
         "action": {
-          "$value": "{font.family.2}",
+          "$value": "{font.family.1}",
           "$type": "fontFamily",
-          "$description": "Family used by action.* roles (buttons, tabs, links). Defaults to font.family.2 — which defaults to Inter, so day-1 visual is unchanged. Brand intent: this is the slot a user remaps to give actions a distinct typographic voice from body text."
+          "$description": "Family used by action.* roles (buttons, tabs, links). Defaults to font.family.1 — actions share the text face, per the two-face model (headline face + text face); remap via the role map for a distinct UI voice."
         },
         "label": {
           "$value": "{font.family.1}",

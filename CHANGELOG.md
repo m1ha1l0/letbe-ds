@@ -3,6 +3,30 @@
 All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.org/)
 — see "What counts as breaking" in the README before relying on an update.
 
+## [Unreleased]
+
+Minor (token values changed, no names): typography defaults now follow the
+two-face model.
+
+- **Typography — two-face default.** `typography.family.display` and
+  `.heading` now alias `{font.family.2}` (the headline face);
+  `typography.family.action` moves to `{font.family.1}` — buttons share the
+  text face, as every shipped preset already assumed. **Visual delta: none**
+  — slot 2 ships the same Inter stack as slot 1, so nothing changes until a
+  brand picks a headline font. Themes exported earlier carry their own full
+  mapping and are unaffected. Slot semantics: 1 = text face, 2 = headline
+  face, 3 = mono.
+- **Theme editor.** The role→slot map is a first-class section (no longer
+  collapsed under "Advanced"), slot captions derive live from the effective
+  mapping, and the `code` role joins the map (all 7 L2 family roles
+  editable). Presets shed their now-redundant family mappings.
+- **Monospace micro-UI follows the code role.** Six spots (datepicker time
+  colon, color-picker hex/number inputs, code-block title, calendar times)
+  re-bind from the L1 slot to `--lb-typography-family-code` — identical
+  rendering by default; remapping the code role now moves them too.
+- **Typography page.** Missing specimens added (heading-xs/2xs, overline,
+  code s/m/l); the role→slot table gains the code row and an overline note.
+
 ## [Unreleased → v1.0.0]
 
 First public release. What ships:

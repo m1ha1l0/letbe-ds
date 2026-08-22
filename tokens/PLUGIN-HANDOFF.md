@@ -948,3 +948,35 @@ from existing roles:
 Variant matrix to add: status ∈ {info, success, warning, danger, **neutral**}
 × action ∈ {none, present}. Note neutral+no-action is legal but rare; the
 variant exists for the undo pattern.
+
+## 28. Typography two-face default — 3 L2 alias retargets (2026-08-21) — PLUGIN RE-IMPORT + PUSH
+
+Canonical role→slot mapping now matches every shipped preset and the
+industry two-face model (headline face + text face; buttons follow the
+text face). **No new tokens, no renames** — three `$value` edits on
+existing L2 aliases in `source-tokens.json`:
+
+| Variable (Figma name) | Was | Now |
+|---|---|---|
+| `typography/family/display` | `font/family/1` | **`font/family/2`** |
+| `typography/family/heading` | `font/family/1` | **`font/family/2`** |
+| `typography/family/action`  | `font/family/2` | **`font/family/1`** |
+
+Plugin action: re-import `source-tokens.json`, push. The push should
+UPDATE the three variables' alias targets IN PLACE (both modes — families
+are unthemed); never delete/recreate, so every ramp alias, style binding
+and consumer binding survives. Zero visual delta day-1: `font/family/2`
+still holds the same Inter stack as slot 1.
+
+Related, same slice (FYI, no variable changes):
+- The editor's role map now exposes all 7 roles — exports may carry a
+  `semantic.typography.family.code` remap; import already handles it.
+- Slot semantics renamed in descriptions: slot 1 = text face, slot 2 =
+  headline face, slot 3 = mono. If the plugin UI labels slots by role
+  anywhere, derive the label from the live alias targets rather than
+  hardcoding (the web editor now does exactly this).
+- The 8 baked preset JSONs need NO rebake: they carry the full mapping
+  explicitly and their values coincide with the new canonical.
+- Editor role-map UI request (owner-approved, plugin session): mirror the
+  Role map control 1:1 — 7 rows reading/writing the alias targets of
+  `typography/family/<role>`, in place, both modes.
