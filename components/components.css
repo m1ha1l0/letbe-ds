@@ -3639,7 +3639,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   min-width: 3.5rem; /* design-intent: time-row select column min */
 }
 .lb-datepicker__time-colon {
-  font-family: var(--lb-font-family-3);
+  font-family: var(--lb-typography-family-code);
   font-size: var(--lb-t-body-l-font-size);
   color: var(--lb-fg-muted);
   user-select: none;
@@ -5527,7 +5527,7 @@ img.lb-list__icon--round { object-fit: cover; }
 .lb-color-picker__inputs { display: flex; flex-direction: column; gap: var(--lb-size-1x); }
 .lb-color-picker__hex-wrap { flex: 1; }
 .lb-color-picker__hex {
-  font-family: var(--lb-font-family-3);
+  font-family: var(--lb-typography-family-code);
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
@@ -5540,7 +5540,7 @@ img.lb-list__icon--round { object-fit: cover; }
   --lb-color-picker-cols: 4;
 }
 .lb-color-picker__num {
-  font-family: var(--lb-font-family-3);
+  font-family: var(--lb-typography-family-code);
   text-align: center;
   /* Hide spinner controls — they crowd the small fields. Users can
      drag the surface or sliders for fine-grained control; the number
@@ -5652,7 +5652,7 @@ img.lb-list__icon--round { object-fit: cover; }
 .lb-code-block__title {
   font-weight: var(--lb-font-weight-medium);
   color: var(--lb-fg-default);
-  font-family: var(--lb-font-family-3);
+  font-family: var(--lb-typography-family-code);
 }
 .lb-code-block__lang {
   text-transform: uppercase;
@@ -6404,7 +6404,7 @@ img.lb-list__icon--round { object-fit: cover; }
 }
 .lb-calendar__more-pop-row:hover { background: var(--lb-bg-strong); }
 .lb-calendar__more-pop-time {
-  font-family: var(--lb-font-family-3);
+  font-family: var(--lb-typography-family-code);
   font-size: var(--lb-t-caption-m-font-size);
   color: var(--lb-fg-muted);
   font-variant-numeric: tabular-nums;
@@ -6519,7 +6519,7 @@ img.lb-list__icon--round { object-fit: cover; }
 }
 .lb-calendar__list-row--past { opacity: 0.5; }
 .lb-calendar__list-time {
-  font-family: var(--lb-font-family-3);
+  font-family: var(--lb-typography-family-code);
   font-size: var(--lb-t-body-s-font-size);
   color: var(--lb-fg-muted);
   font-variant-numeric: tabular-nums;

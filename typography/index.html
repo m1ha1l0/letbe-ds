@@ -18,7 +18,7 @@
 <main class="gallery-main">
   <section class="gallery-section" id="typography">
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Typography</h1>
-    <p class="gallery-section__desc">Six semantic text roles — display, heading, body, action, label, caption — composed from a three-link token chain across L1 and L2. <strong>L1 font-family slots</strong> (numbered 1/2/3) hold the actual face. <strong>L2 family aliases</strong> (one per role) map each role to a slot. <strong>L2 composite tokens</strong> bake font-family + size + weight + line-height + letter-spacing into a single style. The brand swaps a slot's value and every role bound to it changes face — without touching any composite.</p>
+    <p class="gallery-section__desc">Seven semantic text roles — display, heading, body, action, label, caption, code — composed from a three-link token chain across L1 and L2. <strong>L1 font-family slots</strong> (numbered 1/2/3) hold the actual face. <strong>L2 family aliases</strong> (one per role) map each role to a slot. <strong>L2 composite tokens</strong> bake font-family + size + weight + line-height + letter-spacing into a single style. The brand swaps a slot's value and every role bound to it changes face — without touching any composite.</p>
 
     <hr class="gallery-desc-divider">
 
@@ -54,11 +54,16 @@
       <div class="type-family-map__role">caption</div>
       <div class="type-family-map__slot">typography.family.caption</div>
       <div class="type-family-map__font" data-slot-for="caption">Slot 1 — <span data-slot-name="1"></span></div>
+
+      <div class="type-family-map__role">code</div>
+      <div class="type-family-map__slot">typography.family.code</div>
+      <div class="type-family-map__font" data-slot-for="code">Slot 3 — <span data-slot-name="3"></span></div>
     </div>
+    <p class="gallery-section__desc" style="margin-top: var(--lb-size-3x);">Overline has no family alias of its own — it follows <code class="lb-code">label</code>. The code role also styles monospace micro-UI (timestamps, hex inputs, calendar times), so remapping it moves those too.</p>
 
     <!-- ────────────────── Mode preview controls ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Responsive modes — S / M / L</h2>
-    <p class="gallery-section__desc">Every L2 typography token declares three modes: <code class="lb-code">S</code> (mobile, ≤600px), <code class="lb-code">M</code> (tablet, 601–1023px), <code class="lb-code">L</code> (desktop, ≥1024px). Display and heading shrink at S; body, action, label, caption stay constant across all three. Empty <code class="lb-code">$modes</code> blocks mean "inherit base" — they exist in the JSON so the Figma plugin can build variable modes from them.</p>
+    <p class="gallery-section__desc">Every L2 typography token declares three modes: <code class="lb-code">S</code> (mobile, ≤600px), <code class="lb-code">M</code> (tablet, 601–1023px), <code class="lb-code">L</code> (desktop, ≥1024px). Display and heading (xl/l/m) shrink at S; body, action, label, caption, overline and code stay constant across all three. Empty <code class="lb-code">$modes</code> blocks mean "inherit base" — they exist in the JSON so the Figma plugin can build variable modes from them.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x));"><strong>Preview a mode without resizing:</strong> open the <strong>Theme editor</strong> (cog icon in the header) — the Viewport switcher at the top has <em>Auto / S / M / L</em> buttons. Auto follows your real viewport; the others force a specific mode for visual review.</p>
 
     <!-- ────────────────── Display ────────────────── -->
@@ -106,6 +111,14 @@
       <div class="type-specimen__row" data-typo-token="heading-s">
         <div class="type-specimen__name">heading-s<span class="type-specimen__meta" data-typo-spec-mode="auto"></span></div>
         <div class="type-specimen__sample" style="font: var(--lb-t-heading-s-font-weight) var(--lb-t-heading-s-font-size)/var(--lb-t-heading-s-line-height) var(--lb-t-heading-s-font-family); letter-spacing: var(--lb-t-heading-s-letter-spacing);">Heading S</div>
+      </div>
+      <div class="type-specimen__row" data-typo-token="heading-xs">
+        <div class="type-specimen__name">heading-xs<span class="type-specimen__meta" data-typo-spec-mode="auto"></span></div>
+        <div class="type-specimen__sample" style="font: var(--lb-t-heading-xs-font-weight) var(--lb-t-heading-xs-font-size)/var(--lb-t-heading-xs-line-height) var(--lb-t-heading-xs-font-family); letter-spacing: var(--lb-t-heading-xs-letter-spacing);">Heading XS — card titles, dense panels</div>
+      </div>
+      <div class="type-specimen__row" data-typo-token="heading-2xs">
+        <div class="type-specimen__name">heading-2xs<span class="type-specimen__meta" data-typo-spec-mode="auto"></span></div>
+        <div class="type-specimen__sample" style="font: var(--lb-t-heading-2xs-font-weight) var(--lb-t-heading-2xs-font-size)/var(--lb-t-heading-2xs-line-height) var(--lb-t-heading-2xs-font-family); letter-spacing: var(--lb-t-heading-2xs-letter-spacing);">Heading 2XS — sidebar groups, table headers</div>
       </div>
     </div>
 
@@ -200,9 +213,37 @@
       </div>
     </div>
 
-    <!-- ────────────────── Phase 2 teaser ────────────────── -->
-    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">What's next — phase 2</h2>
-    <p class="gallery-section__desc">Phase 1 (shipped 2026-05-13) added the architectural plumbing: numbered family slots, per-role family aliases, S/M/L responsive modes. Sizes stayed hand-tuned. <strong>Phase 2</strong> will bring the editor UI: Google Fonts picker with lazy-load, per-mode base-size sliders, role-to-slot map editor, and (optionally) a formula-driven scale mode where sizes derive from <code class="lb-code">base × ratio^n</code>. Tracked in <code class="lb-code">tokens/PLUGIN-HANDOFF.md</code>.</p>
+    <!-- ────────────────── Overline ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Overline</h2>
+    <p class="type-role-intro">Uppercase eyebrow above a heading — section markers, kickers, card categories. One size. Family follows the <code class="lb-code">label</code> role.</p>
+    <div class="type-specimen">
+      <div class="type-specimen__row" data-typo-token="overline">
+        <div class="type-specimen__name">overline<span class="type-specimen__meta" data-typo-spec-mode="auto"></span></div>
+        <div class="type-specimen__sample" style="font: var(--lb-t-overline-font-weight) var(--lb-t-overline-font-size)/var(--lb-t-overline-line-height) var(--lb-t-overline-font-family); letter-spacing: var(--lb-t-overline-letter-spacing); text-transform: uppercase;">Overline — section eyebrow</div>
+      </div>
+    </div>
+
+    <!-- ────────────────── Code ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Code</h2>
+    <p class="type-role-intro">Monospace text — code blocks, inline code, and the monospace micro-UI (timestamps, hex inputs, calendar times). Three sizes. The only role bound to slot 3 by default.</p>
+    <div class="type-specimen">
+      <div class="type-specimen__row" data-typo-token="code-l">
+        <div class="type-specimen__name">code-l<span class="type-specimen__meta" data-typo-spec-mode="auto"></span></div>
+        <div class="type-specimen__sample" style="font: var(--lb-t-code-l-font-weight) var(--lb-t-code-l-font-size)/var(--lb-t-code-l-line-height) var(--lb-t-code-l-font-family); letter-spacing: var(--lb-t-code-l-letter-spacing);">const theme = tokens.load()</div>
+      </div>
+      <div class="type-specimen__row" data-typo-token="code-m">
+        <div class="type-specimen__name">code-m<span class="type-specimen__meta" data-typo-spec-mode="auto"></span></div>
+        <div class="type-specimen__sample" style="font: var(--lb-t-code-m-font-weight) var(--lb-t-code-m-font-size)/var(--lb-t-code-m-line-height) var(--lb-t-code-m-font-family); letter-spacing: var(--lb-t-code-m-letter-spacing);">const theme = tokens.load()</div>
+      </div>
+      <div class="type-specimen__row" data-typo-token="code-s">
+        <div class="type-specimen__name">code-s<span class="type-specimen__meta" data-typo-spec-mode="auto"></span></div>
+        <div class="type-specimen__sample" style="font: var(--lb-t-code-s-font-weight) var(--lb-t-code-s-font-size)/var(--lb-t-code-s-line-height) var(--lb-t-code-s-font-family); letter-spacing: var(--lb-t-code-s-letter-spacing);">const theme = tokens.load()</div>
+      </div>
+    </div>
+
+    <!-- ────────────────── Retune it live ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Retune it live</h2>
+    <p class="gallery-section__desc">Everything on this page is editable in the <strong>Theme Editor</strong> (header button) → <em>Typo</em>: a Google Fonts picker per family slot, the role map that decides which slot each role wears (the slot captions update live as you remap), and per-mode base-size sliders that scale the whole ramp. Export carries the result as standard DTCG JSON; the letbe tokens plugin registers the same slots, roles and modes as Figma variables.</p>
 
   </section>
 </main>

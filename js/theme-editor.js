@@ -356,7 +356,7 @@
   };
 
   // L2 typography roles in display order — used by the role-map UI.
-  const TYPO_ROLES = ['display', 'heading', 'body', 'action', 'label', 'caption'];
+  const TYPO_ROLES = ['display', 'heading', 'body', 'action', 'label', 'caption', 'code'];
 
   // ── Base font size per mode (phase 2.1) ──
   // Default 16 across all modes. Sliders constrained to 14-20 to keep
@@ -1674,7 +1674,7 @@ ${HELP_CONTENT}
     const id = 'te-font-slot-' + slot;
     return `
       <div class="theme-editor__row theme-editor__row--stack" data-typo-slot="${slot}">
-        <label class="theme-editor__sublabel" for="${id}">Slot ${slot} <span class="theme-editor__hint-inline">${roleHint}</span></label>
+        <label class="theme-editor__sublabel" for="${id}">Slot ${slot} <span class="theme-editor__hint-inline" id="te-slot-caption-${slot}">${roleHint}</span></label>
         <div class="lb-dropdown-wrap">
           <input
             type="text"
@@ -1708,9 +1708,23 @@ ${HELP_CONTENT}
           <span>Show font previews in the list</span>
         </label>
 
-        ${_fontpickerMarkup(1, '— body, heading, display, label, caption')}
-        ${_fontpickerMarkup(2, '— action (buttons, tabs, links)')}
-        ${_fontpickerMarkup(3, '— code, monospace UI (timestamps, hex inputs)')}
+        ${_fontpickerMarkup(1, '— display, heading, body, label, caption')}
+        ${_fontpickerMarkup(2, '— action')}
+        ${_fontpickerMarkup(3, '— code')}
+      </div>
+
+      <!-- ── Role map (which slot each text role wears) ── -->
+      <div class="theme-editor__section">
+        <h4 class="theme-editor__label">Role map</h4>
+        <div class="theme-editor__hint" style="margin-bottom: var(--lb-size-2x);">Each text role maps to one of the three family slots — the slot captions above update as you remap. Overline follows Label. Code also covers monospace micro-UI (timestamps, hex inputs). Default: text roles on slot 1, action on slot 2, code on slot 3.</div>
+        ${TYPO_ROLES.map(role => `
+          <div class="theme-editor__row theme-editor__row--rolemap">
+            <label class="theme-editor__sublabel" for="te-rolemap-${role}" style="min-width: 80px; text-transform: capitalize;">${role}</label>
+            <select id="te-rolemap-${role}" class="lb-select lb-select--small" data-typo-rolemap="${role}">
+              ${_slotOptionsHTML(role)}
+            </select>
+          </div>
+        `).join('')}
       </div>
 
       <!-- ── Base size per mode ── -->
@@ -1735,24 +1749,6 @@ ${HELP_CONTENT}
         </div>
       </div>
 
-      <!-- ── Advanced: role → slot mapping (collapsed by default) ── -->
-      <div class="theme-editor__section theme-editor__section--collapsible">
-        <button type="button" class="theme-editor__collapse-trigger" data-typo-rolemap-toggle aria-expanded="false">
-          <span class="theme-editor__collapse-chevron" aria-hidden="true" data-lb-icon="chevron-down" style="width: 1.25rem; height: 1.25rem;"></span>
-          <span>Advanced: Role → slot mapping</span>
-        </button>
-        <div class="theme-editor__collapse-body" data-typo-rolemap-body hidden>
-          <div class="theme-editor__hint" style="margin-bottom: var(--lb-size-2x);">Each L2 role maps to one of the three family slots. Default: most roles use slot 1; action uses slot 2.</div>
-          ${TYPO_ROLES.map(role => `
-            <div class="theme-editor__row theme-editor__row--rolemap">
-              <label class="theme-editor__sublabel" for="te-rolemap-${role}" style="min-width: 80px; text-transform: capitalize;">${role}</label>
-              <select id="te-rolemap-${role}" class="lb-select lb-select--small" data-typo-rolemap="${role}">
-                ${_slotOptionsHTML(role)}
-              </select>
-            </div>
-          `).join('')}
-        </div>
-      </div>
     `;
   }
 
@@ -2213,7 +2209,7 @@ ${HELP_CONTENT}
       typo:   [
         fs['1'], fs['2'], fs['3'],
         bs.S,    bs.M,    bs.L,
-        fm.display, fm.heading, fm.body, fm.action, fm.label, fm.caption,
+        fm.display, fm.heading, fm.body, fm.action, fm.label, fm.caption, fm.code,
       ],
       stroke: [state.overrides.strokeAction, state.overrides.strokeDecorative, state.overrides.strokeIcon],
       radius: [state.overrides.radius],
@@ -2365,6 +2361,7 @@ ${HELP_CONTENT}
     // After saveAsBaseline, the choice lives in baseline so we need the
     // baseline read to keep the dropdown caption truthful.
     const fmap = state.overrides.familyMap || {};
+    const effectiveSlot = {};   // role → slot, for the dynamic slot captions below
     for (const role of TYPO_ROLES) {
       const sel = panel.querySelector('#te-rolemap-' + role);
       if (!sel) continue;
@@ -2383,9 +2380,19 @@ ${HELP_CONTENT}
         }
         if (want == null) want = 1;
       }
+      effectiveSlot[role] = want;
       const wantStr = String(want);
       sel.value = wantStr;
       for (const opt of sel.options) opt.selected = (opt.value === wantStr);
+    }
+    // Dynamic slot captions — each slot picker lists the roles that
+    // currently wear it (override → baseline → default, same read order
+    // as the dropdowns), so remapping a role updates the captions live.
+    for (const slot of [1, 2, 3]) {
+      const cap = panel.querySelector('#te-slot-caption-' + slot);
+      if (!cap) continue;
+      const roles = TYPO_ROLES.filter((r) => effectiveSlot[r] === slot);
+      cap.textContent = roles.length ? '— ' + roles.join(', ') : '— unused';
     }
 
     // Badges + button-disabled state
@@ -2563,20 +2570,6 @@ ${HELP_CONTENT}
         setKnob('familyMap', Object.keys(familyMap).length ? familyMap : null);
       });
     });
-
-    // Role-map advanced section — collapse/expand toggle
-    const rolemapTrigger = panel.querySelector('[data-typo-rolemap-toggle]');
-    const rolemapBody    = panel.querySelector('[data-typo-rolemap-body]');
-    if (rolemapTrigger && rolemapBody) {
-      rolemapTrigger.addEventListener('click', () => {
-        const open = rolemapTrigger.getAttribute('aria-expanded') === 'true';
-        rolemapTrigger.setAttribute('aria-expanded', String(!open));
-        rolemapBody.hidden = open;
-        // Spin chevron
-        const chev = rolemapTrigger.querySelector('.theme-editor__collapse-chevron');
-        if (chev) chev.style.transform = open ? '' : 'rotate(180deg)';
-      });
-    }
 
     panel.querySelectorAll('[data-preset]').forEach((btn) => {
       btn.addEventListener('click', () => applyPreset(Number(btn.dataset.preset), panel));
