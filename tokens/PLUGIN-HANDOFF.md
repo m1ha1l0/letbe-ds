@@ -978,5 +978,11 @@ Related, same slice (FYI, no variable changes):
 - The 8 baked preset JSONs need NO rebake: they carry the full mapping
   explicitly and their values coincide with the new canonical.
 - Editor role-map UI request (owner-approved, plugin session): mirror the
-  Role map control 1:1 — 7 rows reading/writing the alias targets of
-  `typography/family/<role>`, in place, both modes.
+  Role map control 1:1 — 7 rows (display, heading, body, action, label,
+  caption, code → Slot 1/2/3) reading/writing the alias targets of
+  `typography/family/<role>`, in place, both modes. PLACEMENT: inside the
+  SAME panel/section where the plugin already exposes the three family
+  slots — slots first, Role map directly beneath them, exactly like the
+  web editor's Typo section (Family slots → Role map → sizes). The slot
+  rows' captions should list the roles currently wearing each slot,
+  derived live from the alias targets — never hardcoded.
