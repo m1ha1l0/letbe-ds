@@ -949,7 +949,7 @@ Variant matrix to add: status ∈ {info, success, warning, danger, **neutral**}
 × action ∈ {none, present}. Note neutral+no-action is legal but rare; the
 variant exists for the undo pattern.
 
-## 28. Typography two-face default — 3 L2 alias retargets (2026-08-21) — PLUGIN RE-IMPORT + PUSH
+## 28. Typography two-face default — 3 L2 alias retargets (2026-08-21) ✅ SHIPPED plugin v1.0.1 (2e83200 + 56a13eb, live on Community 2026-08-22) — incl. the Role-map UI in the slots section
 
 Canonical role→slot mapping now matches every shipped preset and the
 industry two-face model (headline face + text face; buttons follow the
