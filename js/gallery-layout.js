@@ -622,6 +622,9 @@
     if (el.matches('p.gallery-section__desc')) return true;
     if (el.matches('hr.gallery-desc-divider')) return true;
     if (el.matches('.gallery-label')) return true;
+    // Explicit opt-out: illustrative compositions (diagrams built from DS
+    // components) are not copy-paste demos — no code panel for them.
+    if (el.hasAttribute('data-lb-no-code')) return true;
     return false;
   }
 
