@@ -19,7 +19,7 @@
     .tokarch-chain .gallery-label { width: auto; margin: 0; }
     /* Tier cascade — static vertical stepper (sanctioned declarative use);
        swatches are painted by the live variables so the diagram re-themes. */
-    .tokarch-cascade { margin: var(--lb-size-6x) 0 var(--lb-size-2x); max-width: 640px; }
+    .tokarch-cascade { margin: var(--lb-size-8x) 0 var(--lb-size-6x); max-width: 640px; }
     .tokarch-cascade .lb-stepper__label .lb-code { margin-left: var(--lb-size-1x); }
     .tokarch-cascade__swatch {
       display: inline-block;
@@ -30,7 +30,7 @@
       border: var(--lb-border-width-thin) solid var(--lb-border-muted);
     }
     .tokarch-cascade .lb-btn { margin-top: var(--lb-size-2x); }
-    .tokarch-cascade__note { font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-muted); }
+    .tokarch-cascade__note { font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-muted); margin-bottom: var(--lb-size-8x); }
     .tokarch-exhibit {
       display: grid;
       grid-template-columns: minmax(220px, 1fr) 2fr;
@@ -64,12 +64,20 @@
 
     <h2 class="gallery-section__title">Three tiers, one direction</h2>
     <p class="gallery-section__desc">Every color reference flows downhill: <strong>L1 primitives</strong> hold raw values (the palette ramps, the size scale) and are never bound by components directly for color; <strong>L2 semantic</strong> names roles on surfaces (<code class="lb-code">bg-default</code>, <code class="lb-code">fg-muted</code>, <code class="lb-code">border-focus</code>) and is the default binding for components; <strong>L3 conceptual</strong> exists only for the three concept families — <code class="lb-code">action-*</code>, <code class="lb-code">field-*</code>, <code class="lb-code">surface-*</code> — where components share a concept, not just a color. L2 and L3 hold only references, never literals. The one sanctioned flat scale: spacing and sizing bind L1 <code class="lb-code">size-*</code> directly.</p>
-    <ol class="lb-stepper lb-stepper--vertical tokarch-cascade" data-lb-no-code aria-label="How one color resolves: from L1 primitive to rendered component">
+    <ol class="lb-stepper lb-stepper--vertical tokarch-cascade" data-lb-no-code aria-label="How one color resolves: from raw value through the tiers to a rendered component">
+      <li class="lb-stepper__step">
+        <span class="lb-stepper__indicator">0</span>
+        <div class="lb-stepper__content">
+          <p class="lb-stepper__label">Raw <code class="lb-code">#623ca8</code></p>
+          <p class="lb-stepper__description">A hex literal — meaningless on its own, and no component may ever touch it directly.</p>
+          <span class="tokarch-cascade__swatch" style="background: #623ca8;" title="#623ca8"></span>
+        </div>
+      </li>
       <li class="lb-stepper__step">
         <span class="lb-stepper__indicator">1</span>
         <div class="lb-stepper__content">
-          <p class="lb-stepper__label">L1 · primitive <code class="lb-code">{violet.600}</code></p>
-          <p class="lb-stepper__description">The raw value lives here — palette ramps and scales. The only tier allowed to hold a literal.</p>
+          <p class="lb-stepper__label">L1 · primitive <code class="lb-code">violet.600</code></p>
+          <p class="lb-stepper__description">The primitive names the value — palette ramps and scales. The only tier allowed to hold a literal, and it never changes with a theme.</p>
           <span class="tokarch-cascade__swatch" style="background: var(--lb-violet-600);" title="--lb-violet-600"></span>
         </div>
       </li>
@@ -77,7 +85,7 @@
         <span class="lb-stepper__indicator">2</span>
         <div class="lb-stepper__content">
           <p class="lb-stepper__label">L2 · semantic <code class="lb-code">bg.accent</code></p>
-          <p class="lb-stepper__description">Names the role, holds only a reference. The default binding for components.</p>
+          <p class="lb-stepper__description">Names the role, holds only a reference — <code class="lb-code">{violet.600}</code> in the factory theme. This is the tier themes re-point: apply a brand and the swatch below leaves violet for the brand ramp.</p>
           <span class="tokarch-cascade__swatch" style="background: var(--lb-bg-accent);" title="--lb-bg-accent"></span>
         </div>
       </li>
@@ -98,7 +106,7 @@
         </div>
       </li>
     </ol>
-    <p class="gallery-section__desc tokarch-cascade__note">Every swatch above is painted by the live variable, not an image — flip dark mode, apply a preset or open the Theme Editor and the whole chain re-paints in place. If a theme re-points a role at a different primitive, the chain shows exactly where the hand-off happens.</p>
+    <p class="gallery-section__desc tokarch-cascade__note">Every swatch above is painted by its live variable, not an image. Apply a preset and you can watch the tiers do their jobs: the raw hex and <code class="lb-code">violet.600</code> stay violet — primitives never move — while <code class="lb-code">bg.accent</code> and everything downstream re-paint to the brand. The seam between steps 1 and 2 is exactly where theming grafts in.</p>
     <p class="gallery-section__desc">The source is standard <strong>DTCG</strong> (<code class="lb-code">tokens/source-tokens.json</code>: <code class="lb-code">$value</code>/<code class="lb-code">$type</code>, aliases as <code class="lb-code">{path.to.token}</code>). <code class="lb-code">scripts/build-tokens.js</code> generates <code class="lb-code">tokens/theme.css</code> — generated, never hand-edited.</p>
 
     <h2 class="gallery-section__title">The naming grammar</h2>
