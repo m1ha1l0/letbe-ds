@@ -578,7 +578,7 @@
 
     // L1 — palettes (required + optional brand)
     const REQUIRED = ['neutral', 'red', 'green', 'yellow', 'blue', 'violet', 'orange', 'cyan'];
-    const OPTIONAL = ['brand'];
+    const OPTIONAL = ['brand', 'brand-2', 'brand-3'];
     for (const palette of REQUIRED.concat(OPTIONAL)) {
       const scales = data.primitives[palette];
       if (!scales) continue;
@@ -1063,6 +1063,91 @@
       };
     }
 
+    // ── Extra accent slots (accent-2 / accent-3) ──
+    // Same measured engine as the brand knob, run against a family prefix.
+    // Filled slot: generate brand-N ramp, re-point ONLY the accent-N family
+    // (both themes) + pick the variant's text by worst-ratio across modes.
+    // Dormant slot while slot 1 is branded: MIRROR accent's fresh refs (and
+    // primary's text picks) so the accent-N button keeps rendering identical
+    // to primary — the shipped canonical mirrors only the factory violet.
+    // border-focus never follows extra slots (focus belongs to accent alone).
+    const ACC_FAMILY_RE = /^accent(-[a-z]+)*$/;
+    for (const slotN of [2, 3]) {
+      const hexN = overrides['brand' + slotN];
+      const famPrefix = 'accent-' + slotN;
+      const palKey = 'brand-' + slotN;
+      if (hexN) {
+        const paletteN = generatePalette(hexN);
+        const oklchN = rgbToOklch(hexToRgb(hexN));
+        const stepN = snapToStep(oklchN.L);
+        const planN = planBrandPrimary(paletteN, stepN);
+        patch.primitives[palKey] = {};
+        for (const step of Object.keys(paletteN)) {
+          patch.primitives[palKey][step] = leaf(paletteN[step], 'color',
+            `Generated ${palKey} palette step ${step} (accent slot ${slotN}).`);
+        }
+        for (const themeMode of ['light', 'dark']) {
+          const remap = computeAccentRemap(stepN, themeMode);
+          remap['bg-accent'] = planN[themeMode].steps.default;
+          remap['bg-accent-strong'] = planN[themeMode].steps.strong;
+          remap['bg-accent-bolder'] = planN[themeMode].steps.bolder;
+          delete remap['border-focus'];
+          const themeBucket = patch.semantic[themeMode];
+          for (const [key, step] of Object.entries(remap)) {
+            const dashIdx = key.indexOf('-');
+            const grp = key.slice(0, dashIdx);
+            const name = key.slice(dashIdx + 1).replace('accent', famPrefix);
+            if (!themeBucket[grp]) themeBucket[grp] = {};
+            themeBucket[grp][name] = leaf(`{${palKey}.${step}}`, 'color',
+              `Theme editor slot-${slotN} remap → ${palKey}.${step} (${themeMode}).`);
+          }
+          // Value fill — measured vs the canonical tracks, same idiom as slot 1.
+          const TRACK = themeMode === 'dark' ? '#272522' : '#dfdcd7';
+          const candidates = themeMode === 'dark' ? [400, 300, 500] : [600, 700, 500];
+          let pick = null;
+          for (const s of candidates) {
+            if (contrastRatio(paletteN[s], TRACK) >= 3) { pick = s; break; }
+          }
+          if (pick == null) {
+            pick = candidates.reduce((a, b) =>
+              contrastRatio(paletteN[a], TRACK) >= contrastRatio(paletteN[b], TRACK) ? a : b);
+          }
+          themeBucket.bg[famPrefix + '-value'] = leaf(`{${palKey}.${pick}}`, 'color',
+            `Theme editor slot-${slotN} remap → ${palKey}.${pick} (${themeMode}) — value fill, measured vs track.`);
+        }
+        const action = patch.component.action = patch.component.action || {};
+        for (const st of ['default', 'hover', 'pressed']) {
+          action[`fg-${famPrefix}-${st}`] = leaf(planN.ref, 'color',
+            `Theme editor slot-${slotN} text pick (worst-ratio across both modes).`);
+        }
+      } else if (overrides.brand) {
+        // Dormant mirror: copy the accent-family refs the slot-1 block just
+        // wrote (snapshot first — we add keys to the same buckets).
+        for (const themeMode of ['light', 'dark']) {
+          const themeBucket = patch.semantic[themeMode];
+          for (const axis of ['fg', 'bg', 'border']) {
+            const bucket = themeBucket[axis];
+            if (!bucket) continue;
+            const entries = Object.entries(bucket).filter(([n]) => ACC_FAMILY_RE.test(n));
+            for (const [n, node] of entries) {
+              bucket[n.replace('accent', famPrefix)] = leaf(node.$value, 'color',
+                `Dormant slot ${slotN} mirrors accent (${themeMode}).`);
+            }
+          }
+        }
+        const action = patch.component.action;
+        if (action) {
+          for (const st of ['default', 'hover', 'pressed']) {
+            const src = action[`fg-primary-${st}`];
+            if (src) {
+              action[`fg-${famPrefix}-${st}`] = leaf(src.$value, 'color',
+                `Dormant slot ${slotN} mirrors primary text (${st}).`);
+            }
+          }
+        }
+      }
+    }
+
     // ── Radius preset ──
     if (overrides.radius != null) {
       const preset = RADIUS_PRESETS[overrides.radius];
@@ -1234,6 +1319,10 @@
   function freshOverrides() {
     return {
       brand: null,
+      // Extra accent slots (accent-2 / accent-3) — seed hex | null (dormant,
+      // mirrors accent). Same engine as the brand knob, run per family.
+      brand2: null,
+      brand3: null,
       radius: null,
       strokeDecorative: null,
       strokeAction: null,
@@ -1445,7 +1534,7 @@
   }
   function resetGroup(groupId) {
     const KEYS = {
-      color:  ['brand'],
+      color:  ['brand', 'brand2', 'brand3'],
       typo:   ['fontSlots', 'baseSizes', 'familyMap'],
       stroke: ['strokeAction', 'strokeDecorative', 'strokeIcon'],
       radius: ['radius'],
@@ -1454,8 +1543,51 @@
     persist();
     render();
   }
+  // Old exports (pre accent-slot vocabulary) carry a branded accent family
+  // but no accent-2/-3 keys — merged over canonical they'd leave the extra
+  // slots on factory violet, silently diverging from primary. Normalize on
+  // every import: if a slot's brand-N ramp is absent (slot dormant in the
+  // imported theme), mirror the import's accent refs (and primary text
+  // picks) onto the slot family so dormant slots track the imported brand.
+  function _normalizeDormantSlots(json) {
+    try {
+      if (!json || typeof json !== 'object') return json;
+      const blob = JSON.stringify(json);
+      const FAMILY_RE = /^accent(-[a-z]+)*$/;
+      for (const slotN of [2, 3]) {
+        if (blob.includes('brand-' + slotN)) continue; // slot filled in this theme
+        const sem = json.semantic || {};
+        for (const mode of ['light', 'dark']) {
+          const t = sem[mode];
+          if (!t) continue;
+          for (const axis of ['fg', 'bg', 'border']) {
+            const bucket = t[axis];
+            if (!bucket) continue;
+            const entries = Object.entries(bucket).filter(([n]) => FAMILY_RE.test(n));
+            for (const [n, node] of entries) {
+              if (node && node.$value !== undefined) {
+                bucket[n.replace('accent', 'accent-' + slotN)] =
+                  { ...node, $description: `Dormant slot ${slotN} mirrors accent (import-normalized).` };
+              }
+            }
+          }
+        }
+        const act = json.component && json.component.action;
+        if (act) {
+          for (const st of ['default', 'hover', 'pressed']) {
+            const src = act['fg-primary-' + st];
+            if (src && src.$value !== undefined) {
+              act[`fg-accent-${slotN}-${st}`] = { ...src };
+            }
+          }
+        }
+      }
+    } catch { /* malformed import → leave as-is; importJson's consumers cope */ }
+    return json;
+  }
+
   function importJson(json) {
-    state.baseline = json;
+    state.baseline = _normalizeDormantSlots(json);
     state.overrides = freshOverrides();
     persist();
     loadBaselineFonts(json);
@@ -1634,8 +1766,24 @@ ${HELP_CONTENT}
   }
 
   function _sectionColor() {
+    const slotRow = (n) => `
+      <div class="theme-editor__section">
+        <h4 class="theme-editor__label">Accent-${n} <span class="theme-editor__hint-inline" id="te-brand-${n}-status">· slot ${n} · dormant</span></h4>
+        <div class="theme-editor__row">
+          <div data-lb-color-picker
+               data-lb-popover
+               data-lb-presets="#a36200,#2563EB,#059669,#E11D48,#EA580C,#0891B2"
+               id="te-brand-${n}"
+               data-lb-value="#7C3AED"></div>
+          <button type="button" class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--small" id="te-brand-${n}-clear" title="Clear — back to dormant" aria-label="Clear accent-${n} slot" hidden>
+            <span class="lb-icon-btn__icon" data-lb-icon="x"></span>
+          </button>
+        </div>
+        <div class="theme-editor__hint" id="te-brand-${n}-hint">Not in use — inherits Accent. Pick a seed color to enable; the ramp, roles and button text are derived and contrast-measured, worn by the <code>.lb-btn--accent-${n}</code> variant.</div>
+      </div>`;
     return `
       <div class="theme-editor__section">
+        <h4 class="theme-editor__label">Accent <span class="theme-editor__hint-inline">· slot 1</span></h4>
         <div class="theme-editor__row">
           <div data-lb-color-picker
                data-lb-popover
@@ -1643,8 +1791,18 @@ ${HELP_CONTENT}
                id="te-brand"
                data-lb-value="#7C3AED"></div>
         </div>
-        <div class="theme-editor__hint">Creates a new <code>brand.*</code> L1 palette and remaps L2 accent tokens to reference it. L1 violet is preserved.</div>
+        <div class="theme-editor__hint">Worn by: primary button · links · selected states · washes. Creates a new <code>brand.*</code> L1 palette and remaps L2 accent tokens to reference it. L1 violet is preserved.</div>
         <div class="theme-editor__feedback" id="te-brand-feedback" hidden></div>
+      </div>
+      ${slotRow(2)}
+      ${slotRow(3)}
+      <div class="theme-editor__section">
+        <div class="theme-editor__hint" style="margin-bottom: var(--lb-size-2x);">Live preview — dormant slots render identical to Primary.</div>
+        <div class="theme-editor__row" style="flex-wrap: wrap; gap: var(--lb-size-2x);">
+          <button type="button" class="lb-btn lb-btn--primary lb-btn--small"><span class="lb-btn__label">Primary</span></button>
+          <button type="button" class="lb-btn lb-btn--accent-2 lb-btn--small"><span class="lb-btn__label">Accent-2</span></button>
+          <button type="button" class="lb-btn lb-btn--accent-3 lb-btn--small"><span class="lb-btn__label">Accent-3</span></button>
+        </div>
       </div>
     `;
   }
@@ -2202,7 +2360,7 @@ ${HELP_CONTENT}
     const bs = state.overrides.baseSizes || {};
     const fm = state.overrides.familyMap || {};
     return {
-      color:  [state.overrides.brand],
+      color:  [state.overrides.brand, state.overrides.brand2, state.overrides.brand3],
       typo:   [
         fs['1'], fs['2'], fs['3'],
         bs.S,    bs.M,    bs.L,
@@ -2230,6 +2388,32 @@ ${HELP_CONTENT}
         _syncingPicker = true;
         try { color._lbColorPicker.setValue(want, false); }
         finally { _syncingPicker = false; }
+      }
+    }
+    // Extra accent slots — picker value + filled/dormant status + clear
+    // visibility. Filled = knob set OR the baseline carries a brand-N ramp.
+    for (const slotN of [2, 3]) {
+      const el = panel.querySelector('#te-brand-' + slotN);
+      const baselineHex = (state.baseline?.primitives?.['brand-' + slotN]?.['500']?.$value) || null;
+      const knobHex = state.overrides['brand' + slotN] || null;
+      const filled = !!(knobHex || baselineHex);
+      if (el && el._lbColorPicker) {
+        const want = knobHex || baselineHex || '#7C3AED';
+        if ((el.dataset.lbValue || '').toLowerCase() !== want.toLowerCase()) {
+          _syncingPicker = true;
+          try { el._lbColorPicker.setValue(want, false); }
+          finally { _syncingPicker = false; }
+        }
+      }
+      const status = panel.querySelector(`#te-brand-${slotN}-status`);
+      if (status) status.textContent = `· slot ${slotN} · ${filled ? 'filled' : 'dormant'}`;
+      const clear = panel.querySelector(`#te-brand-${slotN}-clear`);
+      if (clear) clear.hidden = !knobHex;
+      const hint = panel.querySelector(`#te-brand-${slotN}-hint`);
+      if (hint) {
+        hint.innerHTML = filled
+          ? `Worn by: the <code>.lb-btn--accent-${slotN}</code> variant and the <code>accent-${slotN}</code> role family — ramp and button text derived, contrast-measured in both themes.`
+          : `Not in use — inherits Accent. Pick a seed color to enable; the ramp, roles and button text are derived and contrast-measured, worn by the <code>.lb-btn--accent-${slotN}</code> variant.`;
       }
     }
 
@@ -2459,6 +2643,21 @@ ${HELP_CONTENT}
         if (_syncingPicker) return;
         setKnob('brand', e.detail.hex.toUpperCase());
       });
+    }
+    // Extra accent slots — same picker idiom, one knob per slot + a clear
+    // control that returns the slot to dormant (mirror-of-accent).
+    for (const slotN of [2, 3]) {
+      const picker = panel.querySelector('#te-brand-' + slotN);
+      if (picker) {
+        picker.addEventListener('lb-color-change', (e) => {
+          if (_syncingPicker) return;
+          setKnob('brand' + slotN, e.detail.hex.toUpperCase());
+        });
+      }
+      const clear = panel.querySelector(`#te-brand-${slotN}-clear`);
+      if (clear) {
+        clear.addEventListener('click', () => setKnob('brand' + slotN, null));
+      }
     }
 
     // Five segmented controls (Radius, Stroke icon, Stroke decorative,
