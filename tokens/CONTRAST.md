@@ -23,6 +23,20 @@ but are tracked so drift stays visible. Regenerate after any token change.
 | ✓ | `fg-accent` on `bg-accent-subtle` | accent text on faint wash | 7.03 | 4.5 |
 | ✓ | `fg-accent` on `bg-accent-muted` | selected-state text (chips, nav) | 5.54 | 4.5 |
 | ✓ | `fg-accent-muted` on `bg-default` | muted accent text | 7.06 | 4.5 |
+| ✓ | `fg-accent-2` on `bg-default` | accent-2 text | 7.06 | 4.5 |
+| ✓ | `fg-accent-2` on `bg-accent-2-subtle` | accent-2 text on its wash | 7.03 | 4.5 |
+| ✓ | `action-fg-accent-2-default` on `action-bg-accent-2-default` | accent-2 button | 7.06 | 4.5 |
+| ✓ | `action-fg-accent-2-hover` on `action-bg-accent-2-hover` | accent-2 button hover | 11.06 | 4.5 |
+| ✓ | `action-fg-accent-2-pressed` on `action-bg-accent-2-pressed` | accent-2 button pressed | 15.24 | 4.5 |
+| ✓ | `bg-accent-2-value` on `bg-bolder` | accent-2 value fill vs track | 5.62 | 3 |
+| adv ✓ | `bg-accent-2` on `bg-default` | accent-2 fill vs page | 7.06 | 3 |
+| ✓ | `fg-accent-3` on `bg-default` | accent-3 text | 7.06 | 4.5 |
+| ✓ | `fg-accent-3` on `bg-accent-3-subtle` | accent-3 text on its wash | 7.03 | 4.5 |
+| ✓ | `action-fg-accent-3-default` on `action-bg-accent-3-default` | accent-3 button | 7.06 | 4.5 |
+| ✓ | `action-fg-accent-3-hover` on `action-bg-accent-3-hover` | accent-3 button hover | 11.06 | 4.5 |
+| ✓ | `action-fg-accent-3-pressed` on `action-bg-accent-3-pressed` | accent-3 button pressed | 15.24 | 4.5 |
+| ✓ | `bg-accent-3-value` on `bg-bolder` | accent-3 value fill vs track | 5.62 | 3 |
+| adv ✓ | `bg-accent-3` on `bg-default` | accent-3 fill vs page | 7.06 | 3 |
 | ✓ | `fg-danger` on `bg-default` | danger text | 6.11 | 4.5 |
 | ✓ | `fg-danger` on `bg-danger-subtle` | danger text on danger tint | 6.07 | 4.5 |
 | ✓ | `fg-success` on `bg-default` | success text | 4.92 | 4.5 |
@@ -92,6 +106,20 @@ but are tracked so drift stays visible. Regenerate after any token change.
 | ✓ | `fg-accent` on `bg-accent-subtle` | accent text on faint wash | 8.5 | 4.5 |
 | ✓ | `fg-accent` on `bg-accent-muted` | selected-state text (chips, nav) | 6.91 | 4.5 |
 | ✓ | `fg-accent-muted` on `bg-default` | muted accent text | 12.14 | 4.5 |
+| ✓ | `fg-accent-2` on `bg-default` | accent-2 text | 8.48 | 4.5 |
+| ✓ | `fg-accent-2` on `bg-accent-2-subtle` | accent-2 text on its wash | 8.5 | 4.5 |
+| ✓ | `action-fg-accent-2-default` on `action-bg-accent-2-default` | accent-2 button | 7.06 | 4.5 |
+| ✓ | `action-fg-accent-2-hover` on `action-bg-accent-2-hover` | accent-2 button hover | 11.06 | 4.5 |
+| ✓ | `action-fg-accent-2-pressed` on `action-bg-accent-2-pressed` | accent-2 button pressed | 15.24 | 4.5 |
+| ✓ | `bg-accent-2-value` on `bg-bolder` | accent-2 value fill vs track | 6.36 | 3 |
+| adv ✗ | `bg-accent-2` on `bg-default` | accent-2 fill vs page | 2.65 | 3 |
+| ✓ | `fg-accent-3` on `bg-default` | accent-3 text | 8.48 | 4.5 |
+| ✓ | `fg-accent-3` on `bg-accent-3-subtle` | accent-3 text on its wash | 8.5 | 4.5 |
+| ✓ | `action-fg-accent-3-default` on `action-bg-accent-3-default` | accent-3 button | 7.06 | 4.5 |
+| ✓ | `action-fg-accent-3-hover` on `action-bg-accent-3-hover` | accent-3 button hover | 11.06 | 4.5 |
+| ✓ | `action-fg-accent-3-pressed` on `action-bg-accent-3-pressed` | accent-3 button pressed | 15.24 | 4.5 |
+| ✓ | `bg-accent-3-value` on `bg-bolder` | accent-3 value fill vs track | 6.36 | 3 |
+| adv ✗ | `bg-accent-3` on `bg-default` | accent-3 fill vs page | 2.65 | 3 |
 | ✓ | `fg-danger` on `bg-default` | danger text | 8.24 | 4.5 |
 | ✓ | `fg-danger` on `bg-danger-subtle` | danger text on danger tint | 8.27 | 4.5 |
 | ✓ | `fg-success` on `bg-default` | success text | 9.35 | 4.5 |

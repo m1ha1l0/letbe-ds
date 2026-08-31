@@ -246,7 +246,7 @@ lines.push(':root {');
 // canonical letbe-ds source-tokens.json historically did not (brand was
 // runtime-only via the theme editor). Either case is supported.
 const COLOR_HUE_PALETTES = ['neutral', 'red', 'green', 'yellow', 'blue', 'violet', 'orange', 'cyan'];
-const COLOR_HUE_PALETTES_OPTIONAL = ['brand'];
+const COLOR_HUE_PALETTES_OPTIONAL = ['brand', 'brand-2', 'brand-3'];
 heading('L1 — Color primitives');
 for (const palette of [...COLOR_HUE_PALETTES, ...COLOR_HUE_PALETTES_OPTIONAL]) {
   const scales = data.primitives[palette];

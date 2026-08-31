@@ -85,6 +85,24 @@ const PAIRS = [
   { fg: 'fg-accent', bg: 'bg-accent-muted', what: 'selected-state text (chips, nav)', min: T },
   { fg: 'fg-accent-muted', bg: 'bg-default', what: 'muted accent text', min: T },
 
+  // Second/third accent slots — dormant mirrors of accent, so these pairs
+  // hold by construction until a slot is filled; after a fill the theme
+  // editor re-measures live (same engine as the brand knob).
+  { fg: 'fg-accent-2', bg: 'bg-default', what: 'accent-2 text', min: T },
+  { fg: 'fg-accent-2', bg: 'bg-accent-2-subtle', what: 'accent-2 text on its wash', min: T },
+  { fg: 'action-fg-accent-2-default', bg: 'action-bg-accent-2-default', what: 'accent-2 button', min: T },
+  { fg: 'action-fg-accent-2-hover', bg: 'action-bg-accent-2-hover', what: 'accent-2 button hover', min: T },
+  { fg: 'action-fg-accent-2-pressed', bg: 'action-bg-accent-2-pressed', what: 'accent-2 button pressed', min: T },
+  { fg: 'bg-accent-2-value', bg: 'bg-bolder', what: 'accent-2 value fill vs track', min: UI },
+  { fg: 'bg-accent-2', bg: 'bg-default', what: 'accent-2 fill vs page', min: UI, status: 'advisory' },
+  { fg: 'fg-accent-3', bg: 'bg-default', what: 'accent-3 text', min: T },
+  { fg: 'fg-accent-3', bg: 'bg-accent-3-subtle', what: 'accent-3 text on its wash', min: T },
+  { fg: 'action-fg-accent-3-default', bg: 'action-bg-accent-3-default', what: 'accent-3 button', min: T },
+  { fg: 'action-fg-accent-3-hover', bg: 'action-bg-accent-3-hover', what: 'accent-3 button hover', min: T },
+  { fg: 'action-fg-accent-3-pressed', bg: 'action-bg-accent-3-pressed', what: 'accent-3 button pressed', min: T },
+  { fg: 'bg-accent-3-value', bg: 'bg-bolder', what: 'accent-3 value fill vs track', min: UI },
+  { fg: 'bg-accent-3', bg: 'bg-default', what: 'accent-3 fill vs page', min: UI, status: 'advisory' },
+
   // Status text — on the page and on its own tint (banner/badge pattern)
   { fg: 'fg-danger', bg: 'bg-default', what: 'danger text', min: T },
   { fg: 'fg-danger', bg: 'bg-danger-subtle', what: 'danger text on danger tint', min: T },

@@ -40,7 +40,9 @@
         "danger",
         "warning",
         "success",
-        "info"
+        "info",
+        "accent-2",
+        "accent-3"
       ],
       "fg_default": "fg/default",
       "bg_default": "bg/default",
@@ -61,6 +63,20 @@
       {"fg":"fg/accent","bg":"bg/accent-subtle","what":"accent text on faint wash","min":4.5},
       {"fg":"fg/accent","bg":"bg/accent-muted","what":"selected-state text (chips, nav)","min":4.5},
       {"fg":"fg/accent-muted","bg":"bg/default","what":"muted accent text","min":4.5},
+      {"fg":"fg/accent-2","bg":"bg/default","what":"accent-2 text","min":4.5},
+      {"fg":"fg/accent-2","bg":"bg/accent-2-subtle","what":"accent-2 text on its wash","min":4.5},
+      {"fg":"action/fg-accent-2-default","bg":"action/bg-accent-2-default","what":"accent-2 button","min":4.5},
+      {"fg":"action/fg-accent-2-hover","bg":"action/bg-accent-2-hover","what":"accent-2 button hover","min":4.5},
+      {"fg":"action/fg-accent-2-pressed","bg":"action/bg-accent-2-pressed","what":"accent-2 button pressed","min":4.5},
+      {"fg":"bg/accent-2-value","bg":"bg/bolder","what":"accent-2 value fill vs track","min":3},
+      {"fg":"bg/accent-2","bg":"bg/default","what":"accent-2 fill vs page","min":3,"status":"advisory"},
+      {"fg":"fg/accent-3","bg":"bg/default","what":"accent-3 text","min":4.5},
+      {"fg":"fg/accent-3","bg":"bg/accent-3-subtle","what":"accent-3 text on its wash","min":4.5},
+      {"fg":"action/fg-accent-3-default","bg":"action/bg-accent-3-default","what":"accent-3 button","min":4.5},
+      {"fg":"action/fg-accent-3-hover","bg":"action/bg-accent-3-hover","what":"accent-3 button hover","min":4.5},
+      {"fg":"action/fg-accent-3-pressed","bg":"action/bg-accent-3-pressed","what":"accent-3 button pressed","min":4.5},
+      {"fg":"bg/accent-3-value","bg":"bg/bolder","what":"accent-3 value fill vs track","min":3},
+      {"fg":"bg/accent-3","bg":"bg/default","what":"accent-3 fill vs page","min":3,"status":"advisory"},
       {"fg":"fg/danger","bg":"bg/default","what":"danger text","min":4.5},
       {"fg":"fg/danger","bg":"bg/danger-subtle","what":"danger text on danger tint","min":4.5},
       {"fg":"fg/success","bg":"bg/default","what":"success text","min":4.5},
@@ -230,6 +246,42 @@
         "wcag": {
           "against": "fgAccent",
           "label": "Badge / badge-bg"
+        }
+      },
+      {
+        "id": "accent2",
+        "token": "fg/accent-2",
+        "slot": "fgAccent2",
+        "wcag": {
+          "against": "bg",
+          "label": "Accent-2 text / bg"
+        }
+      },
+      {
+        "id": "accent2btnbg",
+        "token": "bg/accent-2",
+        "slot": "bgAccent2Emphasis",
+        "wcag": {
+          "against": "#f7f5f1",
+          "label": "Accent-2 button / btn-bg"
+        }
+      },
+      {
+        "id": "accent3",
+        "token": "fg/accent-3",
+        "slot": "fgAccent3",
+        "wcag": {
+          "against": "bg",
+          "label": "Accent-3 text / bg"
+        }
+      },
+      {
+        "id": "accent3btnbg",
+        "token": "bg/accent-3",
+        "slot": "bgAccent3Emphasis",
+        "wcag": {
+          "against": "#f7f5f1",
+          "label": "Accent-3 button / btn-bg"
         }
       },
       {
@@ -1482,6 +1534,36 @@
           "$type": "color",
           "$description": "Subtlest accent text — link pressed."
         },
+        "accent-2": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Accent-2 text and icons (second-signal slot 2). DORMANT by default: aliases the same L1 stops as fg/accent so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-muted": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Accent-2 muted role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as fg/accent-muted so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-subtle": {
+          "$value": "{violet.700}",
+          "$type": "color",
+          "$description": "Accent-2 subtle role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as fg/accent-subtle so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Accent-3 text and icons (second-signal slot 3). DORMANT by default: aliases the same L1 stops as fg/accent so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-muted": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Accent-3 muted role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as fg/accent-muted so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-subtle": {
+          "$value": "{violet.700}",
+          "$type": "color",
+          "$description": "Accent-3 subtle role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as fg/accent-subtle so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
         "disabled": {
           "$value": "{neutral.600}",
           "$type": "color",
@@ -1578,6 +1660,66 @@
           "$value": "{violet.600}",
           "$type": "color",
           "$description": "Accent VALUE-DISPLAY fill (slider fill/thumb, progress, spinner, timeline handle) — a role, not an intensity step: tuned for 3:1 against its neutral track (border-muted / bg-bolder), where the interaction chain (accent/-strong/-bolder) is tuned for text-on-fill. Light: equals bg.accent by coincidence of constraints, dark diverges. Precedents: Radix accent-indicator/track, Spectrum accent-visual-color."
+        },
+        "accent-2-subtle": {
+          "$value": "{violet.50}",
+          "$type": "color",
+          "$description": "Accent-2 subtle role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-subtle so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-muted": {
+          "$value": "{violet.200}",
+          "$type": "color",
+          "$description": "Accent-2 muted role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-muted so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Solid accent-2 fill — the accent-2 button face. DORMANT by default: aliases the same L1 stops as bg/accent so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-strong": {
+          "$value": "{violet.700}",
+          "$type": "color",
+          "$description": "Accent-2 strong role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-strong so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-bolder": {
+          "$value": "{violet.800}",
+          "$type": "color",
+          "$description": "Accent-2 bolder role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-bolder so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-value": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Accent-2 value role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-value so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-subtle": {
+          "$value": "{violet.50}",
+          "$type": "color",
+          "$description": "Accent-3 subtle role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-subtle so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-muted": {
+          "$value": "{violet.200}",
+          "$type": "color",
+          "$description": "Accent-3 muted role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-muted so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Solid accent-3 fill — the accent-3 button face. DORMANT by default: aliases the same L1 stops as bg/accent so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-strong": {
+          "$value": "{violet.700}",
+          "$type": "color",
+          "$description": "Accent-3 strong role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-strong so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-bolder": {
+          "$value": "{violet.800}",
+          "$type": "color",
+          "$description": "Accent-3 bolder role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-bolder so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-value": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Accent-3 value role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-value so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
         },
         "success-value": {
           "$value": "{green.600}",
@@ -1705,6 +1847,16 @@
           "$value": "{violet.600}",
           "$type": "color",
           "$description": "Accent borders — matches fg.accent for coherent brand expression (secondary buttons, chip outlines, tab indicators, default badges)."
+        },
+        "accent-2": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Accent-2 boundary. DORMANT by default: aliases the same L1 stops as border/accent so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Accent-3 boundary. DORMANT by default: aliases the same L1 stops as border/accent so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
         },
         "disabled": {
           "$value": "{neutral.200}",
@@ -1904,6 +2056,36 @@
           "$type": "color",
           "$description": "Subtlest accent text — link pressed."
         },
+        "accent-2": {
+          "$value": "{violet.400}",
+          "$type": "color",
+          "$description": "Accent-2 text and icons (second-signal slot 2). DORMANT by default: aliases the same L1 stops as fg/accent so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-muted": {
+          "$value": "{violet.300}",
+          "$type": "color",
+          "$description": "Accent-2 muted role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as fg/accent-muted so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-subtle": {
+          "$value": "{violet.200}",
+          "$type": "color",
+          "$description": "Accent-2 subtle role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as fg/accent-subtle so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3": {
+          "$value": "{violet.400}",
+          "$type": "color",
+          "$description": "Accent-3 text and icons (second-signal slot 3). DORMANT by default: aliases the same L1 stops as fg/accent so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-muted": {
+          "$value": "{violet.300}",
+          "$type": "color",
+          "$description": "Accent-3 muted role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as fg/accent-muted so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-subtle": {
+          "$value": "{violet.200}",
+          "$type": "color",
+          "$description": "Accent-3 subtle role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as fg/accent-subtle so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
         "disabled": {
           "$value": "{neutral.400}",
           "$type": "color",
@@ -2000,6 +2182,66 @@
           "$value": "{violet.400}",
           "$type": "color",
           "$description": "Accent value-display fill, dark: LIGHTER than bg.accent (600) because its reference surface is the near-black track (6.36:1 at 400), not white text. The divergence from light is the reason this role exists."
+        },
+        "accent-2-subtle": {
+          "$value": "{violet.950}",
+          "$type": "color",
+          "$description": "Accent-2 subtle role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-subtle so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-muted": {
+          "$value": "{violet.800}",
+          "$type": "color",
+          "$description": "Accent-2 muted role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-muted so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Solid accent-2 fill — the accent-2 button face. DORMANT by default: aliases the same L1 stops as bg/accent so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-strong": {
+          "$value": "{violet.700}",
+          "$type": "color",
+          "$description": "Accent-2 strong role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-strong so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-bolder": {
+          "$value": "{violet.800}",
+          "$type": "color",
+          "$description": "Accent-2 bolder role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-bolder so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-2-value": {
+          "$value": "{violet.400}",
+          "$type": "color",
+          "$description": "Accent-2 value role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-value so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-subtle": {
+          "$value": "{violet.950}",
+          "$type": "color",
+          "$description": "Accent-3 subtle role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-subtle so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-muted": {
+          "$value": "{violet.800}",
+          "$type": "color",
+          "$description": "Accent-3 muted role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-muted so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3": {
+          "$value": "{violet.600}",
+          "$type": "color",
+          "$description": "Solid accent-3 fill — the accent-3 button face. DORMANT by default: aliases the same L1 stops as bg/accent so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-strong": {
+          "$value": "{violet.700}",
+          "$type": "color",
+          "$description": "Accent-3 strong role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-strong so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-bolder": {
+          "$value": "{violet.800}",
+          "$type": "color",
+          "$description": "Accent-3 bolder role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-bolder so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3-value": {
+          "$value": "{violet.400}",
+          "$type": "color",
+          "$description": "Accent-3 value role — mirrors the accent family shape. DORMANT by default: aliases the same L1 stops as bg/accent-value so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
         },
         "success-value": {
           "$value": "{green.400}",
@@ -2127,6 +2369,16 @@
           "$value": "{violet.400}",
           "$type": "color",
           "$description": "Accent borders — matches dark fg.accent for coherent brand expression."
+        },
+        "accent-2": {
+          "$value": "{violet.400}",
+          "$type": "color",
+          "$description": "Accent-2 boundary. DORMANT by default: aliases the same L1 stops as border/accent so it renders identically to accent until slot 2 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
+        },
+        "accent-3": {
+          "$value": "{violet.400}",
+          "$type": "color",
+          "$description": "Accent-3 boundary. DORMANT by default: aliases the same L1 stops as border/accent so it renders identically to accent until slot 3 is filled in the theme editor; the editor keeps dormant slots in lockstep with accent."
         },
         "disabled": {
           "$value": "{neutral.700}",
@@ -3355,6 +3607,126 @@
         "$value": "{border.focus}",
         "$type": "color",
         "$description": "Focus ring for all action elements."
+      },
+      "bg-accent-2-default": {
+        "$value": "{bg.accent-2}",
+        "$type": "color",
+        "$description": "Accent-2 button fill. Dormant: identical to primary."
+      },
+      "bg-accent-2-hover": {
+        "$value": "{bg.accent-2-strong}",
+        "$type": "color",
+        "$description": "Accent-2 button fill, hover."
+      },
+      "bg-accent-2-pressed": {
+        "$value": "{bg.accent-2-bolder}",
+        "$type": "color",
+        "$description": "Accent-2 button fill, pressed."
+      },
+      "bg-accent-2-disabled": {
+        "$value": "{bg.disabled}",
+        "$type": "color",
+        "$description": "Disabled fill — shared neutral, same as primary."
+      },
+      "fg-accent-2-default": {
+        "$value": "{fg.inverse-strong}",
+        "$type": "color",
+        "$description": "Accent-2 button text — on-color ink role, same as primary."
+      },
+      "fg-accent-2-hover": {
+        "$value": "{fg.inverse-strong}",
+        "$type": "color",
+        "$description": "Accent-2 button text, hover."
+      },
+      "fg-accent-2-pressed": {
+        "$value": "{fg.inverse-strong}",
+        "$type": "color",
+        "$description": "Accent-2 button text, pressed."
+      },
+      "fg-accent-2-disabled": {
+        "$value": "{fg.inverse-muted}",
+        "$type": "color",
+        "$description": "Disabled text — shared, same as primary."
+      },
+      "border-accent-2-default": {
+        "$value": "{bg.accent-2}",
+        "$type": "color",
+        "$description": "Accent-2 button border = fill (sanctioned filled-button exception)."
+      },
+      "border-accent-2-hover": {
+        "$value": "{bg.accent-2-strong}",
+        "$type": "color",
+        "$description": "Accent-2 button border, hover."
+      },
+      "border-accent-2-pressed": {
+        "$value": "{bg.accent-2-bolder}",
+        "$type": "color",
+        "$description": "Accent-2 button border, pressed."
+      },
+      "border-accent-2-disabled": {
+        "$value": "{border.disabled}",
+        "$type": "color",
+        "$description": "Disabled border — shared, same as primary."
+      },
+      "bg-accent-3-default": {
+        "$value": "{bg.accent-3}",
+        "$type": "color",
+        "$description": "Accent-3 button fill. Dormant: identical to primary."
+      },
+      "bg-accent-3-hover": {
+        "$value": "{bg.accent-3-strong}",
+        "$type": "color",
+        "$description": "Accent-3 button fill, hover."
+      },
+      "bg-accent-3-pressed": {
+        "$value": "{bg.accent-3-bolder}",
+        "$type": "color",
+        "$description": "Accent-3 button fill, pressed."
+      },
+      "bg-accent-3-disabled": {
+        "$value": "{bg.disabled}",
+        "$type": "color",
+        "$description": "Disabled fill — shared neutral, same as primary."
+      },
+      "fg-accent-3-default": {
+        "$value": "{fg.inverse-strong}",
+        "$type": "color",
+        "$description": "Accent-3 button text — on-color ink role, same as primary."
+      },
+      "fg-accent-3-hover": {
+        "$value": "{fg.inverse-strong}",
+        "$type": "color",
+        "$description": "Accent-3 button text, hover."
+      },
+      "fg-accent-3-pressed": {
+        "$value": "{fg.inverse-strong}",
+        "$type": "color",
+        "$description": "Accent-3 button text, pressed."
+      },
+      "fg-accent-3-disabled": {
+        "$value": "{fg.inverse-muted}",
+        "$type": "color",
+        "$description": "Disabled text — shared, same as primary."
+      },
+      "border-accent-3-default": {
+        "$value": "{bg.accent-3}",
+        "$type": "color",
+        "$description": "Accent-3 button border = fill (sanctioned filled-button exception)."
+      },
+      "border-accent-3-hover": {
+        "$value": "{bg.accent-3-strong}",
+        "$type": "color",
+        "$description": "Accent-3 button border, hover."
+      },
+      "border-accent-3-pressed": {
+        "$value": "{bg.accent-3-bolder}",
+        "$type": "color",
+        "$description": "Accent-3 button border, pressed."
+      },
+      "border-accent-3-disabled": {
+        "$value": "{border.disabled}",
+        "$type": "color",
+        "$description": "Disabled border — shared, same as primary."
       }
     },
     "field": {
