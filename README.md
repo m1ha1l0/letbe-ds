@@ -197,6 +197,20 @@ Three rules the whole system follows — grounded in measured evidence rather th
   something. When violet shows up, it always answers a question:
   *what's primary, where am I, what did I choose.*
 
+  **A theme may carry up to two extra signals.** `accent-2` and `accent-3`
+  are pre-provisioned, dormant slots. The names are deliberately numbers,
+  not meanings: the slot doesn't presume what your second signal is — a
+  premium tier, a promotional moment, a distinct product surface — but it
+  must *be* one. The rules are the same ones accent already follows: one
+  signal per meaning, applied consistently everywhere that meaning appears;
+  never decoration; never a substitute for the neutral secondary action;
+  and never two extra signals in one view without a reason a user could
+  name. If you need a fourth signal, the answer isn't another slot — it's
+  a better information design. Fill a slot in the theme editor (Color →
+  Accent-2/-3): the ramp, roles and button text are derived and
+  contrast-measured; until then both slots mirror accent and the
+  `.lb-btn--accent-2` / `--accent-3` variants render identical to primary.
+
 - **Menu-opening controls always signal it.** A labeled button that opens a
   menu carries an always-visible chevron (never hover-only). Split buttons get
   a visually separated, permanent chevron segment. The kebab/ellipsis (⋯ / ⋮)

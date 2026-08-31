@@ -5,8 +5,25 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
-Minor (token values changed, no names): typography defaults now follow the
-two-face model.
+Minor: two dormant extra-accent slots (new token names, additive) and the
+two-face typography default (token values changed, no names).
+
+- **Second and third accent slots.** `accent-2` and `accent-3` ship as
+  pre-provisioned, dormant L2/L3 vocabulary — per slot: 10 semantic roles
+  (both themes) mirroring the accent family, 12 `action.*-accent-N-*`
+  tokens mirroring primary's shape, and a `.lb-btn--accent-N` variant.
+  **Visual delta: none** — dormant slots alias the same stops as accent
+  (and the theme editor keeps them mirrored under a branded slot 1), so
+  the new variants render identical to primary until a theme fills the
+  slot (Theme Editor → Color: one seed color; ramp, roles and button text
+  derived and contrast-measured in both themes; ✕ returns the slot to
+  dormant). Focus never follows the extra slots. Doctrine: "Accent is a
+  signal" gains the "up to two extra signals" amendment (README). 14 new
+  WCAG pairs join the generated contrast receipt (78 total).
+  Compatibility: older exports import cleanly (dormant slots are
+  normalized to mirror the imported accent); a theme exported *with a
+  filled slot* needs a letbe-ds build that knows the `brand-2`/`brand-3`
+  palettes — this release or later.
 
 - **Typography — two-face default.** `typography.family.display` and
   `.heading` now alias `{font.family.2}` (the headline face);

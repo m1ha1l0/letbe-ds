@@ -986,3 +986,41 @@ Related, same slice (FYI, no variable changes):
   web editor's Typo section (Family slots → Role map → sizes). The slot
   rows' captions should list the roles currently wearing each slot,
   derived live from the alias targets — never hardcoded.
+
+## 29. Second/third accent slots — accent-2 + accent-3 shipped DORMANT (2026-08-31) — PLUGIN RE-IMPORT ONLY, LIBRARY +16 VARIANTS LATER
+
+letbe-ds ships the owner-approved second-accent model (analysis: "The
+Second Accent" artifact; O2 fixed slots, hard cap 2). All new vocabulary,
+everything L2→L1 / L3→L2, zero raw values:
+
+- **L2 ×2 slots**: `fg/accent-N`, `fg/accent-N-muted`, `fg/accent-N-subtle`,
+  `bg/accent-N` + `-subtle/-muted/-strong/-bolder/-value`,
+  `border/accent-N` (N = 2, 3) — both themes, DORMANT: aliased to the same
+  violet stops as the accent family.
+- **L3 ×2 slots**: `action/bg|fg|border-accent-N-{default,hover,pressed,
+  disabled}` mirroring primary's shape (fg + disabled alias the shared
+  roles). New CSS consumers: `.lb-btn--accent-2`, `.lb-btn--accent-3`
+  (render identical to primary while dormant — intended).
+- **$schema data**: `wcag_pairing.status_keys` += `accent-2`, `accent-3`;
+  `wcag_pairs` 64 → 78 (14 authored pairs, green by construction while
+  dormant); `editor_rows` 41 → 45 (fg + button rows per slot).
+- **Editor**: Color section is now a slot list (Accent · slot 1 + two
+  slot rows with picker/clear/status). A filled slot generates a
+  `brand-N.*` runtime ramp (like `brand.*`) and re-points ONLY its
+  family, measured; dormant slots mirror accent whenever slot 1 is
+  branded, and imports of pre-slot exports are normalized the same way.
+  `border-focus` never follows extra slots.
+
+**Plugin action: re-import `source-tokens.json`, push.** 44 new variables
+register generically (in-place adds; nothing renamed, nothing re-typed);
+the Theme tab gains the accent-2/-3 rows from `editor_rows`; WCAG badges
+come from the shipped pairs. No plugin code expected (verified in the
+second-accent analysis: shape-only validation, generic sync/explorer/
+apply/relink). Exports with a filled slot will carry `brand-2`/`brand-3`
+primitives — also generic.
+
+**Figma library (library session, later): +8 button variants per slot
+(+16 total)** wearing the new L3 variables — same build recipe as the
+danger button. Dormant rendering equals primary, so there is no visual
+urgency; variables land with the plugin push and components heal when the
+variants are built.
