@@ -130,7 +130,7 @@
     },
     "button": {
       "name": "Button",
-      "description": "Primary action trigger. Variants: primary (main action), secondary (alternative action, outlined), subtle/ghost (low emphasis), danger. Sizes: medium, small. Supports leading icon (`.lb-btn__icon`), trailing count badge (`.lb-counter.lb-counter--on-btn` — auto-hides when empty), or icon-only (`.lb-icon-btn` with `aria-label`). Includes a Button Group layout wrapper for aligning multiple buttons (start, end, center, justify, stack).",
+      "description": "Primary action trigger. Variants: primary (main action), secondary (alternative action, outlined), subtle/ghost (low emphasis), danger, accent-2/accent-3 (filled actions on the theme’s extra signal slots — dormant by default, rendering identical to primary until the Theme Editor fills the slot). Sizes: medium, small. Supports leading icon (`.lb-btn__icon`), trailing count badge (`.lb-counter.lb-counter--on-btn` — auto-hides when empty), or icon-only (`.lb-icon-btn` with `aria-label`). Includes a Button Group layout wrapper for aligning multiple buttons (start, end, center, justify, stack).",
       "usage": "Use primary for the main path (one per screen/group), secondary for alternatives, subtle for auxiliary actions. Icon-only buttons MUST have `aria-label`. For count badges, leave the inner span empty (no number) to hide the pill — pair with `disabled` on the host button to read as inactive."
     },
     "card": {

@@ -305,6 +305,16 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-btn--secondary:hover:not(:disabled):not([aria-disabled="true"])   { background-color: var(--lb-action-bg-secondary-hover);   color: var(--lb-action-fg-secondary-hover); }
 .lb-btn--secondary:active:not(:disabled):not([aria-disabled="true"])  { background-color: var(--lb-action-bg-secondary-pressed); color: var(--lb-action-fg-secondary-pressed); }
 
+/* Accent-2 / Accent-3 — second/third-signal filled actions. Pre-provisioned
+   slots: DORMANT by default (their L2 families mirror accent), so these
+   render identical to --primary until the theme fills the slot. */
+.lb-btn--accent-2 { background-color: var(--lb-action-bg-accent-2-default); border-color: var(--lb-action-border-accent-2-default); color: var(--lb-action-fg-accent-2-default); }
+.lb-btn--accent-2:hover:not(:disabled):not([aria-disabled="true"])  { background-color: var(--lb-action-bg-accent-2-hover);   border-color: var(--lb-action-border-accent-2-hover);   color: var(--lb-action-fg-accent-2-hover); }
+.lb-btn--accent-2:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--lb-action-bg-accent-2-pressed); border-color: var(--lb-action-border-accent-2-pressed); color: var(--lb-action-fg-accent-2-pressed); }
+.lb-btn--accent-3 { background-color: var(--lb-action-bg-accent-3-default); border-color: var(--lb-action-border-accent-3-default); color: var(--lb-action-fg-accent-3-default); }
+.lb-btn--accent-3:hover:not(:disabled):not([aria-disabled="true"])  { background-color: var(--lb-action-bg-accent-3-hover);   border-color: var(--lb-action-border-accent-3-hover);   color: var(--lb-action-fg-accent-3-hover); }
+.lb-btn--accent-3:active:not(:disabled):not([aria-disabled="true"]) { background-color: var(--lb-action-bg-accent-3-pressed); border-color: var(--lb-action-border-accent-3-pressed); color: var(--lb-action-fg-accent-3-pressed); }
+
 /* Danger — destructive action (delete, revoke, force-logout) */
 .lb-btn--danger { background-color: var(--lb-action-bg-danger-default); border-color: var(--lb-action-border-danger-default); color: var(--lb-action-fg-danger-default); }
 .lb-btn--danger:hover:not(:disabled):not([aria-disabled="true"])   { background-color: var(--lb-action-bg-danger-hover);   border-color: var(--lb-action-border-danger-hover);   color: var(--lb-action-fg-danger-hover); }
@@ -519,6 +529,8 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
    digit = host's bg colour. Matches the inverted-pill pattern the
    old .lb-btn__count had. */
 .lb-btn--primary   .lb-counter--on-btn { background: var(--lb-action-fg-primary-default);   color: var(--lb-action-bg-primary-default); }
+.lb-btn--accent-2  .lb-counter--on-btn { background: var(--lb-action-fg-accent-2-default);  color: var(--lb-action-bg-accent-2-default); }
+.lb-btn--accent-3  .lb-counter--on-btn { background: var(--lb-action-fg-accent-3-default);  color: var(--lb-action-bg-accent-3-default); }
 .lb-btn--danger    .lb-counter--on-btn { background: var(--lb-action-fg-danger-default);    color: var(--lb-action-bg-danger-default); }
 .lb-btn--secondary .lb-counter--on-btn { background: var(--lb-action-fg-secondary-default); color: var(--lb-action-bg-secondary-default); }
 .lb-btn--neutral   .lb-counter--on-btn,
