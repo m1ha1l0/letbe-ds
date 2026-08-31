@@ -1779,7 +1779,6 @@ ${HELP_CONTENT}
             <span class="lb-icon-btn__icon" data-lb-icon="x"></span>
           </button>
         </div>
-        <div class="theme-editor__hint" id="te-brand-${n}-hint">Not in use — inherits Accent. Pick a seed color to enable; the ramp, roles and button text are derived and contrast-measured, worn by the <code>.lb-btn--accent-${n}</code> variant.</div>
       </div>`;
     return `
       <div class="theme-editor__section">
@@ -1797,7 +1796,7 @@ ${HELP_CONTENT}
       ${slotRow(2)}
       ${slotRow(3)}
       <div class="theme-editor__section">
-        <div class="theme-editor__hint" style="margin-bottom: var(--lb-size-2x);">Live preview — dormant slots render identical to Primary.</div>
+        <div class="theme-editor__hint" style="margin-bottom: var(--lb-size-2x);">Extra signal slots: one seed color each — ramp, roles and button text are derived and contrast-measured, worn by <code>.lb-btn--accent-2</code> / <code>--accent-3</code>. Dormant slots inherit Accent and render identical to Primary:</div>
         <div class="theme-editor__row" style="flex-wrap: wrap; gap: var(--lb-size-2x);">
           <button type="button" class="lb-btn lb-btn--primary lb-btn--small"><span class="lb-btn__label">Primary</span></button>
           <button type="button" class="lb-btn lb-btn--accent-2 lb-btn--small"><span class="lb-btn__label">Accent-2</span></button>
@@ -2409,12 +2408,6 @@ ${HELP_CONTENT}
       if (status) status.textContent = `· slot ${slotN} · ${filled ? 'filled' : 'dormant'}`;
       const clear = panel.querySelector(`#te-brand-${slotN}-clear`);
       if (clear) clear.hidden = !knobHex;
-      const hint = panel.querySelector(`#te-brand-${slotN}-hint`);
-      if (hint) {
-        hint.innerHTML = filled
-          ? `Worn by: the <code>.lb-btn--accent-${slotN}</code> variant and the <code>accent-${slotN}</code> role family — ramp and button text derived, contrast-measured in both themes.`
-          : `Not in use — inherits Accent. Pick a seed color to enable; the ramp, roles and button text are derived and contrast-measured, worn by the <code>.lb-btn--accent-${slotN}</code> variant.`;
-      }
     }
 
     // Radius — match the effective semantic.radius.radius.interactive
