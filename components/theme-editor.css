@@ -363,17 +363,21 @@
 .theme-editor__badge {
   display: inline-flex;
   align-items: center;
-  padding: 0 var(--lb-size-1x);
+  padding: 0 var(--lb-size-1-5x);
   border-radius: var(--lb-radius-interactive);
-  font-size: var(--lb-font-size-2xs);
+  font-size: var(--lb-font-size-xs);
   font-weight: var(--lb-font-weight-semibold);
   line-height: 1.6;
   border: var(--lb-border-width-thin) solid transparent;
 }
 
-.theme-editor__badge--ok   { background: var(--lb-bg-success); color: var(--lb-fg-success); border-color: var(--lb-border-success); }
-.theme-editor__badge--warn { background: var(--lb-bg-warning); color: var(--lb-fg-warning); border-color: var(--lb-border-warning); }
-.theme-editor__badge--fail { background: var(--lb-bg-danger);  color: var(--lb-fg-danger);  border-color: var(--lb-border-danger); }
+/* Status text on its own SUBTLE tint — the audited banner/badge pair
+   ("… text on … tint" in CONTRAST.md). The old solid bg-success/bg-danger
+   fills date from before the item-24 retune made status fills solid,
+   which left same-hue text at ~1:1 on them. */
+.theme-editor__badge--ok   { background: var(--lb-bg-success-subtle); color: var(--lb-fg-success); border-color: var(--lb-border-success); }
+.theme-editor__badge--warn { background: var(--lb-bg-warning-subtle); color: var(--lb-fg-warning); border-color: var(--lb-border-warning); }
+.theme-editor__badge--fail { background: var(--lb-bg-danger-subtle);  color: var(--lb-fg-danger);  border-color: var(--lb-border-danger); }
 
 /* Footer */
 .theme-editor__footer {
