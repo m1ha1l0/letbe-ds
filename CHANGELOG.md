@@ -8,6 +8,20 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 Minor: two dormant extra-accent slots (new token names, additive) and the
 two-face typography default (token values changed, no names).
 
+- **Fix: brand-engine dark picks for light seeds (WCAG).** For seeds whose
+  lightness snapped to step ≤400, the dark-mode walk inverted: ink landed on
+  the dark side (2.1:1-class text) and washes on the light side — affecting
+  the accent slots AND the slot-1 brand knob (latent since the engine
+  shipped; every preset snaps ≥500 and is byte-identical after the fix,
+  except Ink's two dark washes which move one step darker — strictly more
+  contrast). Dark ink is now measured (first stop clearing 4.5 vs the dark
+  page and its own wash), washes always walk the dark side with a ≥700/≥900
+  floor. Verified across seeds snapping 200–900: all accent manifest pairs
+  pass both modes (worst 4.53). The editor now re-runs those pairs live
+  after every slot fill/clear AND import, surfacing failures as a toast —
+  themes exported by the older engine carry baked bad picks, so re-fill the
+  slot from its seed after updating; exports now persist seed hexes in
+  `$extensions["design.letbe"].seeds` to make that possible.
 - **Second and third accent slots.** `accent-2` and `accent-3` ship as
   pre-provisioned, dormant L2/L3 vocabulary — per slot: 10 semantic roles
   (both themes) mirroring the accent family, 12 `action.*-accent-N-*`

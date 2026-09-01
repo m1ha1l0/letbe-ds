@@ -1024,3 +1024,25 @@ primitives — also generic.
 danger button. Dormant rendering equals primary, so there is no visual
 urgency; variables land with the plugin push and components heal when the
 variants are built.
+
+### Item 29 addendum (2026-08-31) — dark-pick engine fix + live pair audit ✅ letbe-ds side
+
+The item-29 follow-up bug (dark ink walked dark, washes walked light, for
+seeds snapping ≤400 — provenance confirmed: letbe-ds engine, not plugin) is
+FIXED at the shared brand engine, so it covers the accent slots AND the
+slot-1 brand knob (same latent bug). Dark ink is now measured (≥4.5 vs the
+dark page and its own wash, escalating lighter); washes always walk the
+dark side, floored ≥700/≥900. Verified: seeds snapping 200–900 pass every
+accent manifest pair in both modes (worst 4.53); the 8 presets are
+byte-identical except Ink's two dark washes (600→700, 800→900 — strictly
+more contrast).
+
+New behavior the plugin may care about:
+- The editor re-runs the family's wcag_pairs live after every slot
+  fill/clear AND import — failures surface as a toast (ask 2, incl. the
+  import path, so pre-fix baked exports get flagged on arrival).
+- Exports now carry `$extensions["design.letbe"].seeds` (the fill hexes) —
+  ignored by shape-only consumers, enables re-derivation after engine
+  fixes. Themes exported by the pre-fix engine hold baked bad picks:
+  re-fill the slot from its seed and re-export.
+- No plugin action required; no token names or $schema shapes changed.

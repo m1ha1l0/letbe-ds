@@ -133,7 +133,7 @@
     return STEPS[i];
   }
 
-  function computeAccentRemap(emphasisStep, themeMode) {
+  function computeAccentRemap(emphasisStep, themeMode, palette) {
     const dir = emphasisStep <= 500 ? +1 : -1;
     const bold      = shiftStep(emphasisStep, dir);
     const boldest   = shiftStep(emphasisStep, dir * 2);
@@ -145,12 +145,48 @@
       const darkEmphasis = STEPS.reduce((best, s) =>
         Math.abs(s - complement) < Math.abs(best - complement) ? s : best, 500);
       const darkDir = darkEmphasis <= 500 ? +1 : -1;
+      // Dark-mode SHAPE is invariant regardless of where the seed snaps:
+      // ink lives on the light side, washes on the dark side. The old
+      // ±darkDir walk inverted BOTH for seeds snapping ≤400 (complement
+      // >500 → darkDir −1): dark fg landed at 700/800/900 (invisible ink,
+      // 2.1:1-class) and washes at 300/100 (light fills on the dark page)
+      // — the item-29 follow-up bug. Washes now always walk darker; the
+      // ink walk is MEASURED when the palette is provided: first candidate
+      // (the structural pick — byte-identical for ≥500 snaps, so preset
+      // output does not move) that clears 4.5 vs the dark page AND vs its
+      // own subtle wash, escalating toward lighter stops.
+      // Floor the wash anchor at 400 so very dark seeds (darkEmphasis 200-300)
+      // still get canon-side washes (≥700/≥900) — a 600 "subtle wash" starves
+      // every light ink candidate of wash contrast. Byte-stable for
+      // darkEmphasis ≥ 400 (every ≥500-snapping seed, incl. all presets).
+      const washAnchor = Math.max(darkEmphasis, 400);
+      const washSubtle = shiftStep(washAnchor, +3);
+      const washMuted  = shiftStep(washAnchor, +5);
+      const structural = shiftStep(darkEmphasis, -1);
+      let fgPick = structural;
+      if (palette) {
+        const PAGE_DARK = '#060504'; // canonical dark bg.default (same idiom as the value-fill tracks)
+        const candidates = [...new Set([
+          structural, shiftStep(darkEmphasis, -2), shiftStep(darkEmphasis, -3),
+          400, 300, 200, 100,
+        ])];
+        const worstOf = (s) => Math.min(
+          contrastRatio(palette[s], PAGE_DARK),
+          contrastRatio(palette[s], palette[washSubtle]));
+        fgPick = null;
+        for (const s of candidates) {
+          if (worstOf(s) >= 4.5) { fgPick = s; break; }
+        }
+        if (fgPick == null) {
+          fgPick = candidates.reduce((a, b) => (worstOf(a) >= worstOf(b) ? a : b));
+        }
+      }
       return {
-        'fg-accent':          shiftStep(darkEmphasis, -darkDir * 1),
-        'fg-accent-muted':    shiftStep(darkEmphasis, -darkDir * 2),
-        'fg-accent-subtle':   shiftStep(darkEmphasis, -darkDir * 3),
-        'bg-accent-subtle':   shiftStep(darkEmphasis, +darkDir * 3),
-        'bg-accent-muted':    shiftStep(darkEmphasis, +darkDir * 5),
+        'fg-accent':          fgPick,
+        'fg-accent-muted':    shiftStep(fgPick, -1),
+        'fg-accent-subtle':   shiftStep(fgPick, -2),
+        'bg-accent-subtle':   washSubtle,
+        'bg-accent-muted':    washMuted,
         'bg-accent':          darkEmphasis,
         'bg-accent-strong':   shiftStep(darkEmphasis, -darkDir * 1),
         'bg-accent-bolder':   shiftStep(darkEmphasis, -darkDir * 2),
@@ -995,7 +1031,7 @@
       }
       const ctx = {};
       for (const mode of ['light', 'dark']) {
-        const rm = computeAccentRemap(emphasisStep, mode);
+        const rm = computeAccentRemap(emphasisStep, mode, palette);
         ctx[mode] = {
           bgDefault: resolveBgHex(mode, `semantic.${mode}.bg.default`) || (mode === 'dark' ? '#060504' : '#f7f5f1'),
           bgSubtle: resolveBgHex(mode, `semantic.${mode}.bg.subtle`) || (mode === 'dark' ? '#272522' : '#edebe6'),
@@ -1087,7 +1123,7 @@
             `Generated ${palKey} palette step ${step} (accent slot ${slotN}).`);
         }
         for (const themeMode of ['light', 'dark']) {
-          const remap = computeAccentRemap(stepN, themeMode);
+          const remap = computeAccentRemap(stepN, themeMode, paletteN);
           remap['bg-accent'] = planN[themeMode].steps.default;
           remap['bg-accent-strong'] = planN[themeMode].steps.strong;
           remap['bg-accent-bolder'] = planN[themeMode].steps.bolder;
@@ -1309,7 +1345,87 @@
       }
     }
 
+    // Persist the seed hexes into the export ($extensions is DTCG-legal and
+    // ignored by shape-only consumers). Exports bake derived values; without
+    // the seed a theme can't be re-derived after an engine fix — the item-29
+    // follow-up lesson.
+    const seeds = {};
+    if (overrides.brand)  seeds.brand    = overrides.brand;
+    if (overrides.brand2) seeds['brand-2'] = overrides.brand2;
+    if (overrides.brand3) seeds['brand-3'] = overrides.brand3;
+    if (Object.keys(seeds).length) {
+      patch.$extensions = { 'design.letbe': { seeds } };
+    }
+
     return { patch, lastBrandInfo };
+  }
+
+  // ── In-editor contrast audit of the accent families ─────────
+  // Evaluates the shipped $schema.wcag_pairs entries that involve the
+  // accent / accent-2 / accent-3 families against the CURRENT merged theme,
+  // both modes — the same pairs scripts/audit-contrast.js grades at build
+  // time, now run live after a slot fill or an import so a failing theme
+  // can never leave the editor silently (item-29 follow-up ask 2).
+  function auditAccentPairs() {
+    if (!canonical) return { rows: [], fails: [] };
+    const pairs = (canonical.$schema && canonical.$schema.wcag_pairs) || [];
+    const merged = buildExportJson();
+    const resolveRef = (mode, val, depth) => {
+      if (depth > 6 || typeof val !== 'string') return null;
+      const m = val.match(/^\{([^}]+)\}$/);
+      if (!m) return val.startsWith('#') ? val : null;
+      const parts = m[1].split('.');
+      for (const root of [merged.primitives, merged.semantic && merged.semantic[mode], merged.component]) {
+        let node = root;
+        for (const p of parts) node = node && node[p];
+        if (node && node.$value !== undefined) return resolveRef(mode, node.$value, depth + 1);
+      }
+      return null;
+    };
+    const tokenHex = (mode, name) => {
+      if (name.startsWith('#')) return name;
+      const slash = name.indexOf('/');
+      const grp = name.slice(0, slash), rest = name.slice(slash + 1);
+      let node = null;
+      if (grp === 'fg' || grp === 'bg' || grp === 'border') {
+        node = merged.semantic && merged.semantic[mode] && merged.semantic[mode][grp] && merged.semantic[mode][grp][rest];
+      } else {
+        node = merged.component && merged.component[grp] && merged.component[grp][rest];
+      }
+      return node && node.$value !== undefined ? resolveRef(mode, node.$value, 0) : null;
+    };
+    const rows = [], fails = [];
+    for (const p of pairs) {
+      const touches = `${p.fg} ${p.bg}`.includes('accent');
+      if (!touches || p.status === 'exempt' || p.status === 'advisory' || p.over) continue;
+      for (const mode of ['light', 'dark']) {
+        const fgHex = tokenHex(mode, p.fg), bgHex = tokenHex(mode, p.bg);
+        if (!fgHex || !bgHex) continue;
+        const ratio = Math.round(contrastRatio(fgHex, bgHex) * 100) / 100;
+        const row = { pair: p.what, mode, fg: p.fg, bg: p.bg, ratio, min: p.min, pass: ratio >= p.min };
+        rows.push(row);
+        if (!row.pass) fails.push(row);
+      }
+    }
+    return { rows, fails };
+  }
+
+  // Debounced runner — fires after brand-knob changes and imports; surfaces
+  // failures as a danger toast + console table, silence when green.
+  let _auditTimer = 0;
+  function _scheduleAccentAudit(sourceLabel) {
+    clearTimeout(_auditTimer);
+    _auditTimer = setTimeout(() => {
+      try {
+        const { fails } = auditAccentPairs();
+        if (fails.length) {
+          console.warn(`[letbe theme editor] Contrast check after ${sourceLabel} — ${fails.length} failing pair(s):`);
+          if (console.table) console.table(fails);
+          _showToast('danger', 'Contrast check failed',
+            `${fails.length} accent pair(s) below WCAG after ${sourceLabel} — details in the console. Adjust the seed before exporting.`);
+        }
+      } catch (e) { /* audit is advisory — never block the edit */ }
+    }, 350);
   }
 
   // ════════════════════════════════════════════════════════════
@@ -1496,6 +1612,12 @@
     state.overrides[name] = value;
     persist();
     render();
+    // Live contrast guard: any accent-affecting knob re-runs the shipped
+    // manifest pairs for the accent families (fill AND clear — clears can
+    // re-expose a bad baseline underneath).
+    if (name === 'brand' || name === 'brand2' || name === 'brand3') {
+      _scheduleAccentAudit(value ? 'slot fill' : 'slot clear');
+    }
   }
 
   // ── Preset application ──
@@ -1592,6 +1714,9 @@
     persist();
     loadBaselineFonts(json);
     render();
+    // Imports carry BAKED values — a theme exported by an older engine can
+    // hold failing picks the import preserves verbatim. Audit on arrival.
+    _scheduleAccentAudit('import');
   }
   function saveAsBaseline() {
     if (!canonical) return;
@@ -2953,6 +3078,7 @@ ${HELP_CONTENT}
     importJson,
     buildExportJson,
     buildShareLink,
+    auditAccentPairs,
     factoryReset,
     saveAsBaseline,
     resetAllKnobs,
