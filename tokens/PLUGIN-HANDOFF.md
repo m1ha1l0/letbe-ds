@@ -1046,3 +1046,34 @@ New behavior the plugin may care about:
   fixes. Themes exported by the pre-fix engine hold baked bad picks:
   re-fill the slot from its seed and re-export.
 - No plugin action required; no token names or $schema shapes changed.
+
+## 30. Shared slot engine extracted — js/slot-engine.js (2026-08-31) — PLUGIN VENDORS VERBATIM
+
+Per the plugin session's three asks (owner-approved):
+
+1. **`js/slot-engine.js`** — pure, DOM/storage-free, ~340 lines. Exposes
+   `window.LetbeSlotEngine`: `ENGINE_VERSION` ('1.0.0') + `CANON` (the
+   canonical page/ink/track hexes, overridable per call), STEPS +
+   PALETTE_STEPS + step math, OKLCH helpers, `contrastRatio`,
+   `generatePalette`, `computeAccentRemap(step, mode, palette?, hexes?)`,
+   `planBrandPrimary(palette, step, hexes?)`,
+   `computeValueFillStep(palette, mode, hexes?)` (extracted too — needed
+   for byte-identical exports), and `auditAccentPairs(wcagPairs,
+   mergedJson)` refactored PURE. Vendor the file verbatim and pin against
+   ENGINE_VERSION; any output-affecting change bumps it. Regression on
+   this side: 10-seed exports byte-identical through the extraction;
+   dark-fix matrix (snap 200–900) all pairs pass both modes.
+   Load order on pages: slot-engine.js BEFORE theme-editor.js.
+2. **Structural fill detection** replaces presence tests: filled ⇔ any
+   accent-N ref references `{brand-N.…}`, OR the family diverges from BOTH
+   the effective accent refs and the canonical factory positions (a
+   deliberate hand-retarget). Hand-made brand-N ramp with zero retargets →
+   dormant (ramp preserved, Clear hidden); stale pre-fix exports →
+   normalized; hand-retargets → filled + never overwritten. Filling over
+   an existing brand-N palette raises a "palette regenerated" warning toast.
+3. **Seeds read back**: import prefills each slot picker (and the slot-1
+   brand picker) from `$extensions["design.letbe"].seeds` when present.
+
+README venue amendment ("theme editor or the plugin") HELD until the
+plugin's slot fill ships — ping when live and letbe-ds updates the
+sentence.

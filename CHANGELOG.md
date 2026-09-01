@@ -8,6 +8,18 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 Minor: two dormant extra-accent slots (new token names, additive) and the
 two-face typography default (token values changed, no names).
 
+- **Shared slot engine.** The brand/accent math (OKLCH ramp, remap,
+  measured planner, value-fill pick, pair audit) now lives in a pure,
+  DOM-free `js/slot-engine.js` (`window.LetbeSlotEngine`, `ENGINE_VERSION`)
+  that the theme editor consumes and the Figma plugin vendors verbatim —
+  one engine, two tools, same bytes. Slot "filled" detection is structural
+  (accent-N refs actually wearing their own identity) instead of
+  presence-based — a hand-made `brand-N` palette without retargets now
+  correctly reads dormant, a deliberate hand-retarget reads filled and is
+  never overwritten by normalization, and re-filling over an existing
+  palette warns before regenerating. Imported themes prefill each slot
+  picker from the stored seed (`$extensions["design.letbe"].seeds`), not
+  the snapped 500 step.
 - **Fix: brand-engine dark picks for light seeds (WCAG).** For seeds whose
   lightness snapped to step ≤400, the dark-mode walk inverted: ink landed on
   the dark side (2.1:1-class text) and washes on the light side — affecting

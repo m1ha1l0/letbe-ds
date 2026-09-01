@@ -153,6 +153,7 @@ ${group.items.map(cardFor).filter(Boolean).join('\n')}
 </main>
 
 <script src="js/lb.js"></script>
+<script src="js/slot-engine.js"></script>
 <script src="js/theme-editor.js"></script>
 <script src="js/token-exporter.js"></script>
 <script src="js/gallery-layout.js"></script>
