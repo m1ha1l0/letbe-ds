@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>letbe-ds — CDN-only consumer</title>
   <!-- The entire install: three files from a pinned CDN tag. Nothing else. -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/tokens/theme.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/tokens/fonts.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/components/components.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/tokens/theme.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/tokens/fonts.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/components/components.css">
 </head>
 <body style="margin:0;padding:var(--lb-size-8x);background:var(--lb-bg-default);color:var(--lb-fg-default);font-family:var(--lb-t-body-m-font-family);">
   <main style="max-width:40rem;margin:0 auto;display:flex;flex-direction:column;gap:var(--lb-size-6x);">
     <h1 style="font:var(--lb-t-heading-l-font-weight) var(--lb-t-heading-l-font-size)/var(--lb-t-heading-l-line-height) var(--lb-t-heading-l-font-family);margin:0;">
       Three files, straight from the CDN
     </h1>
-    <p style="margin:0;color:var(--lb-fg-muted);">This page has no local files at all. Everything below is served from <code class="lb-code">cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0</code>. Toggle the theme, tap the button, open the accordion — all of it is the real runtime.</p>
+    <p style="margin:0;color:var(--lb-fg-muted);">This page has no local files at all. Everything below is served from <code class="lb-code">cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0</code>. Toggle the theme, tap the button, open the accordion — all of it is the real runtime.</p>
 
     <div style="display:flex;flex-wrap:wrap;gap:var(--lb-size-2x);align-items:center;">
       <button type="button" class="lb-btn lb-btn--primary lb-btn--medium" id="toast-it"><span class="lb-btn__label">Show a toast</span></button>
@@ -36,10 +36,10 @@
     <div class="lb-progress-wrap"><progress class="lb-progress" value="70" max="100" aria-label="Demo progress"></progress></div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/js/lb.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/js/lb.js"></script>
   <script>
     // Icons live on the CDN too — tell the loader once.
-    LB.setIconBasePath('https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/assets/icons');
+    LB.setIconBasePath('https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/assets/icons');
     const toasts = new LB.ToastManager();
     document.getElementById('toast-it').addEventListener('click', () =>
       toasts.show({ variant: 'success', title: 'It works', message: 'Served entirely from the CDN.' }));

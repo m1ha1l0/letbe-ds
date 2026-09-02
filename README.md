@@ -111,14 +111,14 @@ edit the vendored files, so a future update is a clean file swap.
 **Or skip vendoring entirely — install from the CDN**, pinned to a release tag:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/tokens/theme.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/tokens/fonts.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/components/components.css">
-<script src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/js/lb.js"></script>
-<script>LB.setIconBasePath('https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.0.0/assets/icons');</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/tokens/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/tokens/fonts.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/components/components.css">
+<script src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/js/lb.js"></script>
+<script>LB.setIconBasePath('https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.0/assets/icons');</script>
 ```
 
-Pin to a tag (`@v1.0.0`), never `@main` — tagged URLs are immutable and cache
+Pin to a tag (`@v1.1.0`), never `@main` — tagged URLs are immutable and cache
 forever. Opt-in controllers load the same way from `js/components/`. See
 [`examples/cdn-only.html`](./examples/cdn-only.html) for a page whose only
 dependency is that block.
@@ -207,7 +207,8 @@ Three rules the whole system follows — grounded in measured evidence rather th
   and never two extra signals in one view without a reason a user could
   name. If you need a fourth signal, the answer isn't another slot — it's
   a better information design. Fill a slot in the theme editor (Color →
-  Accent-2/-3): the ramp, roles and button text are derived and
+  Accent-2/-3) or in the letbe tokens Figma plugin — both run the same
+  shared slot engine (`js/slot-engine.js`): the ramp, roles and button text are derived and
   contrast-measured; until then both slots mirror accent and the
   `.lb-btn--accent-2` / `--accent-3` variants render identical to primary.
 

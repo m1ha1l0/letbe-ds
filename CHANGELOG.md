@@ -3,10 +3,15 @@
 All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.org/)
 — see "What counts as breaking" in the README before relying on an update.
 
-## [Unreleased]
+## [1.1.0] — 2026-09-02
 
-Minor: two dormant extra-accent slots (new token names, additive) and the
-two-face typography default (token values changed, no names).
+Minor: two dormant extra-accent slots (new token names, additive), the
+two-face typography default (token values changed, no names), and the
+shared slot engine. The full slot program is live across all three tools —
+letbe.design's theme editor, the letbe tokens Figma plugin (which vendors
+`js/slot-engine.js` byte-identical at ENGINE_VERSION 1.0.0), and the
+Community library (components bound, dormant violet until themes fill
+slots).
 
 - **Shared slot engine.** The brand/accent math (OKLCH ramp, remap,
   measured planner, value-fill pick, pair audit) now lives in a pure,
