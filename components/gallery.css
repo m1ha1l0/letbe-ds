@@ -372,6 +372,11 @@ body.gallery-ready { visibility: visible; }
       grid-template-columns: max-content max-content 1fr;
       gap: var(--lb-size-1x) var(--lb-size-3x);
       padding: var(--lb-size-4x);
+      /* fixed-geometry mini-table (max-content columns of mono token
+         paths) — scrolls in place on narrow screens instead of pushing
+         the page wide; thin visible-when-overflowing scrollbar per the
+         DS scrollbar policy */
+      overflow-x: auto;
       margin-bottom: var(--lb-size-8x);
       background: var(--lb-bg-default);
       border: var(--lb-border-width-thin) solid var(--lb-border-muted);
