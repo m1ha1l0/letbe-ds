@@ -26,7 +26,7 @@
     <hr class="gallery-desc-divider">
 
     <h2 class="gallery-section__title">Audio</h2>
-    <p class="gallery-section__desc">The minimum pattern: <code class="lb-code">data-lb-media</code> on a wrapper containing a native <code class="lb-code">&lt;audio&gt;</code> + a <code class="lb-code">.lb-media__controls</code> row. The controller wires play/pause, seek (with buffered region), time, volume, and mute. Keyboard: focus any control inside the player, then <kbd>Space</kbd>/<kbd>K</kbd> (play), <kbd>←</kbd>/<kbd>→</kbd> (seek ±5s), <kbd>↑</kbd>/<kbd>↓</kbd> (volume), <kbd>M</kbd> (mute).</p>
+    <p class="gallery-section__desc">The minimum pattern: <code class="lb-code">data-lb-media</code> on a wrapper containing a native <code class="lb-code">&lt;audio&gt;</code> + a <code class="lb-code">.lb-media__controls</code> row. The controller wires play/pause, seek (with buffered region), time, volume, and mute. Keyboard: focus any control inside the player, then <kbd>Space</kbd>/<kbd>K</kbd> (play), <kbd>←</kbd>/<kbd>→</kbd> (seek ±5s), <kbd>↑</kbd>/<kbd>↓</kbd> (volume), <kbd>M</kbd> (mute). <strong>Narrow players reflow automatically</strong> (container query at 480px of player width — per player, not per viewport): the scrubber takes its own full-width line, transport + times follow, and mute + volume drop to their own row with the slider flexing across it; on touch screens (<code class="lb-code">pointer: coarse</code>) the transport buttons also grow to 48px targets. Resize this page (or the player's column) below 480px to see the stack.</p>
 
     <div style="max-width: 520px;">
       <div class="lb-media" data-lb-media>
@@ -56,7 +56,7 @@
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Speed &amp; skip</h2>
     <p class="gallery-section__desc">Optional transport controls. <strong>Skip</strong> buttons use <code class="lb-code">data-lb-media-skip="-10"</code> / <code class="lb-code">"10"</code> (seconds, relative). The <strong>speed</strong> control (<code class="lb-code">data-lb-media-speed</code>) cycles the playback rate 0.5×–2× and shows the current value. Drop either anywhere in the controls row.</p>
 
-    <div style="max-width: 480px;">
+    <div style="max-width: 560px;">
       <div class="lb-media" data-lb-media>
         <audio src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-media@v1.0.1/tracks/Letbe-Design-07-Funk.mp3" preload="metadata"></audio>
         <div class="lb-media__controls">
@@ -297,7 +297,7 @@
     <p class="gallery-section__desc"><strong>Hold-to-skip (opt-in via <code class="lb-code">data-lb-media-hold-to-skip</code>):</strong> short click toggles play/pause; <strong>hold the left half for ~0.5s</strong> to start skipping backward in 10s steps, <strong>right half</strong> to skip forward. A small badge appears on the active side and accumulates the total skipped (<code class="lb-code">10s ⟪</code> / <code class="lb-code">⟫ 10s</code>). Idle auto-hide still applies during playback.</p>
     <p class="gallery-section__desc"><strong>Quality picker</strong> — plain multi-source switching: declare one file per quality in <code class="lb-code">data-lb-media-qualities</code> (JSON of <code class="lb-code">{label, src}</code>) and add a <code class="lb-code">data-lb-media-quality</code> menu; switching preserves position, speed and play state (this demo ships 720p + 480p). <em>For adaptive bitrate streaming (auto-switching 1080p/2K/4K ladders) attach <code class="lb-code">hls.js</code> or <code class="lb-code">shaka-player</code> to the same <code class="lb-code">&lt;video&gt;</code> — per the pluggable-engines rule the DS ships the picker chrome, you bring the streaming engine.</em></p>
 
-    <div style="max-width: 480px;">
+    <div style="max-width: 560px;">
       <div class="lb-media lb-media--video" data-lb-media data-lb-media-hold-to-skip data-lb-media-qualities='[{"label":"720p","src":"https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-media@v1.0.1/video/letbe-video-web.mp4"},{"label":"480p","src":"https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-media@v1.0.1/video/letbe-video-web-480.mp4"}]'>
         <div class="lb-media__stage">
         <video src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-media@v1.0.1/video/letbe-video-web.mp4" preload="metadata" playsinline poster="../assets/media/letbe-profile-cover.jpg">

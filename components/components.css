@@ -2934,12 +2934,36 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media__range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-border-focus); }
 
 /* Narrow players (compact / mobile): the transport row can't fit inline,
-   so the scrubber takes its own full-width line above the buttons + time
-   labels. Container query → automatic for any player narrower than 320px,
-   no demo-specific markup. */
-@container (max-width: 320px) {
+   so it reflows into a stack — scrubber on its own full-width line, then
+   buttons + time labels, then (when the player has a volume slider) mute +
+   volume on their own row with the slider flexing instead of holding its
+   fixed width. The ::before is a full-width flex break placed (order:1)
+   between the order-0 transport items and the order-2/3 mute + volume; it
+   only exists when a volume slider is a direct child of the row, so
+   volume-less players (--compact, --card sub-rows, speed-only demos) never
+   pay for a phantom flex line. Container query → automatic for any player
+   whose content box is 480px or narrower, no demo-specific markup. 480
+   accommodates the coarse-pointer 48px buttons below: at the old 320px
+   threshold, real phones (~340–410px players) never triggered the wrap and
+   the row overflowed the box. Variants with their own arrangements defend
+   themselves after this block (--compact nowrap, --card sub-rows). */
+@container (max-width: 480px) {
   .lb-media__controls { flex-wrap: wrap; }
   .lb-media__scrubber { order: -1; flex: 1 1 100%; }
+  /* The zero-height break line costs one extra row-gap, so the mute+volume
+     row sits 2×gap (16px) below the transport row — kept: it reads as
+     cluster grouping (transport vs sound), and a negative-margin
+     counter-hack on a zero-height flex line is engine-fragile. */
+  .lb-media__controls:has(> .lb-media__volume)::before { content: ""; flex-basis: 100%; order: 1; }
+  .lb-media__controls > [data-lb-media-mute] { order: 2; }
+  .lb-media__controls > .lb-media__volume { order: 3; flex: 1 1 var(--lb-size-16x); width: auto; min-width: var(--lb-size-16x); }
+  /* Anything after the volume in DOM order (video: PiP, playlist toggle,
+     fullscreen) joins the same final row — keeps visual order = DOM order,
+     so tab focus never zigzags back up to a higher row (WCAG 2.4.3). */
+  .lb-media__controls > .lb-media__volume ~ * { order: 4; }
+  /* video top bar (like/dislike · utility actions) wraps too instead of
+     pushing the actions cluster out of the frame on very narrow players */
+  .lb-media__top { flex-wrap: wrap; }
 }
 
 /* Touch-target sizing — when the primary pointer is coarse (touch screens,
@@ -2977,10 +3001,13 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    stays unchanged. */
 .lb-media--card .lb-media__controls { flex-direction: column; row-gap: var(--lb-size-3x); align-items: stretch; }
 .lb-media--card .lb-media__progress-row { display: flex; align-items: center; gap: var(--lb-size-2x); }
-/* order:0 explicitly undoes the narrow-player container query (line ~2808)
-   which sets scrubber order:-1 so the scrubber stacks above the times in
-   single-row layouts. The card's progress-row IS the dedicated single
-   row, so we want DOM order: [current time] [scrubber] [total time]. */
+/* order:0 explicitly undoes the narrow-player container query (the
+   @container (max-width: 480px) block above) which sets scrubber order:-1
+   so the scrubber stacks above the times in single-row layouts. The card's
+   progress-row IS the dedicated single row, so we want DOM order:
+   [current time] [scrubber] [total time]. (The query's mute/volume rules
+   can't reach the card: they match direct children of .lb-media__controls
+   only, and the card nests everything in sub-rows.) */
 .lb-media--card .lb-media__progress-row .lb-media__scrubber { flex: 1 1 auto; order: 0; }
 .lb-media--card .lb-media__progress-row .lb-media__time { flex: none; }
 .lb-media--card .lb-media__transport-row { display: flex; align-items: center; justify-content: center; gap: var(--lb-size-2x); }
@@ -3004,8 +3031,11 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media--compact .lb-media__art-play:hover { background: color-mix(in srgb, var(--lb-bg-overlay) 72%, transparent); }
 .lb-media--compact .lb-media__art-play > [data-lb-icon] { width: var(--lb-size-5x); height: var(--lb-size-5x); }
 /* single-line transport — override the narrow-width reflow so the times
-   stay flanking the scrubber on one row */
+   stay flanking the scrubber on one row; the ::before flex break is
+   suppressed too, or it would sit in the nowrap row as a phantom spacer
+   if a consumer's compact player carries a volume slider */
 .lb-media--compact .lb-media__controls { flex-wrap: nowrap; }
+.lb-media--compact .lb-media__controls::before { content: none; }
 .lb-media--compact .lb-media__scrubber { order: 0; flex: 1 1 auto; }
 
 /* Video layout — auto-applied when the player wraps a <video>. The video
@@ -3033,7 +3063,10 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media--video [data-lb-media-dislike][aria-pressed="true"] { color: var(--lb-fg-accent); }
 /* Active captions toggle */
 .lb-media--video [data-lb-media-captions][aria-pressed="true"] { color: var(--lb-fg-accent); }
-/* Half-width sound slider — more room for the video timeline. */
+/* Half-width sound slider — more room for the video timeline. In the
+   narrow-player stack (@container ≤480px) the query's flex-basis governs
+   the main size instead, so the slider flexes across the mute + volume
+   row there — deliberate: wider touch target where the row is dedicated. */
 .lb-media--video .lb-media__volume { width: var(--lb-size-12x); }
 /* Top-right menu anchors from the right (LB.Menu inline-sets left:0;
    !important is the cleanest scoped override) so the panel grows
