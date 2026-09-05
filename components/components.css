@@ -4014,6 +4014,15 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-table-wrap {
   width: 100%;
   overflow-x: auto;
+  /* the scroller must also be the containing block for absolutely-
+     positioned descendants: the a11y column labels (.lb-visually-hidden
+     in <th>) are position:absolute, and without this they resolve
+     against the page at their static position — inside scrolled-out
+     columns past the right edge — stretching the whole page into
+     horizontal scroll on phones. relative + z-index:auto, so no new
+     stacking context; in-cell menus anchor to their own
+     .lb-menu-wrapper (position:relative) and are unaffected. */
+  position: relative;
   border-radius: var(--lb-radius-surface);
   border: var(--lb-border-width-thin) solid var(--lb-border-muted);
   background: var(--lb-surface-bg-default);
