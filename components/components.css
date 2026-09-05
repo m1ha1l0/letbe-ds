@@ -1246,12 +1246,24 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
    under active items; vertical nav uses a left bar. Both reads at a
    glance even when colors are dialled down. */
 .lb-nav { font-family: var(--lb-t-action-m-font-family); display: flex; align-items: center; }
-.lb-nav--horizontal { flex-direction: row; gap: var(--lb-size-2x); padding: var(--lb-size-3x) var(--lb-size-6x); background-color: var(--lb-surface-bg-default); border-bottom: var(--lb-border-width-thin) solid var(--lb-surface-border-default); }
-/* min-width:0 lets the flex:1 list actually shrink below its content;
-   overflow-x:auto then scrolls the items (thin visible-when-overflowing
-   scrollbar per the DS scrollbar policy) instead of pushing trailing
-   items (e.g. "Billing") past the bar on narrow screens. */
-.lb-nav--horizontal .lb-nav__list { flex-direction: row; gap: var(--lb-size-1x); flex: 1; min-width: 0; overflow-x: auto; }
+/* overflow-x:auto on the BAR (not the item list): when the items cannot
+   fit a narrow screen the whole strip scrolls in place (thin
+   visible-when-overflowing scrollbar per the DS scrollbar policy)
+   instead of pushing trailing items past the page edge. The bar is the
+   only safe scroller here — the active-page underline
+   (.lb-nav__item--active::after) hangs below the items onto the bar's
+   bottom border and the item focus ring uses a positive outline-offset,
+   so a scroller on the inner list would clip both; the bar's own
+   padding box contains them. Desktop: no overflow, no scrollbar,
+   unchanged.
+   The bottom hairline is an inset shadow, not a real border: the active
+   underline overlays that hairline, and a scroll container clips at the
+   padding edge — a border would put the hairline (and the underline's
+   last pixel) outside the clip. Padding-bottom grows by the same thin
+   width, so outer height and the hairline's position are pixel-identical
+   to the previous border version. */
+.lb-nav--horizontal { flex-direction: row; gap: var(--lb-size-2x); padding: var(--lb-size-3x) var(--lb-size-6x) calc(var(--lb-size-3x) + var(--lb-border-width-thin)); background-color: var(--lb-surface-bg-default); box-shadow: inset 0 calc(-1 * var(--lb-border-width-thin)) 0 var(--lb-surface-border-default); overflow-x: auto; }
+.lb-nav--horizontal .lb-nav__list { flex-direction: row; gap: var(--lb-size-1x); flex: 1; }
 .lb-nav--vertical { flex-direction: column; align-items: stretch; padding: var(--lb-size-4x); background-color: var(--lb-surface-bg-elevated); border-right: var(--lb-border-width-thin) solid var(--lb-surface-border-default); min-width: 14rem; }
 .lb-nav--vertical .lb-nav__list { flex-direction: column; gap: var(--lb-size-0-5x); flex: 1; align-items: stretch; }
 
