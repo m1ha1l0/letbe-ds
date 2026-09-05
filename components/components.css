@@ -3624,6 +3624,15 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-datepicker-field__hint--error > [data-lb-icon],
 .lb-datepicker-field__hint--success > [data-lb-icon] { width: var(--lb-size-3-5x); height: var(--lb-size-3-5x); flex-shrink: 0; }
 .lb-datepicker--inline { display: inline-flex; flex-direction: column; gap: var(--lb-size-2x); font-family: var(--lb-t-body-m-font-family); width: fit-content; }
+/* The inline picker's grid-root is fixed geometry (7×40px day cells,
+   content-box 280px + padding/border = 314px) — on narrower containers
+   the host scrolls it in place per the DS scrollbar policy instead of
+   pushing the page wide. Time mode is excluded: its hour/minute
+   dropdown lists extend below the short box and a scroll container
+   would clip them (:has() is already this component's baseline, see the
+   time-row rules below). position:relative guards any future
+   absolutely-positioned descendants, as in .lb-table-wrap. */
+.lb-datepicker--inline:not(:has(.lb-datepicker__time-row)) { max-width: 100%; overflow-x: auto; position: relative; }
 .lb-datepicker-trigger { display: flex; align-items: center; gap: var(--lb-size-2x); width: 100%; background: var(--lb-field-bg-default); border: var(--lb-border-width-action) solid var(--lb-field-border-default); border-radius: var(--lb-radius-field); color: var(--lb-field-fg-default); cursor: pointer; font-family: var(--lb-t-body-m-font-family); text-align: left; transition: border-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), box-shadow var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 /* Fixed heights match inputs/buttons. Large = 48px (desktop-only, still AA touch target). */
 .lb-datepicker-trigger--small  { height: 2rem;   padding: 0 var(--lb-size-2x); font-size: var(--lb-t-body-s-font-size); }

@@ -74,7 +74,7 @@
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Month mode — <code class="lb-code">data-lb-mode="month"</code></h2>
     <p class="gallery-section__desc">Pick a month + year. Layout is a 4×3 grid of month cells; the header carries year navigation chevrons. Today's month is outlined in accent. Emits <code class="lb-code">lb-datepicker-change</code> with <code class="lb-code">detail.value</code> = first of selected month. Useful for navigation in calendars (e.g. Calendar component's month-view headline) and for monthly-cadence reports.</p>
     <div class="gallery-row" style="gap: var(--lb-size-4x); flex-wrap: wrap;">
-      <div>
+      <div style="min-width: 0;"><!-- flex item: drop the automatic min so the picker's contained scroller can engage on narrow screens -->
         <div class="gallery-label">Inline</div>
         <div class="lb-datepicker--inline" data-lb-datepicker data-lb-variant="inline" data-lb-mode="month"></div>
       </div>
