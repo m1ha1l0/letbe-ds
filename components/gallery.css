@@ -165,6 +165,12 @@ body.gallery-ready { visibility: visible; }
       font-size: var(--lb-t-body-s-font-size);
       color: var(--lb-fg-muted);
       margin: 0 0 var(--lb-size-6x);
+      /* Long unbreakable inline-code tokens (selectors, one-line JS like
+         document.querySelector('…:checked').value) may exceed a phone
+         column; anywhere lets them wrap mid-token ONLY when they cannot
+         fit — nothing is lost, and text that fits is untouched.
+         Inherits into the <code class="lb-code"> spans. */
+      overflow-wrap: anywhere;
     }
 
     .gallery-row {
