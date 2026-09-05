@@ -1411,7 +1411,12 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
    INPUT
    ═══════════════════════════════════════════════════════════ */
 
-.lb-field { display: flex; flex-direction: column; gap: var(--lb-size-1x); font-family: var(--lb-t-body-m-font-family); }
+/* max-width:100% caps the field's hypothetical cross size so wrapped /
+   column flex parents resolve their line to the container instead of to
+   a wide composition inside (the phone field's nowrap country trigger +
+   dial code forced ~365px lines that panned phone screens); it can only
+   bite where a field already renders wider than its containing block. */
+.lb-field { display: flex; flex-direction: column; gap: var(--lb-size-1x); font-family: var(--lb-t-body-m-font-family); max-width: 100%; }
 .lb-label { font-family: var(--lb-t-label-m-font-family); font-size: var(--lb-t-label-m-font-size); font-weight: var(--lb-t-label-m-font-weight); line-height: var(--lb-t-label-m-line-height); letter-spacing: var(--lb-t-label-m-letter-spacing); color: var(--lb-field-fg-label); }
 .lb-label--required::after { content: ' *'; color: var(--lb-fg-danger); }
 
