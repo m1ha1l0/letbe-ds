@@ -34,11 +34,11 @@
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Week numbers — ISO 8601</h2>
     <p class="gallery-section__desc">Each row in the month grid shows its ISO 8601 week number — week 1 is the week containing the first Thursday of the year. Common in Sweden, Germany and other EU contexts; agile/sprint teams reference work by week (e.g. "ship in W22"). Toggle off with <code class="lb-code">data-lb-no-week-numbers</code> if you don't need it.</p>
     <div class="gallery-row" style="gap: var(--lb-size-4x); flex-wrap: wrap; align-items: stretch;">
-      <div style="flex: 1 1 360px; min-width: 320px;">
+      <div style="flex: 1 1 360px; min-width: min(320px, 100%);">
         <div class="gallery-label">With week numbers (default)</div>
         <div data-lb-calendar id="cal-weeknum-on"></div>
       </div>
-      <div style="flex: 1 1 360px; min-width: 320px;">
+      <div style="flex: 1 1 360px; min-width: min(320px, 100%);">
         <div class="gallery-label">Without week numbers</div>
         <div data-lb-calendar data-lb-no-week-numbers id="cal-weeknum-off"></div>
       </div>
@@ -58,11 +58,11 @@
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Slot duration &amp; default scroll</h2>
     <p class="gallery-section__desc">Week view's hour grid uses <strong>30-minute slots by default</strong> — each slot is a fixed <code class="lb-code">2.5rem</code> tall, so a 30-min meeting fills one row (40px), a 1-hour meeting fills two (80px). Override per-instance with <code class="lb-code">data-lb-slot-duration="15|30|60"</code>. The scroll position lands at <strong>08:00 by default</strong> (override with <code class="lb-code">data-lb-scroll-hour</code>). The header + all-day strip stay sticky as you scroll the hours. We deliberately do <em>not</em> auto-track the clock — the view opens at that hour and never re-scrolls itself as time passes.</p>
     <div class="gallery-row" style="gap: var(--lb-size-4x); flex-wrap: wrap; align-items: stretch;">
-      <div style="flex: 1 1 360px; min-width: 320px;">
+      <div style="flex: 1 1 360px; min-width: min(320px, 100%);">
         <div class="gallery-label">30-min slots (default)</div>
         <div data-lb-calendar data-lb-view="week" id="cal-slot-30"></div>
       </div>
-      <div style="flex: 1 1 360px; min-width: 320px;">
+      <div style="flex: 1 1 360px; min-width: min(320px, 100%);">
         <div class="gallery-label">15-min slots — for booking precision</div>
         <div data-lb-calendar data-lb-view="week" data-lb-slot-duration="15" id="cal-slot-15"></div>
       </div>
@@ -78,11 +78,11 @@
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Working hours — <code class="lb-code">data-lb-min-time</code> / <code class="lb-code">data-lb-max-time</code></h2>
     <p class="gallery-section__desc">Clamp the visible hour range so the calendar stops wasting screen on midnight. Hours outside the range simply don't render — the grid is shorter, no scroll past the configured edges. Useful for booking flows but works for any view. Side-by-side: a wider 06–22 slot vs a tighter 09–17 office-hours slot.</p>
     <div class="gallery-row" style="gap: var(--lb-size-4x); flex-wrap: wrap; align-items: stretch;">
-      <div style="flex: 1 1 360px; min-width: 320px;">
+      <div style="flex: 1 1 360px; min-width: min(320px, 100%);">
         <div class="gallery-label">06:00 – 22:00 (extended)</div>
         <div data-lb-calendar data-lb-view="week" data-lb-min-time="06:00" data-lb-max-time="22:00" id="cal-hours-wide"></div>
       </div>
-      <div style="flex: 1 1 360px; min-width: 320px;">
+      <div style="flex: 1 1 360px; min-width: min(320px, 100%);">
         <div class="gallery-label">09:00 – 17:00 (office hours)</div>
         <div data-lb-calendar data-lb-view="week" data-lb-min-time="09:00" data-lb-max-time="17:00" id="cal-hours-tight"></div>
       </div>

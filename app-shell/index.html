@@ -122,7 +122,7 @@
     <!-- ────────────────── C. Floating + Inset ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">C · Styles — <code class="lb-code">--floating</code> · <code class="lb-code">--inset</code></h2>
     <p class="gallery-section__desc">Floating detaches the sidebar as a card; inset makes the <em>content column</em> the card instead. Both collapse like the default.</p>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); gap: var(--lb-size-4x);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr)); gap: var(--lb-size-4x);">
       <div style="border: var(--lb-border-width-thin) solid var(--lb-border-muted); border-radius: var(--lb-radius-overlay); overflow: hidden; position: relative;">
         <div class="lb-shell lb-shell--floating" data-lb-shell data-lb-shell-collapse="icon" data-lb-shell-key="lb-shell-demo-c1" style="height: 340px;">
           <div class="lb-shell__sidebar">

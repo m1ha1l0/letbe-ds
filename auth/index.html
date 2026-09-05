@@ -141,7 +141,7 @@
     <!-- ────────────────── D. Forgot + Reset ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);" id="authD">D · Forgot password — request + reset</h2>
     <p class="gallery-section__desc">Two separate screens, per the production flow: request (email only) → email link/code → reset (new password only, shown after identity is verified).</p>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: var(--lb-size-4x);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); gap: var(--lb-size-4x);">
       <div style="border: var(--lb-border-width-thin) solid var(--lb-border-muted); border-radius: var(--lb-radius-overlay); overflow: hidden;">
         <div class="lb-auth">
           <div class="lb-card lb-card--padded lb-card--elevated lb-auth__card">
@@ -185,7 +185,7 @@
     <!-- ────────────────── E. Verify ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">E · Verify — OTP code · magic-link sent</h2>
     <p class="gallery-section__desc">Two variants of one skeleton, because providers ship both strategies. The code field is <strong>one input</strong> with <code class="lb-code">autocomplete="one-time-code"</code> + <code class="lb-code">inputmode="numeric"</code> — SMS/email autofill just works.</p>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); gap: var(--lb-size-4x);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr)); gap: var(--lb-size-4x);">
       <div style="border: var(--lb-border-width-thin) solid var(--lb-border-muted); border-radius: var(--lb-radius-overlay); overflow: hidden;">
         <div class="lb-auth">
           <div class="lb-card lb-card--padded lb-card--elevated lb-auth__card">
