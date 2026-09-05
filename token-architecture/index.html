@@ -45,7 +45,11 @@
     .tokarch-exhibit__stage { display: flex; flex-direction: column; align-items: flex-start; gap: var(--lb-size-4x); }
     .tokarch-map { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--lb-size-1-5x); }
     .tokarch-map li { display: flex; flex-wrap: wrap; gap: var(--lb-size-2x); align-items: baseline; font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-muted); }
-    .tokarch-map .lb-code { white-space: nowrap; }
+    /* long token one-liners wrap mid-token only when a line can't hold
+       them (same pattern as the gallery desc prose); nowrap made the
+       longest chip a 371px unbreakable atom that inflated the whole
+       exhibit grid past phone widths */
+    .tokarch-map .lb-code { overflow-wrap: anywhere; }
     .tokarch-grammar { display: flex; flex-wrap: wrap; gap: var(--lb-size-1x); align-items: flex-start; margin: var(--lb-size-4x) 0; }
     .tokarch-grammar__part { display: flex; flex-direction: column; gap: var(--lb-size-1x); align-items: center; }
     .tokarch-grammar__part .gallery-label { width: auto; margin: 0; }
