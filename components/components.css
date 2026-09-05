@@ -2464,7 +2464,11 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    ═══════════════════════════════════════════════════════════ */
 
 .lb-tabs { display: flex; flex-direction: column; }
-.lb-tab-list { display: flex; gap: 0; }
+/* Tabs never wrap (nowrap labels) — on narrow screens the list scrolls
+   in place (thin visible-when-overflowing scrollbar per the DS policy)
+   instead of pushing wide variants (icon + label + badge) off the page.
+   Focus rings stay visible: .lb-tab uses a negative outline-offset. */
+.lb-tab-list { display: flex; gap: 0; overflow-x: auto; }
 .lb-tab { display: inline-flex; align-items: center; gap: var(--lb-size-2x); background: none; border: none; border-bottom: var(--lb-border-width-medium) solid transparent; padding: var(--lb-size-2x) var(--lb-size-3x); font-family: var(--lb-t-action-m-font-family); font-size: var(--lb-t-action-m-font-size); font-weight: var(--lb-t-action-m-font-weight); line-height: var(--lb-t-action-m-line-height); letter-spacing: var(--lb-t-action-m-letter-spacing); color: var(--lb-fg-default); /* neutral idle — accent reserved for selected (d442ece rationale) */ cursor: pointer; white-space: nowrap; transition: color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), border-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-tab:hover:not([aria-selected="true"]) { color: var(--lb-fg-default); }
 .lb-tab[aria-selected="true"] { color: var(--lb-action-fg-selected); border-bottom-color: var(--lb-action-border-selected); }
