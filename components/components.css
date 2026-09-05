@@ -2678,7 +2678,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 
 .lb-popover-host { position: relative; display: inline-flex; }
 .lb-popover-trigger { display: inline-flex; cursor: pointer; }
-.lb-popover { position: absolute; z-index: 100; min-width: 200px; max-width: 320px; background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-default); animation: lb-popover-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-popover { position: absolute; z-index: 100; min-width: 200px; max-width: min(320px, calc(100vw - var(--lb-size-4x))); /* 320 design-intent cap; never wider than the viewport minus a size-2x gutter per side */ background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-default); animation: lb-popover-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 /* Fade-in only — don't animate transform. Position variants (--bottom, --top, etc.)
    set their own translate() for centering; animating transform here would override
    that centering during the 120ms animation, causing the popover to snap on open. */

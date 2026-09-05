@@ -1219,6 +1219,19 @@ const LB = (() => {
     _openPopover() {
       this._open = true;
       this.popover.style.display = '';
+      // The CSS position variants center on the trigger; near a screen
+      // edge that pushes the panel off-viewport (cut and unreachable on
+      // phones). Clamp horizontally with a margin so the CSS variant
+      // still owns the base position. Gutter mirrors --lb-size-2x (8px),
+      // the popover's own anchor gap.
+      this.popover.style.marginLeft = '';
+      const r = this.popover.getBoundingClientRect();
+      const gutter = 8;
+      const vw = document.documentElement.clientWidth;
+      let shift = 0;
+      if (r.left < gutter) shift = gutter - r.left;
+      else if (r.right > vw - gutter) shift = (vw - gutter) - r.right;
+      if (shift) this.popover.style.marginLeft = `${shift}px`;
       this.trigger.setAttribute('aria-expanded', 'true');
       if (this.onOpenChange) this.onOpenChange(true);
     }
@@ -1226,6 +1239,7 @@ const LB = (() => {
     _close() {
       this._open = false;
       this.popover.style.display = 'none';
+      this.popover.style.marginLeft = '';
       this.trigger.setAttribute('aria-expanded', 'false');
       if (this.onOpenChange) this.onOpenChange(false);
     }
