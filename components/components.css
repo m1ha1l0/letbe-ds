@@ -2029,6 +2029,13 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   border-radius: var(--lb-radius-full);
   font-family: var(--lb-t-action-m-font-family);
   vertical-align: middle;
+  /* nowrap pill strip — when the labels can't fit a narrow container
+     the group scrolls in place (thin visible-when-overflowing scrollbar
+     per the DS policy) instead of pushing the page wide; pairs with the
+     items' flex-shrink:0 and the inset focus ring below, mirroring
+     .lb-tab-list */
+  max-width: 100%;
+  overflow-x: auto;
 }
 .lb-segmented--full-width { display: flex; width: 100%; }
 .lb-segmented--full-width > .lb-segmented__item { flex: 1; }
@@ -2040,6 +2047,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   gap: var(--lb-size-1x);
   height: 2rem;
   min-width: 0;
+  flex-shrink: 0; /* hold label width — the group scrolls instead of squeezing/clipping labels (--full-width restores flex:1 via its shorthand) */
   padding: 0 var(--lb-size-3x);
   border: none;
   background: transparent;
@@ -2060,7 +2068,9 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 }
 .lb-segmented__item:focus-visible {
   outline: var(--lb-border-width-medium) solid var(--lb-border-focus);
-  outline-offset: var(--lb-size-0-5x);
+  /* inset ring: the group is a scroll container now, and an outside
+     ring would clip at its padding box (same pairing as .lb-tab) */
+  outline-offset: calc(-1 * var(--lb-size-0-5x));
 }
 .lb-segmented__item:disabled {
   color: var(--lb-fg-disabled);
