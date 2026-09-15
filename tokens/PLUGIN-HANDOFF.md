@@ -1,8 +1,8 @@
 # Plugin Handoff — Tokens Pending Plugin-Side Registration
 
-**Status**: Items 1–10 done. Item 11 (textarea → input variant merge in Figma) pending. **No new colour tokens are planned for the three new component sets (Media Player / Timeline / AI Chat)** — they build entirely from existing L2/L3 colour tokens (user decision 2026-05-27). The "Forward-looking" section below is now a *mapping reference* (existing token per need), not a list of tokens to register. New colour tokens get minted ONLY if a built component looks visually off — and then only via the plugin.
+**Status (trued up 2026-09-15, owner-confirmed)**: All plugin-side work is DELIVERED through plugin v1.0.3 (live on Community 2026-09-02) and the Figma library is PUBLISHED through the second-accent republish (+16 variants, 2026-09-02) — items 1–30 closed. **Open queue is library-only**: 🔵 items 27 (toast neutral+action), 31 (header active indicator), 32 (segmented inset-ring parity check), 34 (Lightbox set), 36 (stepper dots). 🟢 items 12–14/33/35 are mapping references / code-side only — no action unless a build reveals a gap. **No new colour tokens are planned** — components build entirely from existing L2/L3 (user decision 2026-05-27); new tokens get minted ONLY if a built component looks visually off, and then only via the plugin.
 
-**Latest update**: 2026-05-27 (reframed items 12–14: existing-token mapping, no new colour tokens per user decision)
+**Latest update**: 2026-09-15 (ledger trued: items 11/16/29/30 marked ✅ per owner; items 31–36 appended from the v1.2.0–v1.4.0 releases)
 **First created**: 2026-05-03
 
 ---
@@ -40,7 +40,7 @@ When you finish an item in the plugin chat, change the status here (commit lives
 | 8 | Four new L2 tokens for tier-clean danger button + field hover — `bg.danger-bold`, `bg.danger-boldest`, `border.emphasis-bold`, `fg.inverse-bold` | ✅ |
 | 9 | L2 vocabulary refactor — rename 10 tokens, retire `emphasis`/`bold`/`boldest` suffixes in favour of canonical `strong`/`bolder` intensity scale + introduce `bg.inverse` role; fix dark-mode `border.muted` invisibility (collapse to `neutral.800`, same as `border.default`) | ✅ |
 | 10 | Typography refactor — phase 1: per-role family mapping + `font.family.{1,2,3}` numbered slots + `$modes.S/M/L` responsive blocks on all L2 typography tokens. Slot 3 (`Roboto Mono`) now wired into components. JSON shape is plugin-ready for Figma variable modes. | ✅ |
-| 11 | Textarea → Input variant merge — fold the standalone Textarea Figma component into the Input component set as a `multiline` variant. letbe-ds side already shipped: `.lb-input--multiline` modifier replaces `.lb-textarea`. | ⬜ |
+| 11 | Textarea → Input variant merge — fold the standalone Textarea Figma component into the Input component set as a `multiline` variant. letbe-ds side already shipped: `.lb-input--multiline` modifier replaces `.lb-textarea`. | ✅ (library published; owner-confirmed 2026-09-15) |
 | 12 | Media Player — **no new colour tokens**; builds from existing L2/L3 (mapping below). One open NON-colour question: 44px mobile touch target. | 🟢 |
 | 13 | Timeline — **no new colour tokens**; builds from existing L2/L3 (mapping below). | 🟢 |
 | 14 | AI Chat — **no new colour tokens**; bubbles bind directly to existing L2 (mapping below). | 🟢 |
@@ -555,7 +555,7 @@ Plugin chat can pick these up as one batch or three — same end state.
 
 ---
 
-### 11. Textarea → Input variant merge (plugin-side component consolidation)
+### 11. Textarea → Input variant merge (plugin-side component consolidation) ✅ DONE (library published; owner-confirmed 2026-09-15)
 
 **Scope is Figma-component-only — no token / JSON changes.** Textarea was always 95% the same as Input (same fill / border / radius / focus / disabled tokens). letbe-ds-side has been consolidated: there is no more `.lb-textarea` class. A `<textarea>` element now uses `<textarea class="lb-input lb-input--multiline">`, sharing every token and state with `<input class="lb-input">`.
 
@@ -690,7 +690,7 @@ width: var(--lb-size-3-5x); height: var(--lb-size-3-5x);
 
 Sweep gates on the next Figma plugin export round-trip into letbe-ds (`scripts/import-tokens.js`) emitting `--lb-size-3-5x: 14px;` in `theme.css`. Zero visual delta (14px = 14px).
 
-### 16. Two new L3 surface tokens — cutout / separator rings ⬜
+### 16. Two new L3 surface tokens — cutout / separator rings ✅ DONE 2026-08-05 (heading trued 2026-09-15; the summary table already said ✅)
 
 **Added to letbe-ds 2026-07-20** (`tokens/source-tokens.json` `component.surface`, rebuilt into `theme.css`, in use across 3 components). Plugin needs them registered so re-exports round-trip without stripping them.
 
@@ -987,7 +987,7 @@ Related, same slice (FYI, no variable changes):
   rows' captions should list the roles currently wearing each slot,
   derived live from the alias targets — never hardcoded.
 
-## 29. Second/third accent slots — accent-2 + accent-3 shipped DORMANT (2026-08-31) — PLUGIN RE-IMPORT ONLY, LIBRARY +16 VARIANTS LATER
+## 29. Second/third accent slots — accent-2 + accent-3 shipped DORMANT (2026-08-31) ✅ DONE — plugin v1.0.3 live 2026-09-02, library republished +16 variants 2026-09-02 (owner-confirmed 2026-09-15)
 
 letbe-ds ships the owner-approved second-accent model (analysis: "The
 Second Accent" artifact; O2 fixed slots, hard cap 2). All new vocabulary,
@@ -1047,7 +1047,7 @@ New behavior the plugin may care about:
   re-fill the slot from its seed and re-export.
 - No plugin action required; no token names or $schema shapes changed.
 
-## 30. Shared slot engine extracted — js/slot-engine.js (2026-08-31) — PLUGIN VENDORS VERBATIM
+## 30. Shared slot engine extracted — js/slot-engine.js (2026-08-31) ✅ DONE — vendored in plugin v1.0.3, live 2026-09-02 (owner-confirmed 2026-09-15)
 
 Per the plugin session's three asks (owner-approved):
 
@@ -1074,9 +1074,9 @@ Per the plugin session's three asks (owner-approved):
 3. **Seeds read back**: import prefills each slot picker (and the slot-1
    brand picker) from `$extensions["design.letbe"].seeds` when present.
 
-README venue amendment ("theme editor or the plugin") HELD until the
-plugin's slot fill ships — ping when live and letbe-ds updates the
-sentence.
+README venue amendment ("theme editor or the plugin"): SHIPPED — the
+README Design-principles sentence already names both venues running the
+shared slot engine. Nothing held anymore.
 
 ---
 
