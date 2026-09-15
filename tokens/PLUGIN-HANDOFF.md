@@ -1117,7 +1117,7 @@ those APIs. Pure JS — behaviour is never mirrored in the library, and
 the error/hint compositions it toggles already exist in Figma via the
 shared `field/message` atom (input/dropdown/phone variants). No tokens.
 
-### 34. Lightbox — new component 🔵 FIGMA LIBRARY ITEM — no plugin action (2026-09-15)
+### 34. Lightbox — new component ✅ DONE in library 2026-09-15 (new `lightbox` set, layout=[desktop, mobile], on its own Lightbox page; blur radius even variable-bound to size/3x) — no plugin action
 
 `LB.Lightbox` (js/components/lb-lightbox.js + the .lb-lightbox block in
 components.css) — image viewer composed over the canonical lb-modal
