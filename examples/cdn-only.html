@@ -38,7 +38,9 @@
 
   <script src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.1/js/lb.js"></script>
   <script>
-    // Icons live on the CDN too — tell the loader once.
+    // Icon and flag paths auto-detect from lb.js's own script origin,
+    // CDN included; the explicit setters remain as escape hatches for
+    // self-hosted asset splits (LB.setIconBasePath / LB.setFlagBasePath).
     LB.setIconBasePath('https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.1/assets/icons');
     const toasts = new LB.ToastManager();
     document.getElementById('toast-it').addEventListener('click', () =>

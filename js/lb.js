@@ -5714,7 +5714,12 @@ const LB = (() => {
   };
 
   // Detect base path from script src so assets/icons/ resolves correctly
-  // even when lb.js is loaded from a subfolder
+  // even when lb.js is loaded from a subfolder. Origin-qualified: a
+  // CDN-hosted lb.js must resolve assets on the CDN, not on the
+  // consuming site (pathname alone turned cdn…/gh/…/js/lb.js into a
+  // root-relative /gh/… path that 404s on the consumer's own domain).
+  // Same-origin consumers are unaffected — an absolute same-origin URL
+  // resolves identically to the old root-relative one.
   (function detectBasePath() {
     const scripts = document.querySelectorAll('script[src]');
     for (const s of scripts) {
@@ -5722,7 +5727,7 @@ const LB = (() => {
         const url = new URL(s.src);
         const dir = url.pathname.substring(0, url.pathname.lastIndexOf('/'));
         // assets/icons/ sits one level up from js/
-        _iconBasePath = dir.replace(/\/js$/, '') + '/assets/icons';
+        _iconBasePath = url.origin + dir.replace(/\/js$/, '') + '/assets/icons';
         break;
       }
     }
@@ -6168,17 +6173,25 @@ const LB = (() => {
   // from lb.js's own <script src> so consumers served from any subpath
   // resolve correctly. Mirrors the icon loader pattern above.
   let _flagBasePath = 'assets/flags';
+  // Origin-qualified for the same reason as detectBasePath above: flags
+  // must load from wherever lb.js lives (CDN included), and unlike
+  // icons they render as <img> and fail hard, so the consumer-side
+  // escape hatch setFlagBasePath mirrors setIconBasePath.
   (function detectFlagBasePath() {
     const scripts = document.querySelectorAll('script[src]');
     for (const s of scripts) {
       if (s.src.includes('lb.js')) {
         const url = new URL(s.src);
         const dir = url.pathname.substring(0, url.pathname.lastIndexOf('/'));
-        _flagBasePath = dir.replace(/\/js$/, '') + '/assets/flags';
+        _flagBasePath = url.origin + dir.replace(/\/js$/, '') + '/assets/flags';
         break;
       }
     }
   })();
+
+  function setFlagBasePath(path) {
+    _flagBasePath = path.replace(/\/$/, '');
+  }
 
   const _flagCache = {};
 
@@ -8408,6 +8421,7 @@ const LB = (() => {
     initIcons,
     initCheckboxGlyphs,
     setIconBasePath,
+    setFlagBasePath,
   };
 })();
 
