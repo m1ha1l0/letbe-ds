@@ -1116,3 +1116,20 @@ setters, and `setError`/`clearError` on the existing error skin;
 those APIs. Pure JS — behaviour is never mirrored in the library, and
 the error/hint compositions it toggles already exist in Figma via the
 shared `field/message` atom (input/dropdown/phone variants). No tokens.
+
+### 34. Lightbox — new component 🔵 FIGMA LIBRARY ITEM — no plugin action (2026-09-15)
+
+`LB.Lightbox` (js/components/lb-lightbox.js + the .lb-lightbox block in
+components.css) — image viewer composed over the canonical lb-modal
+anatomy: blurred backdrop, dialog hugging the image, caption headline +
+subline in the header, counter + prev/next ghost icon buttons in the
+footer, full screen ≤640px. No new tokens (caption/counter type =
+caption-m roles; blur radius size-3x; two design-intent dimension caps
+commented in CSS).
+
+Library work: new `lightbox` set built per the standard loop — compose
+from the existing modal/backdrop pieces + lb-icon-btn ghost instances;
+suggest variants: layout=[desktop, mobile-fullscreen] × caption=[head,
+head+sub] with nav (show) and a counter text slot. Bind per
+components.css (surface/overlay family, radius/overlay on the dialog).
+Plugin: nothing — existing tokens only.

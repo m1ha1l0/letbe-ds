@@ -12,7 +12,7 @@
       "items": [
         "accordion", "avatar", "badge", "banner", "breadcrumb", "button",
         "calendar", "card", "chat", "checkbox", "chip", "code-block", "color-picker", "command-palette", "counter", "datepicker", "divider",
-        "dropdown", "empty-state", "file-uploader", "flag", "footer", "forms", "header", "input", "kanban", "link", "list", "media-player", "menu", "modal", "navigation",
+        "dropdown", "empty-state", "file-uploader", "flag", "footer", "forms", "header", "input", "kanban", "lightbox", "link", "list", "media-player", "menu", "modal", "navigation",
         "pagination", "popover", "progress", "radio", "rating", "resizable", "scroll-area", "segmented", "select", "sheet",
         "skeleton", "slider", "spinner", "stepper", "switch", "table", "tabs",
         "time-picker", "timeline", "toast", "tooltip", "tree"
@@ -262,6 +262,11 @@
       "description": "Right-rail detail/settings CONTENT pattern (workspace-modules S4) \u2014 song detail, object properties, issue panels, agent settings. Pure CSS anatomy: `__head` (optional back \u00b7 `__label`+`__title` \u00b7 close) \u2192 scrollable `__body` (`__hero`, badges/stats, CTA, `__section`s of key-value `__row`s with copy-to-clipboard icon-btns) \u2192 pinned `__foot` actions. Two mounts: IN-FLOW inside `aside.lb-shell__panel` (nonmodal complementary landmark \u2014 the verified default: keeps the canvas usable for reference/copy-paste) or OVERLAY inside `.lb-sheet--right` for transient tasks. Dynamic opens: move focus into the panel, return to launcher on close (IBM SidePanel model). Includes the `.lb-choice` row (radio + title + description \u2014 the settings-form pattern) for settings panels with segmented defaults + Save foot.",
       "usage": "`<div class=\"lb-inspector\">` with `__head` / `__body` / `__foot`. Rows: `.lb-inspector__row` + `__row-label` + `__row-value` + a ghost-small copy icon-btn. Settings flavor: `.lb-choice` labels wrapping `.lb-radio`, `.lb-dock__tray-row` + `.lb-segmented` for defaults. Mount in the shell aside or a right sheet.",
       "status": "workspace-modules program S4"
+    },
+    "lightbox": {
+      "name": "Lightbox",
+      "description": "Image viewer built on the Modal (`LB.Lightbox`, opt-in `js/components/lb-lightbox.js`). Any `<a href=\"image\" data-lb-lightbox>` opens in a dialog that hugs the image: caption headline + subline, 1-of-N counter, previous/next + arrow-key navigation through the group (wrapping), cross-fade between steps (skipped under prefers-reduced-motion), blurred backdrop, full screen on phones. Grouping: links sharing a `data-lb-lightbox=\"name\"` value navigate together; bare attributes group within their closest `[data-lb-gallery]`. Captions from `data-lb-caption`/`data-lb-caption-sub`, else the figure's figcaption, else the thumbnail alt. Modal owns focus trap, scroll lock, Esc and backdrop-click; thumbnails stay plain links (no-JS and modifier clicks open the file). Engine boundary: chrome + state only — no loader or zoom bundled.",
+      "usage": "`<a href=\"full.jpg\" data-lb-lightbox><img src=\"thumb.jpg\" alt=\"…\"></a>` — that's the whole opt-in; group several with a shared attribute value or a `[data-lb-gallery]` wrapper. Load `js/lb.js` then `js/components/lb-lightbox.js` (console names the module if missing). Programmatic: `LB.Lightbox.open(linkEl)`. The viewer chrome is canonical `lb-modal` anatomy with `.lb-lightbox__*` additions — the image is sized per step so the dialog hugs it; the size caps live in the `.lb-lightbox` CSS and `_fit()` and mirror each other."
     },
     "link": {
       "name": "Link",

@@ -8549,6 +8549,7 @@ const LB = (() => {
     ['[data-lb-thread]', 'lb-chat.js'],
     ['[data-lb-conv-list]', 'lb-chat.js'],
     ['[data-lb-artifact]', 'lb-chat-artifact.js'],
+    ['a[data-lb-lightbox]', 'lb-lightbox.js'],
   ];
   function _warnMissingModules() {
     _OPT_IN_MODULES.forEach(([sel, file]) => {

@@ -2564,6 +2564,36 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-modal__footer { padding: var(--lb-size-4x) var(--lb-size-6x); border-top: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); display: flex; justify-content: flex-end; gap: var(--lb-size-2x); font-family: var(--lb-t-body-m-font-family); }
 
 /* ═══════════════════════════════════════════════════════════
+   LIGHTBOX — image viewer chrome over the modal anatomy
+   ═══════════════════════════════════════════════════════════
+   Composition, not a fork: .lb-lightbox rides on .lb-modal-backdrop /
+   .lb-modal, adding a blurred backdrop, a dialog that hugs the image
+   (width:auto — lb-lightbox.js sizes the img to the largest viewport
+   fit; the caps here and in its _fit() mirror each other), a caption
+   headline + subline in the header, and counter + prev/next in the
+   footer. Full screen on phones. Behaviour lives in
+   js/components/lb-lightbox.js (opt-in module). */
+.lb-lightbox.lb-modal-backdrop { backdrop-filter: blur(var(--lb-size-3x)); -webkit-backdrop-filter: blur(var(--lb-size-3x)); }
+.lb-lightbox__dialog { width: auto; min-width: min(90vw, 28rem); /* design-intent: caption/footer chrome floor */ max-width: min(96vw, 90rem); /* design-intent: viewer cap on huge screens */ max-height: calc(100svh - var(--lb-size-8x)); }
+.lb-lightbox__body { flex: 1; min-height: 0; overflow: hidden; display: grid; place-items: center; padding: var(--lb-size-4x); background: var(--lb-bg-default); }
+.lb-lightbox__img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; transition: opacity var(--lb-animation-dur-normal) var(--lb-animation-ease-ui); }
+.lb-lightbox__img--switching { opacity: 0; }
+.lb-lightbox__titles { display: flex; flex-direction: column; align-items: flex-start; gap: var(--lb-size-0-5x); min-width: 0; }
+.lb-lightbox .lb-modal__title { overflow-wrap: anywhere; }
+.lb-lightbox__sub { margin: 0; font-family: var(--lb-t-caption-m-font-family); font-size: var(--lb-t-caption-m-font-size); line-height: var(--lb-t-caption-m-line-height); color: var(--lb-fg-muted); }
+.lb-lightbox__footer { justify-content: space-between; align-items: center; }
+.lb-lightbox__count { font-family: var(--lb-t-caption-m-font-family); font-size: var(--lb-t-caption-m-font-size); color: var(--lb-fg-muted); font-variant-numeric: tabular-nums; }
+.lb-lightbox__nav { display: inline-flex; gap: var(--lb-size-1x); }
+/* Phones: the viewer takes the whole screen (matches the file's 640px
+   breakpoint family). */
+@media (max-width: 640px) {
+  .lb-lightbox.lb-modal-backdrop { padding: 0; }
+  .lb-lightbox__dialog { width: 100vw; min-width: 0; max-width: none; height: 100svh; max-height: none; border: 0; border-radius: 0; }
+  .lb-lightbox__body { padding: 0; }
+  .lb-lightbox .lb-modal__header, .lb-lightbox .lb-modal__footer { padding-inline: var(--lb-size-4x); }
+}
+
+/* ═══════════════════════════════════════════════════════════
    SHEET
    ═══════════════════════════════════════════════════════════ */
 
