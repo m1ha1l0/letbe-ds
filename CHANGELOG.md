@@ -3,6 +3,40 @@
 All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.org/)
 — see "What counts as breaking" in the README before relying on an update.
 
+## [1.2.0] — 2026-09-15
+
+Minor: one new public API (`LB.setFlagBasePath`), a theme-proof active
+state on the header, and the library now owns its own box model. No new
+tokens. Deletable consumer workarounds: flag-path rescue listeners,
+select-trigger truncation rules, and dropdown-list `box-sizing`
+patches.
+
+- **Header: the active page is never colour-only.** Themes may map the
+  selected ink to the default ink (mono themes do), which used to leave
+  the current page indistinguishable. `--active` now draws an underline
+  bar in the header bar and the vertical-nav treatment (selected fill +
+  left bar) in the drawer — same non-colour signal family as nav and
+  tabs.
+- **lb-\* owns border-box.** Components always assumed border-box, but
+  only the docs shell's reset delivered it — consumer pages without a
+  global reset hit content-box overflow (dropdown options painting a
+  horizontal scrollbar, select triggers overflowing their wrap). A
+  scoped word-boundary reset at the top of components.css fixes every
+  case at once; the deliberate content-box spots (grouped avatar,
+  switch track, datepicker grids) are unaffected.
+- **Select: long option labels truncate** with an ellipsis on the
+  one-line trigger instead of wrapping it taller; the full label is
+  mirrored into the trigger's `title`.
+- **CDN-hosted assets resolve on the CDN.** The icon and flag path
+  detectors kept only the script's pathname, so a CDN-hosted `lb.js`
+  404'd its flags on the consumer's own domain. Both now use the script
+  origin, and `LB.setFlagBasePath` ships as the escape hatch symmetric
+  with `setIconBasePath`. (Icons load via `fetch()` — a foreign asset
+  host must send CORS headers; jsDelivr does.)
+- **tokens/README.md** documents the emitted custom-property names and
+  the underscore→hyphen transform (`size.0_5x` → `--lb-size-0-5x`),
+  including why a wrong spelling fails silently inside `calc()`.
+
 ## [1.1.1] — 2026-09-15
 
 Patch: mobile overflow fixes across the library — no new tokens, no new

@@ -87,12 +87,18 @@ your pages use and load them *after* `lb.js`:
 | Timeline | `js/components/lb-timeline.js` |
 | Multi-select cards/bulk toolbar (`data-lb-selection`) | `js/components/lb-selection.js` |
 
-**3. Icons** — `data-lb-icon` fetches individual SVGs at runtime. Copy the whole
-`assets/icons/` folder, then tell the loader where you put it (once, before or
-after `lb.js` loads):
+**3. Icons and flags** — `data-lb-icon` fetches individual SVGs at runtime, and
+the phone input renders country flags from `assets/flags/`. Both paths
+auto-detect from the `lb.js` script origin (CDN included, since v1.2.0 — note
+icons load via `fetch()`, so a foreign asset host must send CORS headers;
+jsDelivr does). If you split assets away from `lb.js`, tell the loaders where
+they live (once, before or after `lb.js` loads):
 
 ```html
-<script>LB.setIconBasePath('/your/path/to/letbe-icons');</script>
+<script>
+  LB.setIconBasePath('/your/path/to/letbe-icons');
+  LB.setFlagBasePath('/your/path/to/letbe-flags');
+</script>
 ```
 
 Without this, icons resolve relative to `data-lb-base` — correct inside this
@@ -111,14 +117,14 @@ edit the vendored files, so a future update is a clean file swap.
 **Or skip vendoring entirely — install from the CDN**, pinned to a release tag:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.1/tokens/theme.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.1/tokens/fonts.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.1/components/components.css">
-<script src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.1/js/lb.js"></script>
-<script>LB.setIconBasePath('https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.1.1/assets/icons');</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.2.0/tokens/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.2.0/tokens/fonts.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.2.0/components/components.css">
+<script src="https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.2.0/js/lb.js"></script>
+<script>LB.setIconBasePath('https://cdn.jsdelivr.net/gh/m1ha1l0/letbe-ds@v1.2.0/assets/icons');</script>
 ```
 
-Pin to a tag (`@v1.1.1`), never `@main` — tagged URLs are immutable and cache
+Pin to a tag (`@v1.2.0`), never `@main` — tagged URLs are immutable and cache
 forever. Opt-in controllers load the same way from `js/components/`. See
 [`examples/cdn-only.html`](./examples/cdn-only.html) for a page whose only
 dependency is that block.
