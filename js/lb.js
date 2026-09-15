@@ -1098,6 +1098,9 @@ const LB = (() => {
 
     setValue(value) {
       const opt = this._options.find(o => o.value === value);
+      // unknown non-empty value = no-op (the legacy setter's contract);
+      // a falsy value explicitly clears back to the placeholder
+      if (value && !opt) return;
       this._value = opt ? opt.value : '';
       const textEl = this.trigger.querySelector('.lb-select__text');
       if (textEl) {
@@ -4987,9 +4990,12 @@ const LB = (() => {
         } else {
           this._hidden = mk(this.name);
         }
-        this.el.addEventListener('lb-datepicker-change', () => { this._syncFormValue(); this.clearError(); });
         this._syncFormValue();
       }
+      // a pick always clears a runtime error and (when named) syncs the
+      // mirrors — errors must clear on unnamed pickers too, matching
+      // Select's unconditional clear in _select()
+      this.el.addEventListener('lb-datepicker-change', () => { this._syncFormValue(); this.clearError(); });
       if (this.required) this.trigger.setAttribute('aria-required', 'true');
       this._form = this.el.closest('form');
       if (this._form) {
@@ -5740,10 +5746,14 @@ const LB = (() => {
       this.trigger.classList.add('lb-datepicker-trigger--error');
       this.trigger.setAttribute('aria-invalid', 'true');
       if (message) {
-        let errEl = this.el.querySelector('.lb-datepicker-field__hint--error');
+        // Only ever create/reuse a RUNTIME-marked element — an
+        // author-authored static error/hint (data-lb-error) is never
+        // touched, same guard as LB.Form's messages.
+        let errEl = this.el.querySelector('.lb-datepicker-field__hint--error[data-lb-form-error]');
         if (!errEl) {
           errEl = document.createElement('span');
           errEl.className = 'lb-datepicker-field__hint lb-datepicker-field__hint--error';
+          errEl.setAttribute('data-lb-form-error', '');
           errEl.id = uid('dp-hint');
           this.el.appendChild(errEl);
         }
@@ -5751,7 +5761,11 @@ const LB = (() => {
         initFieldHintIcons(this.el);
         initIcons(this.el);
         this._runtimeErrorEl = errEl;
-        this.trigger.setAttribute('aria-describedby', errEl.id);
+        // preserve an existing describedby (the field hint) — append,
+        // don't replace, and restore it on clear (mirrors Select)
+        if (this._describedByBefore === undefined) this._describedByBefore = this.trigger.getAttribute('aria-describedby');
+        this.trigger.setAttribute('aria-describedby',
+          [this._describedByBefore, errEl.id].filter(Boolean).join(' '));
       }
     }
 
@@ -5759,11 +5773,12 @@ const LB = (() => {
       if (!this.trigger) return;
       this.trigger.classList.remove('lb-datepicker-trigger--error');
       this.trigger.removeAttribute('aria-invalid');
-      const errEl = this._runtimeErrorEl || this.el.querySelector('.lb-datepicker-field__hint--error');
-      if (errEl) {
-        if (this.trigger.getAttribute('aria-describedby') === errEl.id) this.trigger.removeAttribute('aria-describedby');
-        errEl.remove();
+      if (this._runtimeErrorEl) {
+        this._runtimeErrorEl.remove();
         this._runtimeErrorEl = null;
+        if (this._describedByBefore) this.trigger.setAttribute('aria-describedby', this._describedByBefore);
+        else this.trigger.removeAttribute('aria-describedby');
+        this._describedByBefore = undefined;
       }
     }
 
@@ -5799,11 +5814,19 @@ const LB = (() => {
       this.onValid = options.onValid || null;
       // DS errors replace the browser's own bubbles
       el.setAttribute('novalidate', '');
+      // Validate in the DOCUMENT capture phase: submit targets the form,
+      // where listeners run in registration order regardless of capture —
+      // and consumer listeners registered at parse time would beat our
+      // DOMContentLoaded auto-init. Capturing on document runs before ANY
+      // listener on the form, and stopping propagation on an invalid
+      // submit guarantees consumer submit handlers only ever see valid
+      // submits.
       this._onSubmit = (e) => {
-        if (!this.validate()) e.preventDefault();
+        if (e.target !== this.form) return;
+        if (!this.validate()) { e.preventDefault(); e.stopPropagation(); }
         else if (this.onValid) this.onValid(e);
       };
-      el.addEventListener('submit', this._onSubmit);
+      document.addEventListener('submit', this._onSubmit, true);
       // live clearing: a field stops shouting as soon as the user types
       this._onInput = (e) => {
         const t = e.target;
@@ -5812,6 +5835,21 @@ const LB = (() => {
         else if (t.matches('.lb-input')) this._clearNativeError(t);
       };
       el.addEventListener('input', this._onInput);
+      // native selects / checkboxes / radios clear on change
+      this._onChange = (e) => {
+        const t = e.target;
+        if (t && t.matches && !t.matches('.lb-input, .lb-phone__input') && t.willValidate) this._clearGenericError(t);
+      };
+      el.addEventListener('change', this._onChange);
+      // reset returns the WHOLE form to a clean slate — native controls
+      // fire no input events on reset, so errors must be cleared here
+      // (DS selects and datepickers already follow reset themselves)
+      this._onReset = () => {
+        this.form.querySelectorAll('input.lb-input, textarea.lb-input').forEach((i) => this._clearNativeError(i));
+        this.form.querySelectorAll('[data-lb-phone]').forEach((ph) => this._clearPhoneError(ph));
+        Array.from(this.form.elements).forEach((c) => this._clearGenericError(c));
+      };
+      el.addEventListener('reset', this._onReset);
     }
 
     validate() {
@@ -5830,15 +5868,16 @@ const LB = (() => {
         else this._clearNativeError(input);
       });
 
-      // Phone composition — digits of the full number, 6–15.
+      // Phone composition — judge the NATIONAL number the user typed
+      // (6–15 digits): the full number always carries the dial code, so
+      // an empty optional phone would read as "+1" and never pass.
       this.form.querySelectorAll('[data-lb-phone]').forEach((ph) => {
         const input = ph.querySelector('.lb-phone__input');
         const required = ph.hasAttribute('data-lb-required') || (input && input.required);
-        const raw = (ph._lbPhone && ph._lbPhone.getValue) ? (ph._lbPhone.getValue().fullNumber || '') : (input ? input.value : '');
-        const digits = raw.replace(/\D/g, '');
+        const national = (input ? input.value : '').replace(/\D/g, '');
         let kind = null;
-        if (required && !digits) kind = 'required';
-        else if (digits && (digits.length < 6 || digits.length > 15)) kind = 'phone';
+        if (required && !national) kind = 'required';
+        else if (national && (national.length < 6 || national.length > 15)) kind = 'phone';
         if (kind) { this._setPhoneError(ph, this._msgFor(ph, kind)); invalid.push(input || ph); }
         else this._clearPhoneError(ph);
       });
@@ -5862,6 +5901,22 @@ const LB = (() => {
         else inst.clearError();
       });
 
+      // Everything else with native constraints (checkboxes, radios,
+      // native selects, inputs outside the lb-input skin): novalidate
+      // silenced the browser, so the DS must enforce what it silenced —
+      // opting in must never make a form LESS validated. Message comes
+      // from the control's own (localized) validationMessage.
+      Array.from(this.form.elements).forEach((c) => {
+        if (!c.willValidate || c.type === 'hidden') return;
+        if (c.matches('.lb-input') || c.closest('[data-lb-phone]')) return; // handled above
+        if (!c.checkValidity()) {
+          this._setGenericError(c, c.dataset.lbErrorRequired || c.validationMessage || this.messages.required);
+          invalid.push(c);
+        } else {
+          this._clearGenericError(c);
+        }
+      });
+
       if (invalid.length) {
         const first = invalid[0];
         if (first.focus) first.focus({ preventScroll: true });
@@ -5869,6 +5924,20 @@ const LB = (() => {
         return false;
       }
       return true;
+    }
+
+    _setGenericError(c, message) {
+      c.setAttribute('aria-invalid', 'true');
+      const err = this._renderError(this._errHost(c), message);
+      c.setAttribute('aria-describedby', err.id);
+    }
+
+    _clearGenericError(c) {
+      if (!c.getAttribute) return;
+      if (c.getAttribute('aria-invalid') !== 'true') return;
+      if (c.matches('.lb-input') || c.closest('[data-lb-phone]')) return;
+      c.removeAttribute('aria-invalid');
+      this._removeError(this._errHost(c), c);
     }
 
     _msgFor(el, kind) {
@@ -5938,8 +6007,10 @@ const LB = (() => {
     }
 
     destroy() {
-      this.form.removeEventListener('submit', this._onSubmit);
+      document.removeEventListener('submit', this._onSubmit, true);
       this.form.removeEventListener('input', this._onInput);
+      this.form.removeEventListener('change', this._onChange);
+      this.form.removeEventListener('reset', this._onReset);
     }
   }
 

@@ -209,7 +209,10 @@
     </form>
     <script>
       // Demo-only: show what a passing submit looks like. Real consumers
-      // send the FormData here instead.
+      // send the FormData here instead. Safe by construction: LB.Form
+      // validates in the document capture phase and stops an invalid
+      // submit's propagation, so listeners like this one only ever run
+      // for submits that passed.
       document.getElementById('validate-demo').addEventListener('submit', (e) => {
         e.preventDefault();
         const fd = new FormData(e.target);
