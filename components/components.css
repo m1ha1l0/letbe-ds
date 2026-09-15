@@ -2294,6 +2294,21 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-stepper--sm .lb-stepper__indicator { font-size: var(--lb-t-caption-m-font-size); }
 .lb-stepper--sm .lb-stepper__indicator svg { width: 0.75rem; height: 0.75rem; }
 
+/* ── Dots variant — compact track for cards and tight rails ──
+   12px content-free dots: filled (accent) for complete/active via the
+   normal state cascade, outlined for upcoming. No number, no icon —
+   the step's own label (caption-size here) carries the meaning, so
+   keep labels in the markup (or aria-label the steps) and mark the
+   active step aria-current="step". Radius binds radius.interactive —
+   unlike the raw 50% above, the dots follow the theme's square/round
+   preset (a circle dot on a square-corner theme would clash). */
+.lb-stepper--dots { --lb-stepper-size: var(--lb-size-3x); --lb-stepper-connector: 2px; /* design-intent: dot outline = connector thickness */ }
+.lb-stepper--dots .lb-stepper__indicator { border-radius: var(--lb-radius-interactive); font-size: 0; }
+.lb-stepper--dots .lb-stepper__indicator svg,
+.lb-stepper--dots .lb-stepper__indicator [data-lb-icon] { display: none; }
+.lb-stepper--dots .lb-stepper__label { font-family: var(--lb-t-caption-m-font-family); font-size: var(--lb-t-caption-m-font-size); line-height: var(--lb-t-caption-m-line-height); }
+.lb-stepper--dots .lb-stepper__description { display: none; }
+
 /* ── Clickable variant — when a step is a <button> or has role=button ── */
 .lb-stepper__step > button.lb-stepper__trigger {
   display: contents;

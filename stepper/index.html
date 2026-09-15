@@ -183,6 +183,34 @@
       </ol>
     </div>
 
+    <!-- ────────────────── Dots ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Dots — <code class="lb-code">.lb-stepper--dots</code></h2>
+    <p class="gallery-section__desc">12px content-free dots for cards and tight tracks: filled for complete and active, outlined for upcoming, caption-size labels, no number or icon. The dot's corner binds <code class="lb-code">radius.interactive</code>, so it follows the theme's square or round preset instead of staying a circle. The label carries the step's meaning — keep labels in the markup (or <code class="lb-code">aria-label</code> each step) and mark the active one <code class="lb-code">aria-current="step"</code>. Descriptions are hidden in this variant.</p>
+    <div style="max-width: 360px;">
+      <ol class="lb-stepper lb-stepper--horizontal lb-stepper--dots" aria-label="Release track">
+        <li class="lb-stepper__step lb-stepper__step--complete">
+          <span class="lb-stepper__indicator" aria-hidden="true"></span>
+          <span class="lb-stepper__label">Draft</span><span class="lb-visually-hidden"> (completed)</span>
+        </li>
+        <li class="lb-stepper__step lb-stepper__step--complete">
+          <span class="lb-stepper__indicator" aria-hidden="true"></span>
+          <span class="lb-stepper__label">Review</span><span class="lb-visually-hidden"> (completed)</span>
+        </li>
+        <li class="lb-stepper__step lb-stepper__step--active" aria-current="step">
+          <span class="lb-stepper__indicator" aria-hidden="true"></span>
+          <span class="lb-stepper__label">Mix</span>
+        </li>
+        <li class="lb-stepper__step">
+          <span class="lb-stepper__indicator" aria-hidden="true"></span>
+          <span class="lb-stepper__label">Master</span>
+        </li>
+        <li class="lb-stepper__step">
+          <span class="lb-stepper__indicator" aria-hidden="true"></span>
+          <span class="lb-stepper__label">Release</span>
+        </li>
+      </ol>
+    </div>
+
   </section>
 </main>
 

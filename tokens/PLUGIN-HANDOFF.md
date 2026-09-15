@@ -1140,3 +1140,20 @@ Plugin: nothing — existing tokens only.
 Pure behaviour over consumer-authored grids and buttons — behaviours
 are never mirrored in the library (scroll-area/resizable precedent),
 and no tokens are involved.
+
+### 36. Stepper dots variant 🔵 FIGMA LIBRARY ITEM — no plugin action (2026-09-15)
+
+`.lb-stepper--dots` — 12px content-free dots (`--lb-stepper-size:
+var(--lb-size-3x)`), filled for complete/active via the normal state
+cascade, outlined for upcoming, caption-m labels, descriptions hidden.
+KEY BINDING DETAIL: the dot corner binds `radius.interactive` (NOT the
+raw 50%/9999 exception family) — dots must follow the theme's
+square/round preset; a square-corner theme gets square dots (verified
+by flipping the token). No new tokens.
+
+Library work: the merged `stepper` set gains a dots value on its
+size/density axis — connector model unchanged (keys off
+--lb-stepper-size), indicator content hidden, label style caption-m,
+corner bound to the radius/interactive variable. Same session can
+delete the `.deprecated/*` old stepper masters the registry still
+carries. Plugin: nothing.

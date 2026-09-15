@@ -405,7 +405,7 @@
     },
     "stepper": {
       "name": "Stepper",
-      "description": "Multi-step progress indicator for signup flows, checkouts, onboarding wizards, multi-part forms. Horizontal (default) or vertical (`--vertical`) layout. States per step: `--complete`, `--active`, default (upcoming), `--error`. Optional clickable variant via `.lb-stepper__trigger` wrapper button. Pure declarative — consumer owns state.",
+      "description": "Multi-step progress indicator for signup flows, checkouts, onboarding wizards, multi-part forms. Horizontal (default) or vertical (`--vertical`) layout. States per step: `--complete`, `--active`, default (upcoming), `--error`. Optional clickable variant via `.lb-stepper__trigger` wrapper button. `--dots` renders a compact 12px content-free track (filled complete/active, outlined upcoming, caption labels; the dot corner binds radius.interactive so it follows the theme's square/round preset — keep labels or aria-label the steps, mark active aria-current=\"step\"). Pure declarative — consumer owns state.",
       "usage": "`<ol class=\"lb-stepper\">` (add `--vertical` for stacked layout). Each `<li class=\"lb-stepper__step\">` holds `.lb-stepper__indicator` (number / check / x SVG) and `.lb-stepper__label`. Vertical adds `.lb-stepper__content` wrapping label + `.lb-stepper__description`. Mark current step with `aria-current=\"step\"`."
     },
     "switch": {
