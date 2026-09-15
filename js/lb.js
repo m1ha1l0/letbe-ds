@@ -6014,6 +6014,105 @@ const LB = (() => {
     }
   }
 
+  // ─── SHOW MORE ─────────────────────────────────────────────
+  // Collapse a grid to N rows and reveal the rest on demand.
+  //
+  //   <div class="my-grid" id="press" data-lb-show-more="3"
+  //        data-lb-show-more-sm="2"> …tiles… </div>
+  //   <button class="lb-btn lb-btn--secondary lb-btn--medium"
+  //           data-lb-show-more-for="press"
+  //           data-lb-label-more="Show more" data-lb-label-less="Show fewer">
+  //     <span class="lb-btn__label">Show more</span></button>
+  //
+  // The limit is rows × the grid's rendered column count, so it follows
+  // the responsive template; data-lb-show-more-sm overrides the row
+  // count at ≤640px (the file's phone breakpoint family). The consumer
+  // authors and styles the button — the DS never invents one; it is
+  // wired with aria-controls/aria-expanded, swaps its label, and hides
+  // itself when nothing is hidden. Collapsing scrolls back to where the
+  // reader expanded, so the button lands where it was before the page
+  // grew. Tiles hide via the [hidden] attribute — the companion
+  // [data-lb-show-more] > [hidden] rule in components.css wins against
+  // class-level display rules, so tiles of ANY class collapse (the
+  // global lb-[hidden] rule only covers lb-* classes). A ResizeObserver
+  // recomputes on resize and when the grid becomes visible (e.g. inside
+  // a tab panel), replacing polling or tab-click sniffing. Reveal
+  // animation is deliberately not bundled — motion stays a consumer
+  // choice. Emits lb-show-more-toggle {expanded} (bubbles).
+
+  class ShowMore {
+    constructor(el) {
+      this.grid = el;
+      this.button = el.id ? document.querySelector(`[data-lb-show-more-for="${CSS.escape(el.id)}"]`) : null;
+      this._collapsed = true;
+      this._restoreY = 0;
+      this._sm = window.matchMedia('(max-width: 640px)');
+      if (this.button) {
+        this.button.setAttribute('aria-controls', el.id);
+        this._onClick = () => this.toggle();
+        this.button.addEventListener('click', this._onClick);
+      }
+      this._ro = new ResizeObserver(() => this.refresh());
+      this._ro.observe(el);
+      this._onMq = () => this.refresh();
+      this._sm.addEventListener('change', this._onMq);
+      this.refresh();
+    }
+
+    _columns() {
+      const tpl = getComputedStyle(this.grid).gridTemplateColumns;
+      return tpl && tpl !== 'none' ? tpl.split(' ').length : 1;
+    }
+
+    refresh() {
+      const attr = this._sm.matches && this.grid.hasAttribute('data-lb-show-more-sm')
+        ? 'data-lb-show-more-sm' : 'data-lb-show-more';
+      const rows = parseInt(this.grid.getAttribute(attr) || '3', 10);
+      const limit = rows * this._columns();
+      let hiddenCount = 0;
+      Array.from(this.grid.children).forEach((child, i) => {
+        const hide = this._collapsed && i >= limit;
+        child.hidden = hide;
+        if (hide) hiddenCount++;
+      });
+      this.grid.setAttribute('data-collapsed', String(this._collapsed));
+      if (this.button) {
+        this.button.hidden = this._collapsed && hiddenCount === 0;
+        const label = this._collapsed
+          ? (this.button.getAttribute('data-lb-label-more') || 'Show more')
+          : (this.button.getAttribute('data-lb-label-less') || 'Show fewer');
+        const labelEl = this.button.querySelector('.lb-btn__label');
+        (labelEl || this.button).textContent = label;
+        this.button.setAttribute('aria-expanded', String(!this._collapsed));
+      }
+    }
+
+    expand() {
+      if (!this._collapsed) return;
+      this._restoreY = window.scrollY;
+      this._collapsed = false;
+      this.refresh();
+      this.grid.dispatchEvent(new CustomEvent('lb-show-more-toggle', { detail: { expanded: true }, bubbles: true }));
+    }
+
+    collapse() {
+      if (this._collapsed) return;
+      this._collapsed = true;
+      this.refresh();
+      window.scrollTo({ top: this._restoreY, behavior: 'smooth' });
+      this.grid.dispatchEvent(new CustomEvent('lb-show-more-toggle', { detail: { expanded: false }, bubbles: true }));
+    }
+
+    toggle() { this._collapsed ? this.expand() : this.collapse(); }
+
+    destroy() {
+      this._ro.disconnect();
+      this._sm.removeEventListener('change', this._onMq);
+      if (this.button && this._onClick) this.button.removeEventListener('click', this._onClick);
+      Array.from(this.grid.children).forEach((c) => { c.hidden = false; });
+    }
+  }
+
   // ─── TOAST MANAGER ─────────────────────────────────────────
 
   class ToastManager {
@@ -8607,6 +8706,11 @@ const LB = (() => {
       if (!el._lbForm) el._lbForm = new Form(el);
     });
 
+    // Show more
+    root.querySelectorAll('[data-lb-show-more]').forEach((el) => {
+      if (!el._lbShowMore) el._lbShowMore = new ShowMore(el);
+    });
+
     // Menus
     root.querySelectorAll('[data-lb-menu]').forEach((el) => {
       if (!el._lbMenu) el._lbMenu = new Menu(el);
@@ -8853,6 +8957,7 @@ const LB = (() => {
     ToastManager,
     Select,
     Form,
+    ShowMore,
     ClearableInput,
     PasswordInput,
     PhoneInput,

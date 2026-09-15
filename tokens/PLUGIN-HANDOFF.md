@@ -1133,3 +1133,10 @@ suggest variants: layout=[desktop, mobile-fullscreen] × caption=[head,
 head+sub] with nav (show) and a counter text slot. Bind per
 components.css (surface/overlay family, radius/overlay on the dialog).
 Plugin: nothing — existing tokens only.
+
+### 35. Show More — new behaviour 🟢 code-side only — no plugin or library action (2026-09-15)
+
+`LB.ShowMore` (core lb.js) + one `[data-lb-show-more] > [hidden]` rule.
+Pure behaviour over consumer-authored grids and buttons — behaviours
+are never mirrored in the library (scroll-area/resizable precedent),
+and no tokens are involved.

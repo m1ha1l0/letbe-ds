@@ -49,6 +49,12 @@
 [class^="lb-"]::before, [class*=" lb-"]::before,
 [class^="lb-"]::after, [class*=" lb-"]::after { box-sizing: border-box; }
 
+/* Show-more collapses tiles via [hidden]; tiles are CONSUMER elements
+   of any class, so the lb-* [hidden] rule above cannot cover them —
+   this (0,2,0) pair wins against class-level display rules the same
+   way, no !important. */
+[data-lb-show-more] > [hidden] { display: none; }
+
 /* ═══════════════════════════════════════════════════════════
    GLOBAL SCROLLBAR
    ═══════════════════════════════════════════════════════════
