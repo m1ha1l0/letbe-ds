@@ -2307,7 +2307,10 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-select-wrap__chevron svg { width: 1.25rem; height: 1.25rem; }
 
 /* Custom select trigger (button-based) */
-.lb-select__text { flex: 1; text-align: left; }
+/* min-width:0 + ellipsis: a long option label truncates on one line
+   instead of wrapping the trigger taller than its row mates; lb.js
+   mirrors the full label into the trigger's title attribute. */
+.lb-select__text { flex: 1; text-align: left; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lb-select__text--placeholder { color: var(--lb-field-fg-placeholder); }
 button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); text-align: left; }
 .lb-dropdown-list__option--selected { font-weight: var(--lb-font-weight-semibold); color: var(--lb-fg-accent); }

@@ -881,6 +881,8 @@ const LB = (() => {
         this.trigger.className = `lb-select lb-select--${this.size}`;
         const label = this._options.find(o => o.value === this._value)?.label || this.placeholder;
         this.trigger.innerHTML = `<span class="lb-select__text${!this._value ? ' lb-select__text--placeholder' : ''}">${label}</span><span class="lb-select-wrap__chevron">${SVG_CHEVRON}</span>`;
+        // Full label survives CSS truncation as a native tooltip.
+        this.trigger.title = label;
         // Replace native select if present
         const nativeSelect = this.field.querySelector('select.lb-select');
         if (nativeSelect) nativeSelect.replaceWith(this.trigger);
@@ -957,6 +959,7 @@ const LB = (() => {
         textEl.textContent = option.label;
         textEl.classList.remove('lb-select__text--placeholder');
       }
+      this.trigger.title = option.label;
       this._close();
       if (this.onChange) this.onChange(option.value);
       this.field.dispatchEvent(new CustomEvent('lb-select-change', { detail: option }));

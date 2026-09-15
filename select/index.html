@@ -26,7 +26,7 @@
 
     <!-- ────────────────── Default ────────────────── -->
     <h2 class="gallery-section__title">Default</h2>
-    <p class="gallery-section__desc">Custom-styled select with full keyboard support: <kbd>↑</kbd>/<kbd>↓</kbd> roam, <kbd>Enter</kbd> selects, <kbd>Esc</kbd> closes, <kbd>Home</kbd>/<kbd>End</kbd> jump. Pass options via <code class="lb-code">data-lb-options</code> as a JSON array of <code class="lb-code">{value, label}</code> pairs.</p>
+    <p class="gallery-section__desc">Custom-styled select with full keyboard support: <kbd>↑</kbd>/<kbd>↓</kbd> roam, <kbd>Enter</kbd> selects, <kbd>Esc</kbd> closes, <kbd>Home</kbd>/<kbd>End</kbd> jump. Pass options via <code class="lb-code">data-lb-options</code> as a JSON array of <code class="lb-code">{value, label}</code> pairs. Long option labels truncate with an ellipsis on the one-line trigger (the full label is mirrored into the trigger's <code class="lb-code">title</code>), so the field never grows taller than its row mates.</p>
     <div class="gallery-row" style="max-width: 360px;">
       <div class="lb-select-field" data-lb-select data-lb-options='[{"value":"1","label":"Option One"},{"value":"2","label":"Option Two"},{"value":"3","label":"Option Three"},{"value":"4","label":"Option Four"}]' data-lb-placeholder="Choose option" style="width: 100%;">
         <label class="lb-label">Choose option</label>
