@@ -1098,7 +1098,7 @@ components.css uses: `action/border/selected`; label stays
 so the drawer half has no Figma counterpart. Plugin: nothing — existing
 tokens only.
 
-### 32. Segmented focus ring moved inset — library parity check 🔵 FIGMA LIBRARY ITEM — no plugin action (2026-09-15)
+### 32. Segmented focus ring moved inset — library parity check ✅ DONE 2026-09-15 (library models no focus state — nothing to retune) — no plugin action
 
 Shipped in v1.1.1 (commit 0ff7128): `.lb-segmented__item:focus-visible`
 outline-offset flipped from `+size.0-5x` (outside the pill) to
