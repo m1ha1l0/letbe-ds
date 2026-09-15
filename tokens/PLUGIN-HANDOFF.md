@@ -923,7 +923,7 @@ disease the -subtle re-point cured. Plugin: wire the new slot to the
 canvas if/where a solid danger swatch is painted, else it simply renders
 as an audited row.
 
-## 27. Toast — neutral variant + action slot (2026-08-11) 🔵 FIGMA LIBRARY ITEM — no plugin action
+## 27. Toast — neutral variant + action slot (2026-08-11) ✅ DONE in library (built 2026-08-11, verified against file 2026-09-15) — no plugin action
 
 > Filed here for the trail only. The PLUGIN needs nothing but an optional
 > re-import (one new `$schema.wcag_pairs` row, 63 → 64). All build work below
