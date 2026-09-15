@@ -8427,7 +8427,23 @@ img.lb-list__icon--round { object-fit: cover; }
 }
 .lb-header__link:hover { background: var(--lb-action-bg-ghost-hover); }
 .lb-header__link:focus-visible { outline: var(--lb-border-width-action) solid var(--lb-border-focus); outline-offset: calc(-1 * var(--lb-size-0-5x)); }
-.lb-header__link--active { color: var(--lb-action-fg-selected); }
+/* Active page — never colour-only: themes may map selected ink to the
+   default ink (mono themes do), which would leave the current page
+   indistinguishable even with aria-current set. Same non-colour signal
+   family as nav and tabs: an underline bar in the header bar, drawn
+   INSIDE the link box so no header variant, scroller, or drawer can
+   clip it; the drawer swaps it for the vertical-nav treatment below. */
+.lb-header__link--active { color: var(--lb-action-fg-selected); position: relative; }
+.lb-header__link--active::after {
+  content: '';
+  position: absolute;
+  left: var(--lb-size-3x);
+  right: var(--lb-size-3x);
+  bottom: var(--lb-size-0-5x);
+  height: var(--lb-border-width-medium);
+  background: var(--lb-action-border-selected);
+  border-radius: var(--lb-radius-full);
+}
 .lb-header__link [data-lb-icon] { width: var(--lb-size-4x); height: var(--lb-size-4x); display: inline-flex; transition: transform var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-header__item--open .lb-header__link [data-lb-icon] { transform: rotate(180deg); }
 
@@ -8586,6 +8602,20 @@ img.lb-list__icon--round { object-fit: cover; }
   margin-bottom: var(--lb-size-3x);
 }
 .lb-header__drawer .lb-header__link { width: 100%; justify-content: flex-start; }
+/* Drawer rows are a vertical list — the active page takes the vertical
+   nav's treatment (selected fill + left bar) instead of the underline. */
+.lb-header__drawer .lb-header__link--active { background-color: var(--lb-action-bg-selected); }
+.lb-header__drawer .lb-header__link--active::after { content: none; }
+.lb-header__drawer .lb-header__link--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: var(--lb-size-1x);
+  bottom: var(--lb-size-1x);
+  width: var(--lb-border-width-medium);
+  background: var(--lb-action-border-selected);
+  border-radius: 0 var(--lb-radius-full) var(--lb-radius-full) 0;
+}
 .lb-header__drawer-actions {
   display: flex;
   flex-direction: column;

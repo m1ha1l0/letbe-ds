@@ -1077,3 +1077,32 @@ Per the plugin session's three asks (owner-approved):
 README venue amendment ("theme editor or the plugin") HELD until the
 plugin's slot fill ships — ping when live and letbe-ds updates the
 sentence.
+
+---
+
+### 31. Header active-page indicator 🔵 FIGMA LIBRARY ITEM — no plugin action (2026-09-15)
+
+`.lb-header__link--active` gained a non-colour indicator (both mihailo
+consumers hit the colour-only state collapsing in mono themes): an
+underline bar inside the link box in the header bar (`::after`, height
+`border-width.medium`, `action.border-selected`, inset `size.3x` each
+side, `radius.full` ends), and in the drawer the vertical-nav treatment
+(`action.bg-selected` fill + `::before` left bar, `action.border-selected`,
+rounded right edge). No new tokens — everything binds existing
+action/* + radius.full.
+
+Library work: the `header / link` set adds the active underline per the
+directional-marker convention (bind the bar to the variable
+components.css uses: `action/border/selected`; label stays
+`action/fg/selected`). The mobile drawer is NOT modeled in the library,
+so the drawer half has no Figma counterpart. Plugin: nothing — existing
+tokens only.
+
+### 32. Segmented focus ring moved inset — library parity check 🔵 FIGMA LIBRARY ITEM — no plugin action (2026-09-15)
+
+Shipped in v1.1.1 (commit 0ff7128): `.lb-segmented__item:focus-visible`
+outline-offset flipped from `+size.0-5x` (outside the pill) to
+`-size.0-5x` (inset), because the group became a scroll container and an
+outside ring would clip. If the `segmented` set models a focus state,
+move the ring inset to match code; if no focus variant exists, no work.
+Plugin: nothing — no token changes.
