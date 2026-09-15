@@ -1141,7 +1141,7 @@ Pure behaviour over consumer-authored grids and buttons — behaviours
 are never mirrored in the library (scroll-area/resizable precedent),
 and no tokens are involved.
 
-### 36. Stepper dots variant 🔵 FIGMA LIBRARY ITEM — no plugin action (2026-09-15)
+### 36. Stepper dots variant ✅ DONE in library 2026-09-15 (density=[default, dots] axis minted on both stepper sets; .deprecated masters were already gone — nothing to delete) — no plugin action
 
 `.lb-stepper--dots` — 12px content-free dots (`--lb-stepper-size:
 var(--lb-size-3x)`), filled for complete/active via the normal state
