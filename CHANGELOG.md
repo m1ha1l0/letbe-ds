@@ -3,6 +3,44 @@
 All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.org/)
 — see "What counts as breaking" in the README before relying on an update.
 
+## [1.1.1] — 2026-09-15
+
+Patch: mobile overflow fixes across the library — no new tokens, no new
+APIs, no markup changes required by consumers. Two known site-level
+workarounds this release makes deletable: hiding the media player's
+volume slider on phones, and any page-level transport-row wrap rules.
+
+- **Media player: phones get a real narrow layout.** The compact
+  container query moved from 320px (which real ~340–410px phone players
+  never triggered, overflowing the box) to 480px of player width, and
+  the reflow keeps the desktop shape: scrubber on its own line, then one
+  line — play + times left, mute + volume right, the volume slider
+  flexing between 48px and its desktop width as the smallest piece.
+  `--video` hides the slider in the narrow layout (its row can't hold
+  one on a phone line); the mute button stays as the sound control.
+  Touch targets: coarse pointers still grow the transport buttons to
+  48px.
+- **Table: no more sideways page scroll on phones.** The wrap is now the
+  containing block for the absolutely-positioned visually-hidden column
+  labels, which used to stretch the page from inside scrolled-out
+  columns.
+- **Navigation: the horizontal bar scrolls in place** when its items
+  can't fit a narrow screen, with the active-page underline and focus
+  rings intact (the bottom hairline is now an inset shadow so the
+  scroller can't clip it — pixel-identical rendering).
+- **Tabs and segmented controls scroll in place** when their labels
+  overflow, per the visible-when-overflowing scrollbar policy; the
+  segmented focus ring moved inset so the scroller can't cut it.
+- **Popover clamps into the viewport on open** — a panel centered on a
+  trigger near the screen edge no longer renders half off-screen; its
+  max-width also caps at the viewport minus gutters.
+- **Inline datepicker scrolls its fixed grid in place** on narrow
+  containers (time mode excluded — its dropdowns need the overflow).
+- **Fields cap at their containing block**, so the phone input's wide
+  country trigger + dial code composition fits small screens.
+- **letbe.design defaults to dark mode** (site pages only — nothing a
+  library consumer inherits).
+
 ## [1.1.0] — 2026-09-02
 
 Minor: two dormant extra-accent slots (new token names, additive), the
