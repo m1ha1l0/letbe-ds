@@ -33,15 +33,24 @@ const LB = (() => {
   }
 
   function trapFocus(container) {
-    const focusable = container.querySelectorAll(
+    // Only elements the browser will actually Tab to can be trap edges:
+    // a display:none / [hidden] / visibility:hidden candidate (e.g. the
+    // lightbox's prev/next in a single-image group) is skipped by the
+    // browser, so using it as first/last lets focus walk out of the
+    // dialog. Edges are re-resolved on every Tab, since visibility can
+    // change while the trap is live.
+    const tabbable = () => Array.from(container.querySelectorAll(
       'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    );
-    if (!focusable.length) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    first.focus();
+    )).filter((el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden');
+    const initial = tabbable();
+    if (!initial.length) return;
+    initial[0].focus();
     const handler = (e) => {
       if (e.key !== 'Tab') return;
+      const list = tabbable();
+      if (!list.length) return;
+      const first = list[0];
+      const last = list[list.length - 1];
       if (e.shiftKey) {
         if (document.activeElement === first) { e.preventDefault(); last.focus(); }
       } else {
@@ -6069,13 +6078,25 @@ const LB = (() => {
         ? 'data-lb-show-more-sm' : 'data-lb-show-more';
       const rows = parseInt(this.grid.getAttribute(attr) || '3', 10);
       const limit = rows * this._columns();
+      let shown = 0;
       let hiddenCount = 0;
-      Array.from(this.grid.children).forEach((child, i) => {
-        const hide = this._collapsed && i >= limit;
-        child.hidden = hide;
-        if (hide) hiddenCount++;
+      // Only tiles ShowMore hid carry the marker; a tile the CONSUMER
+      // hid (filtering) is left alone and doesn't occupy a visible slot.
+      Array.from(this.grid.children).forEach((child) => {
+        const mine = child.hasAttribute('data-lb-show-more-hidden');
+        if (child.hidden && !mine) return;
+        const hide = this._collapsed && shown >= limit;
+        if (hide) {
+          child.hidden = true;
+          child.setAttribute('data-lb-show-more-hidden', '');
+          hiddenCount++;
+        } else {
+          child.hidden = false;
+          child.removeAttribute('data-lb-show-more-hidden');
+          shown++;
+        }
       });
-      this.grid.setAttribute('data-collapsed', String(this._collapsed));
+      this.grid.setAttribute('data-lb-collapsed', String(this._collapsed));
       if (this.button) {
         this.button.hidden = this._collapsed && hiddenCount === 0;
         const label = this._collapsed
@@ -6109,7 +6130,14 @@ const LB = (() => {
       this._ro.disconnect();
       this._sm.removeEventListener('change', this._onMq);
       if (this.button && this._onClick) this.button.removeEventListener('click', this._onClick);
-      Array.from(this.grid.children).forEach((c) => { c.hidden = false; });
+      // release only the tiles this instance hid
+      Array.from(this.grid.children).forEach((c) => {
+        if (c.hasAttribute('data-lb-show-more-hidden')) {
+          c.hidden = false;
+          c.removeAttribute('data-lb-show-more-hidden');
+        }
+      });
+      this.grid.removeAttribute('data-lb-collapsed');
     }
   }
 

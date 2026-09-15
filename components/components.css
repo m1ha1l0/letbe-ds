@@ -50,10 +50,13 @@
 [class^="lb-"]::after, [class*=" lb-"]::after { box-sizing: border-box; }
 
 /* Show-more collapses tiles via [hidden]; tiles are CONSUMER elements
-   of any class, so the lb-* [hidden] rule above cannot cover them —
-   this (0,2,0) pair wins against class-level display rules the same
-   way, no !important. */
-[data-lb-show-more] > [hidden] { display: none; }
+   of any class, so the lb-* [hidden] rule above cannot cover them.
+   !important is deliberate here (the one place in this file): tiles
+   commonly carry INLINE display styles (filter/animation libraries set
+   them), and no selector specificity beats an inline style — a
+   collapsed-but-rendered tile would silently break the row count.
+   Visible tiles are untouched (the rule matches [hidden] only). */
+[data-lb-show-more] > [hidden] { display: none !important; }
 
 /* ═══════════════════════════════════════════════════════════
    GLOBAL SCROLLBAR

@@ -13,7 +13,7 @@
         "accordion", "avatar", "badge", "banner", "breadcrumb", "button",
         "calendar", "card", "chat", "checkbox", "chip", "code-block", "color-picker", "command-palette", "counter", "datepicker", "divider",
         "dropdown", "empty-state", "file-uploader", "flag", "footer", "forms", "header", "input", "kanban", "lightbox", "link", "list", "media-player", "menu", "modal", "navigation",
-        "pagination", "popover", "progress", "radio", "rating", "resizable", "scroll-area", "segmented", "select", "show-more", "sheet",
+        "pagination", "popover", "progress", "radio", "rating", "resizable", "scroll-area", "segmented", "select", "sheet", "show-more",
         "skeleton", "slider", "spinner", "stepper", "switch", "table", "tabs",
         "time-picker", "timeline", "toast", "tooltip", "tree"
       ]
