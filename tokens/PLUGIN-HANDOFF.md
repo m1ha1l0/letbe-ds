@@ -1080,7 +1080,7 @@ shared slot engine. Nothing held anymore.
 
 ---
 
-### 31. Header active-page indicator 🔵 FIGMA LIBRARY ITEM — no plugin action (2026-09-15)
+### 31. Header active-page indicator ✅ DONE in library 2026-09-15 (bar variant; drawer not modeled) — no plugin action
 
 `.lb-header__link--active` gained a non-colour indicator (both mihailo
 consumers hit the colour-only state collapsing in mono themes): an
