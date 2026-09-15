@@ -535,6 +535,9 @@
         if (textEl && match) {
           textEl.textContent = match.label;
           textEl.classList.remove('lb-select__text--placeholder');
+          // keep the full-label tooltip in sync with the trigger text
+          const trig = textEl.closest('button.lb-select');
+          if (trig) trig.title = match.label;
         }
       } else {
         // Pre-init path: set data-lb-value so Select picks it up.
@@ -552,6 +555,8 @@
       if (textEl) {
         textEl.textContent = opt.label;
         textEl.classList.remove('lb-select__text--placeholder');
+        const trig = textEl.closest('button.lb-select');
+        if (trig) trig.title = opt.label;
       }
     }
   }
