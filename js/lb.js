@@ -5776,6 +5776,173 @@ const LB = (() => {
     }
   }
 
+  // ─── FORM VALIDATION ───────────────────────────────────────
+  // The thin behaviour layer over the existing error skin. LB.Form owns
+  // WHEN to validate (submit, with live clearing on input/selection)
+  // and WHICH baseline rules run — required, email, url, phone digits,
+  // DS selects and datepickers — toggling the classes and per-field
+  // APIs the components already ship. Business rules, sanitization and
+  // the submission itself stay with the consumer, per the
+  // pluggable-engines boundary. Opt in with data-lb-validate on a
+  // <form>; per-field messages via data-lb-error-required /
+  // -email / -url / -phone on the field (fallbacks below).
+
+  class Form {
+    constructor(el, options = {}) {
+      this.form = el;
+      this.messages = Object.assign({
+        required: 'This field is required.',
+        email: 'Enter a valid email address.',
+        url: 'Enter a valid URL.',
+        phone: 'Enter a valid phone number.',
+      }, options.messages || {});
+      this.onValid = options.onValid || null;
+      // DS errors replace the browser's own bubbles
+      el.setAttribute('novalidate', '');
+      this._onSubmit = (e) => {
+        if (!this.validate()) e.preventDefault();
+        else if (this.onValid) this.onValid(e);
+      };
+      el.addEventListener('submit', this._onSubmit);
+      // live clearing: a field stops shouting as soon as the user types
+      this._onInput = (e) => {
+        const t = e.target;
+        if (!t || !t.matches) return;
+        if (t.matches('.lb-phone__input')) this._clearPhoneError(t.closest('[data-lb-phone]'));
+        else if (t.matches('.lb-input')) this._clearNativeError(t);
+      };
+      el.addEventListener('input', this._onInput);
+    }
+
+    validate() {
+      const invalid = [];
+
+      // Native inputs/textareas (.lb-input); the phone's inner input is
+      // handled by the phone pass below.
+      this.form.querySelectorAll('input.lb-input, textarea.lb-input').forEach((input) => {
+        if (input.disabled || input.closest('[data-lb-phone]')) return;
+        const v = input.value.trim();
+        let kind = null;
+        if ((input.required || input.hasAttribute('data-lb-required')) && !v) kind = 'required';
+        else if (v && input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) kind = 'email';
+        else if (v && input.type === 'url' && !this._validUrl(v)) kind = 'url';
+        if (kind) { this._setNativeError(input, this._msgFor(input, kind)); invalid.push(input); }
+        else this._clearNativeError(input);
+      });
+
+      // Phone composition — digits of the full number, 6–15.
+      this.form.querySelectorAll('[data-lb-phone]').forEach((ph) => {
+        const input = ph.querySelector('.lb-phone__input');
+        const required = ph.hasAttribute('data-lb-required') || (input && input.required);
+        const raw = (ph._lbPhone && ph._lbPhone.getValue) ? (ph._lbPhone.getValue().fullNumber || '') : (input ? input.value : '');
+        const digits = raw.replace(/\D/g, '');
+        let kind = null;
+        if (required && !digits) kind = 'required';
+        else if (digits && (digits.length < 6 || digits.length > 15)) kind = 'phone';
+        if (kind) { this._setPhoneError(ph, this._msgFor(ph, kind)); invalid.push(input || ph); }
+        else this._clearPhoneError(ph);
+      });
+
+      // DS selects — required only; the instance also clears itself on
+      // pick, the else covers programmatically-set values.
+      this.form.querySelectorAll('[data-lb-select][data-lb-required]').forEach((f) => {
+        const inst = f._lbSelect;
+        if (!inst) return;
+        if (!inst.getValue()) { inst.setError(this._msgFor(f, 'required')); invalid.push(f.querySelector('button.lb-select') || f); }
+        else inst.clearError();
+      });
+
+      // DS datepickers (input variant) — required only.
+      this.form.querySelectorAll('[data-lb-datepicker][data-lb-required]').forEach((f) => {
+        const inst = f._lbDatePicker;
+        if (!inst || !inst.getValue) return;
+        const v = inst.getValue();
+        const empty = !v || (inst.mode === 'range' && !(v.start && v.end));
+        if (empty) { inst.setError(this._msgFor(f, 'required')); invalid.push(f.querySelector('.lb-datepicker-trigger') || f); }
+        else inst.clearError();
+      });
+
+      if (invalid.length) {
+        const first = invalid[0];
+        if (first.focus) first.focus({ preventScroll: true });
+        if (first.scrollIntoView) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return false;
+      }
+      return true;
+    }
+
+    _msgFor(el, kind) {
+      const key = 'lbError' + kind.charAt(0).toUpperCase() + kind.slice(1);
+      return el.dataset[key] || (el.closest('.lb-field') || el).dataset?.[key] || this.messages[kind];
+    }
+
+    _validUrl(v) {
+      try { const u = new URL(v); return u.protocol === 'http:' || u.protocol === 'https:'; }
+      catch { return false; }
+    }
+
+    // DS-created messages carry data-lb-form-error so author-authored
+    // static hints are never touched.
+    _errHost(el) { return el.closest('.lb-field') || el.parentElement || this.form; }
+
+    _renderError(host, message) {
+      let err = host.querySelector(':scope > .lb-field__error[data-lb-form-error]');
+      if (!err) {
+        err = document.createElement('span');
+        err.className = 'lb-field__error';
+        err.setAttribute('data-lb-form-error', '');
+        err.id = uid('form-err');
+        host.appendChild(err);
+      }
+      err.textContent = message;
+      initFieldHintIcons(host);
+      initIcons(host);
+      return err;
+    }
+
+    _removeError(host, focusEl) {
+      const err = host.querySelector(':scope > .lb-field__error[data-lb-form-error]');
+      if (err) {
+        if (focusEl && focusEl.getAttribute('aria-describedby') === err.id) focusEl.removeAttribute('aria-describedby');
+        err.remove();
+      }
+    }
+
+    _setNativeError(input, message) {
+      input.classList.add('lb-input--error');
+      input.setAttribute('aria-invalid', 'true');
+      const err = this._renderError(this._errHost(input), message);
+      input.setAttribute('aria-describedby', err.id);
+    }
+
+    _clearNativeError(input) {
+      input.classList.remove('lb-input--error');
+      input.removeAttribute('aria-invalid');
+      this._removeError(this._errHost(input), input);
+    }
+
+    _setPhoneError(ph, message) {
+      ph.classList.add('lb-phone--error');
+      const input = ph.querySelector('.lb-phone__input');
+      if (input) input.setAttribute('aria-invalid', 'true');
+      const err = this._renderError(this._errHost(ph), message);
+      if (input) input.setAttribute('aria-describedby', err.id);
+    }
+
+    _clearPhoneError(ph) {
+      if (!ph) return;
+      ph.classList.remove('lb-phone--error');
+      const input = ph.querySelector('.lb-phone__input');
+      if (input) input.removeAttribute('aria-invalid');
+      this._removeError(this._errHost(ph), input);
+    }
+
+    destroy() {
+      this.form.removeEventListener('submit', this._onSubmit);
+      this.form.removeEventListener('input', this._onInput);
+    }
+  }
+
   // ─── TOAST MANAGER ─────────────────────────────────────────
 
   class ToastManager {
@@ -8362,6 +8529,11 @@ const LB = (() => {
       if (!el._lbSelect) el._lbSelect = new Select(el);
     });
 
+    // Form validation
+    root.querySelectorAll('form[data-lb-validate]').forEach((el) => {
+      if (!el._lbForm) el._lbForm = new Form(el);
+    });
+
     // Menus
     root.querySelectorAll('[data-lb-menu]').forEach((el) => {
       if (!el._lbMenu) el._lbMenu = new Menu(el);
@@ -8607,6 +8779,7 @@ const LB = (() => {
     Calendar,
     ToastManager,
     Select,
+    Form,
     ClearableInput,
     PasswordInput,
     PhoneInput,

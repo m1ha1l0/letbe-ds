@@ -1106,3 +1106,13 @@ outline-offset flipped from `+size.0-5x` (outside the pill) to
 outside ring would clip. If the `segmented` set models a focus state,
 move the ring inset to match code; if no focus variant exists, no work.
 Plugin: nothing — no token changes.
+
+### 33. Forms cluster: form-native Select + DatePicker, LB.Form 🟢 code-side only — no plugin or library action (2026-09-15)
+
+Select and the DatePicker input variant gained hidden-input form
+mirroring (`data-lb-name`), `data-lb-required`, side-effect-free
+setters, and `setError`/`clearError` on the existing error skin;
+`LB.Form` (`data-lb-validate`) is the thin validation behaviour over
+those APIs. Pure JS — behaviour is never mirrored in the library, and
+the error/hint compositions it toggles already exist in Figma via the
+shared `field/message` atom (input/dropdown/phone variants). No tokens.

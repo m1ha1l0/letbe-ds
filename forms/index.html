@@ -169,6 +169,54 @@
     </form>
 
     <!-- ────────────────── Spacing variants ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Validation — <code class="lb-code">LB.Form</code></h2>
+    <p class="gallery-section__desc">Add <code class="lb-code">data-lb-validate</code> to a <code class="lb-code">&lt;form&gt;</code> and the DS owns the validation <em>behaviour</em> on submit: required, email and URL formats on native inputs, 6–15 digits on the phone composition, and required state on DS selects and datepickers (via their own <code class="lb-code">setError</code> APIs). Errors render with the existing skin — error border, <code class="lb-code">.lb-field__error</code> message with the alert icon, <code class="lb-code">aria-invalid</code> + <code class="lb-code">aria-describedby</code> — the first invalid field is focused and scrolled into view, and each field clears live as the user types or picks. Browser bubbles are suppressed (<code class="lb-code">novalidate</code>). Per-field copy via <code class="lb-code">data-lb-error-required</code> / <code class="lb-code">-email</code> / <code class="lb-code">-url</code> / <code class="lb-code">-phone</code>; form-wide defaults via <code class="lb-code">new LB.Form(el, { messages })</code>, and <code class="lb-code">onValid</code> receives the passing submit. What happens on success — sanitization, sending — stays yours.</p>
+    <form class="lb-form" data-lb-validate id="validate-demo" style="max-width: 560px;">
+      <div class="lb-field-row">
+        <div class="lb-field">
+          <label class="lb-label lb-label--required" for="val-name">Name</label>
+          <input class="lb-input lb-input--medium" id="val-name" name="name" type="text" required data-lb-error-required="Tell us your name">
+        </div>
+        <div class="lb-field">
+          <label class="lb-label lb-label--required" for="val-email">Email</label>
+          <input class="lb-input lb-input--medium" id="val-email" name="email" type="email" required>
+        </div>
+      </div>
+      <div class="lb-field">
+        <label class="lb-label" for="val-site">Website</label>
+        <input class="lb-input lb-input--medium" id="val-site" name="site" type="url" placeholder="https://…">
+      </div>
+      <div class="lb-field">
+        <label class="lb-label lb-label--required" for="val-phone">Phone</label>
+        <div class="lb-phone" data-lb-phone data-lb-required id="val-phone-wrap">
+          <input id="val-phone" type="tel" class="lb-phone__input" placeholder="Phone number">
+        </div>
+      </div>
+      <div class="lb-field-row">
+        <div class="lb-field">
+          <label class="lb-label lb-label--required" for="val-plan">Plan</label>
+          <div class="lb-select-field" id="val-plan" data-lb-select data-lb-name="plan" data-lb-required data-lb-placeholder="Choose a plan" data-lb-error-required="Pick a plan to continue" data-lb-options='[{"value":"free","label":"Free"},{"value":"pro","label":"Pro"},{"value":"team","label":"Team"}]'></div>
+        </div>
+        <div class="lb-field">
+          <label class="lb-label lb-label--required" for="val-start">Start date</label>
+          <div class="lb-datepicker-field" id="val-start" data-lb-datepicker data-lb-variant="input" data-lb-mode="single" data-lb-name="start" data-lb-required data-lb-placeholder="Pick a date"></div>
+        </div>
+      </div>
+      <div class="lb-form__actions">
+        <button type="reset" class="lb-btn lb-btn--ghost lb-btn--medium"><span class="lb-btn__label">Reset</span></button>
+        <button type="submit" class="lb-btn lb-btn--primary lb-btn--medium"><span class="lb-btn__label">Submit</span></button>
+      </div>
+    </form>
+    <script>
+      // Demo-only: show what a passing submit looks like. Real consumers
+      // send the FormData here instead.
+      document.getElementById('validate-demo').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.target);
+        new LB.ToastManager().show({ variant: 'success', title: 'Valid', message: `Would submit: ${[...fd.keys()].join(', ')}` });
+      });
+    </script>
+
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Form spacing</h2>
     <p class="gallery-section__desc">Three density levels via form modifiers. Default (24px between fields), <code class="lb-code">--compact</code> (16px, settings panels), <code class="lb-code">--loose</code> (32px, marketing signup).</p>
     <div class="gallery-label">Default</div>
