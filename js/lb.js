@@ -859,8 +859,13 @@ const LB = (() => {
       this.size = options.size || el.dataset.lbSize || 'medium';
       this.placeholder = options.placeholder || el.dataset.lbPlaceholder || 'Select...';
       this.onChange = options.onChange || null;
+      // Form integration: a name renders a hidden input that submits the
+      // value like a native select; required is announced on the combobox.
+      this.name = options.name || el.dataset.lbName || '';
+      this.required = options.required ?? el.hasAttribute('data-lb-required');
       this._options = [];
       this._value = options.value || el.dataset.lbValue || '';
+      this._initialValue = this._value;
       this._activeIndex = -1;
       this._open = false;
       this._init();
@@ -925,6 +930,22 @@ const LB = (() => {
       this._removeClickOutside = onClickOutside(this.field, () => {
         if (this._open) this._close();
       });
+
+      // Form plumbing: hidden input mirror, required announcement, and a
+      // reset hook so the field follows its form like a native control.
+      if (this.name) {
+        this._hidden = document.createElement('input');
+        this._hidden.type = 'hidden';
+        this._hidden.name = this.name;
+        this._hidden.value = this._value;
+        this.field.appendChild(this._hidden);
+      }
+      if (this.required) this.trigger.setAttribute('aria-required', 'true');
+      this._form = this.field.closest('form');
+      if (this._form) {
+        this._onFormReset = () => { this.setValue(this._initialValue); this.clearError(); };
+        this._form.addEventListener('reset', this._onFormReset);
+      }
     }
 
     setOptions(options) {
@@ -960,9 +981,12 @@ const LB = (() => {
         textEl.classList.remove('lb-select__text--placeholder');
       }
       this.trigger.title = option.label;
+      if (this._hidden) this._hidden.value = this._value;
+      this.clearError();
       this._close();
       if (this.onChange) this.onChange(option.value);
-      this.field.dispatchEvent(new CustomEvent('lb-select-change', { detail: option }));
+      // bubbles so a form-level listener (LB.Form, analytics) can delegate
+      this.field.dispatchEvent(new CustomEvent('lb-select-change', { detail: option, bubbles: true }));
     }
 
     _render() {
@@ -1065,14 +1089,65 @@ const LB = (() => {
     }
 
     get value() { return this._value; }
-    set value(v) {
-      const opt = this._options.find(o => o.value === v);
-      if (opt) this._select(opt);
+    // The setter is programmatic: it updates UI + the hidden input and
+    // fires nothing (mirrors LB.Dropdown.setValue) — user selection via
+    // _select() is what emits lb-select-change / onChange.
+    set value(v) { this.setValue(v); }
+
+    getValue() { return this._value; }
+
+    setValue(value) {
+      const opt = this._options.find(o => o.value === value);
+      this._value = opt ? opt.value : '';
+      const textEl = this.trigger.querySelector('.lb-select__text');
+      if (textEl) {
+        textEl.textContent = opt ? opt.label : this.placeholder;
+        textEl.classList.toggle('lb-select__text--placeholder', !opt);
+      }
+      this.trigger.title = opt ? opt.label : this.placeholder;
+      if (this._hidden) this._hidden.value = this._value;
+    }
+
+    // Error state on the existing skin: .lb-select--error border +
+    // aria-invalid; a message renders as the shared .lb-field__error hint
+    // (the alert icon arrives via the same injection pipeline the static
+    // field hints use). clearError() runs automatically on selection.
+    setError(message) {
+      this.trigger.classList.add('lb-select--error');
+      this.trigger.setAttribute('aria-invalid', 'true');
+      if (message) {
+        if (!this._errorEl) {
+          this._errorEl = document.createElement('span');
+          this._errorEl.className = 'lb-field__error';
+          this._errorEl.id = uid('sel-err');
+          this.field.appendChild(this._errorEl);
+        }
+        this._errorEl.textContent = message;
+        initFieldHintIcons(this.field);
+        initIcons(this.field);
+        this._describedByBefore = this.trigger.getAttribute('aria-describedby');
+        this.trigger.setAttribute('aria-describedby',
+          [this._describedByBefore, this._errorEl.id].filter(Boolean).join(' '));
+      }
+    }
+
+    clearError() {
+      this.trigger.classList.remove('lb-select--error');
+      this.trigger.removeAttribute('aria-invalid');
+      if (this._errorEl) {
+        this._errorEl.remove();
+        this._errorEl = null;
+        if (this._describedByBefore) this.trigger.setAttribute('aria-describedby', this._describedByBefore);
+        else this.trigger.removeAttribute('aria-describedby');
+      }
     }
 
     destroy() {
       this._close();
       if (this._removeClickOutside) this._removeClickOutside();
+      if (this._form && this._onFormReset) this._form.removeEventListener('reset', this._onFormReset);
+      if (this._hidden) this._hidden.remove();
+      if (this._errorEl) this._errorEl.remove();
     }
   }
 
