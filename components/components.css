@@ -26,6 +26,30 @@
 [class*="lb-"][hidden] { display: none; }
 
 /* ═══════════════════════════════════════════════════════════
+   GLOBAL BOX MODEL — lb-* owns border-box
+   ═══════════════════════════════════════════════════════════
+   Components are written assuming border-box (width:100% + side
+   padding compositions everywhere), but that assumption used to be
+   satisfied by the docs shell's universal reset in gallery.css — so
+   demo pages could never reproduce what consumer pages without their
+   own reset hit: content-box lb elements overflowing their wrappers
+   (first surfaced as dropdown options painting a horizontal scrollbar,
+   mihailo finding 10; .lb-select and the filterable search input carry
+   the same defect class). The DS must not borrow its box model from
+   its docs shell, so lb-* declares it here.
+
+   Selector is stricter than the [hidden] rule above — word-boundary
+   forms only, because a substring false-positive ("bulb-…") that
+   merely hides nothing is harmless, while one that changes geometry
+   is not. Pseudo-elements included, as component decorations size
+   against the same model. Deliberate content-box spots (avatar ring
+   math, switch track, datepicker grids) declare themselves in their
+   own later rules and win by source order at equal specificity. */
+[class^="lb-"], [class*=" lb-"],
+[class^="lb-"]::before, [class*=" lb-"]::before,
+[class^="lb-"]::after, [class*=" lb-"]::after { box-sizing: border-box; }
+
+/* ═══════════════════════════════════════════════════════════
    GLOBAL SCROLLBAR
    ═══════════════════════════════════════════════════════════
    Thin, theme-token driven. Uses --lb-fg-muted for the thumb so it
