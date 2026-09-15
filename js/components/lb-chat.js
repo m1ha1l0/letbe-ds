@@ -2090,7 +2090,7 @@
     setUsed(n)   { if (Number.isFinite(n)) { this._used  = n; this._render(); } }
     setTotal(n)  { if (Number.isFinite(n)) { this._total = n; this._render(); } }
     setLabel(t)  { this._labelText = t; this._render(); }
-    getRatio()   { return this._total > 0 ? clamp(this._used / this._total, 0, 1) : 0; }
+    getRatio()   { return this._total > 0 ? Math.min(1, Math.max(0, this._used / this._total)) : 0; }
     getUsed()    { return this._used; }
     getTotal()   { return this._total; }
 

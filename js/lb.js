@@ -6145,6 +6145,7 @@ const LB = (() => {
   // Accept BOTH orders — the flipped alias resolves to the shipped file,
   // so consumers stop guessing. Filenames themselves are stable API.
   const _ICON_ALIASES = {
+    'bar-chart-3': 'bar-chart', // current Lucide name for the glyph the set ships as bar-chart
     'check-circle': 'circle-check', 'check-circle-filled': 'circle-check-filled',
     'alert-circle': 'circle-alert', 'dot-circle': 'circle-dot',
     'stop-circle': 'circle-stop', 'circle-help': 'help-circle',
