@@ -4843,6 +4843,16 @@ const LB = (() => {
       this.hint = options.hint || el.dataset.lbHint || '';
       this.error = options.error || el.dataset.lbError || '';
       this.disabled = options.disabled ?? el.hasAttribute('data-lb-disabled');
+      // Form integration (input variant): a name renders hidden input(s)
+      // that submit the picked value like a native control — one input
+      // for single/month/time, `${name}-start` + `${name}-end` for
+      // range and week. data-lb-format picks the serialization: 'iso'
+      // (default — LOCAL yyyy-mm-dd, no UTC shift; time mode HH:MM) or
+      // 'epoch' (ms); options.formatValue(date, mode) overrides both.
+      this.name = options.name || el.dataset.lbName || '';
+      this.required = options.required ?? el.hasAttribute('data-lb-required');
+      this.format = options.format || el.dataset.lbFormat || 'iso';
+      this.formatValue = options.formatValue || null;
 
       const now = new Date();
       this._viewMonth = now.getMonth();
@@ -4957,6 +4967,39 @@ const LB = (() => {
         hintEl.textContent = this.hint;
         this.el.appendChild(hintEl);
         this.trigger.setAttribute('aria-describedby', hintEl.id);
+      }
+
+      // Form plumbing: hidden mirror(s), required announcement, reset
+      // hook. User picks emit lb-datepicker-change on the host (all
+      // modes), so one listener keeps the mirrors current; programmatic
+      // setValue/setRange sync explicitly (they deliberately emit
+      // nothing).
+      if (this.name) {
+        const mk = (n) => {
+          const i = document.createElement('input');
+          i.type = 'hidden'; i.name = n;
+          this.el.appendChild(i);
+          return i;
+        };
+        if (this.mode === 'range' || this.mode === 'week') {
+          this._hiddenStart = mk(`${this.name}-start`);
+          this._hiddenEnd = mk(`${this.name}-end`);
+        } else {
+          this._hidden = mk(this.name);
+        }
+        this.el.addEventListener('lb-datepicker-change', () => { this._syncFormValue(); this.clearError(); });
+        this._syncFormValue();
+      }
+      if (this.required) this.trigger.setAttribute('aria-required', 'true');
+      this._form = this.el.closest('form');
+      if (this._form) {
+        this._onFormReset = () => {
+          this._selected = null; this._rangeStart = null; this._rangeEnd = null; this._timeSelected = null;
+          this._updateTriggerText();
+          this._syncFormValue();
+          this.clearError();
+        };
+        this._form.addEventListener('reset', this._onFormReset);
       }
 
       // Build popover
@@ -5581,6 +5624,14 @@ const LB = (() => {
         // Month mode — pass first-of-month through formatDate.
         textEl.textContent = this.formatDate(this._selected);
         this.trigger.classList.remove('lb-datepicker-trigger--placeholder');
+      } else if (this.mode === 'time' && this._timeSelected) {
+        textEl.textContent = this._formatTime(this._timeHours, this._timeMinutes);
+        this.trigger.classList.remove('lb-datepicker-trigger--placeholder');
+      } else {
+        // Empty state for the mode (init, or a form reset cleared the
+        // selection) — back to the placeholder.
+        textEl.textContent = this.placeholder;
+        this.trigger.classList.add('lb-datepicker-trigger--placeholder');
       }
     }
 
@@ -5625,13 +5676,14 @@ const LB = (() => {
     // ── Public API ──────────────────────────────────────────
 
     setValue(date) {
-      this._selected = startOfDay(date);
+      this._selected = this.mode === 'week' ? this._weekStartOf(startOfDay(date)) : startOfDay(date);
       this._viewMonth = date.getMonth();
       this._viewYear = date.getFullYear();
       this._updateTriggerText();
       // Re-render through the same dispatcher so week + month modes
       // hit their proper renderer (single + range fall through to grid).
       this._renderContent();
+      this._syncFormValue();
     }
 
     setRange(start, end) {
@@ -5641,10 +5693,86 @@ const LB = (() => {
       this._viewYear = start.getFullYear();
       this._updateTriggerText();
       this._renderGrid();
+      this._syncFormValue();
+    }
+
+    getValue() {
+      if (this.mode === 'range') return { start: this._rangeStart, end: this._rangeEnd };
+      if (this.mode === 'time') return this._timeSelected ? { hours: this._timeHours, minutes: this._timeMinutes } : null;
+      return this._selected;
+    }
+
+    // ── Form value serialization ────────────────────────────
+
+    _serializeDate(d) {
+      if (!d) return '';
+      if (this.formatValue) return String(this.formatValue(d, this.mode));
+      if (this.format === 'epoch') return String(d.getTime());
+      const p = (n) => String(n).padStart(2, '0');
+      // local date — toISOString would shift across the UTC boundary
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+    }
+
+    _syncFormValue() {
+      if (!this.name) return;
+      const p = (n) => String(n).padStart(2, '0');
+      if (this.mode === 'range') {
+        if (this._hiddenStart) this._hiddenStart.value = this._serializeDate(this._rangeStart);
+        if (this._hiddenEnd) this._hiddenEnd.value = this._serializeDate(this._rangeEnd);
+      } else if (this.mode === 'week') {
+        const start = this._selected;
+        const end = start ? new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6) : null;
+        if (this._hiddenStart) this._hiddenStart.value = this._serializeDate(start);
+        if (this._hiddenEnd) this._hiddenEnd.value = this._serializeDate(end);
+      } else if (this.mode === 'time') {
+        if (this._hidden) this._hidden.value = this._timeSelected ? `${p(this._timeHours)}:${p(this._timeMinutes)}` : '';
+      } else if (this._hidden) {
+        this._hidden.value = this._serializeDate(this._selected);
+      }
+    }
+
+    // ── Runtime error state (input variant) ─────────────────
+    // Same shape as Select: existing error skin + the datepicker
+    // field's own hint class (alert icon via the shared injection map).
+
+    setError(message) {
+      if (!this.trigger) return;
+      this.trigger.classList.add('lb-datepicker-trigger--error');
+      this.trigger.setAttribute('aria-invalid', 'true');
+      if (message) {
+        let errEl = this.el.querySelector('.lb-datepicker-field__hint--error');
+        if (!errEl) {
+          errEl = document.createElement('span');
+          errEl.className = 'lb-datepicker-field__hint lb-datepicker-field__hint--error';
+          errEl.id = uid('dp-hint');
+          this.el.appendChild(errEl);
+        }
+        errEl.textContent = message;
+        initFieldHintIcons(this.el);
+        initIcons(this.el);
+        this._runtimeErrorEl = errEl;
+        this.trigger.setAttribute('aria-describedby', errEl.id);
+      }
+    }
+
+    clearError() {
+      if (!this.trigger) return;
+      this.trigger.classList.remove('lb-datepicker-trigger--error');
+      this.trigger.removeAttribute('aria-invalid');
+      const errEl = this._runtimeErrorEl || this.el.querySelector('.lb-datepicker-field__hint--error');
+      if (errEl) {
+        if (this.trigger.getAttribute('aria-describedby') === errEl.id) this.trigger.removeAttribute('aria-describedby');
+        errEl.remove();
+        this._runtimeErrorEl = null;
+      }
     }
 
     destroy() {
       if (this._removeClickOutside) this._removeClickOutside();
+      if (this._form && this._onFormReset) this._form.removeEventListener('reset', this._onFormReset);
+      if (this._hidden) this._hidden.remove();
+      if (this._hiddenStart) this._hiddenStart.remove();
+      if (this._hiddenEnd) this._hiddenEnd.remove();
     }
   }
 
