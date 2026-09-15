@@ -3,6 +3,41 @@
 All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.org/)
 — see "What counts as breaking" in the README before relying on an update.
 
+## [1.3.0] — 2026-09-15
+
+Minor: forms become a first-class surface — the custom pickers submit
+like native controls and the DS ships the validation behaviour its
+error skin always implied. No new tokens. Deletable consumer
+workarounds: hidden-input mirroring, hand-rolled required checks and
+validators around DS selects/datepickers.
+
+- **Select is form-native.** `data-lb-name` renders a hidden input that
+  submits with the form; `data-lb-required` announces the state;
+  `getValue()` and side-effect-free `setValue(v)` land on the instance
+  (the legacy `.value` setter routes there — it no longer fires change
+  events or steals focus); `setError(msg)`/`clearError()` drive the
+  existing error skin plus a `.lb-field__error` message with the
+  standard alert icon and aria wiring; errors clear on selection and
+  the field follows its form's reset. `lb-select-change` now bubbles.
+- **DatePicker (input variant) is form-native.** `data-lb-name` renders
+  hidden mirror(s) — `name-start`/`name-end` in range and week modes;
+  `data-lb-format` picks the submitted serialization (`iso` default,
+  LOCAL dates — no UTC shift; `epoch`; or a `formatValue(date, mode)`
+  option; time mode submits `HH:MM`). Same `getValue`/`setError`/
+  `clearError`/required/reset surface as Select; the trigger now also
+  returns to its placeholder when a form reset clears the selection.
+- **`LB.Form` — validation behaviour, thin by design.** Opt in with
+  `data-lb-validate`: on submit it enforces required/email/url on
+  native inputs, 6–15 national digits on the phone composition,
+  required state on DS selects and datepickers, and — because
+  `novalidate` silences the browser — every other native constraint in
+  the form via the control's own localized message. Errors render the
+  existing skin, the first invalid field is focused and scrolled into
+  view, fields clear live as the user types or picks, and reset wipes
+  the slate. Validation runs in the document capture phase, so consumer
+  submit listeners only ever see submits that passed; `onValid`
+  receives them explicitly. Sanitization and sending stay yours.
+
 ## [1.2.0] — 2026-09-15
 
 Minor: one new public API (`LB.setFlagBasePath`), a theme-proof active
