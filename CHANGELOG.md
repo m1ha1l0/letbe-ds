@@ -3,6 +3,38 @@
 All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.org/)
 — see "What counts as breaking" in the README before relying on an update.
 
+## [1.4.0] — 2026-09-15
+
+Minor: two new pieces both mihailo consumers had to build at site
+level, one stepper variant, and two small fixes. No new tokens.
+
+- **Lightbox** (`LB.Lightbox`, opt-in `js/components/lb-lightbox.js`).
+  Any `<a href="image" data-lb-lightbox>` opens in an image viewer
+  composed over the canonical modal anatomy: a dialog that hugs the
+  image, caption headline + subline (`data-lb-caption`/`-sub` →
+  figcaption → alt), 1-of-N counter, prev/next + arrow keys wrapping
+  through the group, cross-fade (off under prefers-reduced-motion),
+  blurred backdrop, full screen on phones. Group by a shared attribute
+  value or a `[data-lb-gallery]` container. Modal owns focus trap,
+  scroll lock, Esc, backdrop-click; modifier clicks and no-JS keep the
+  plain link. No loader or zoom bundled.
+- **Show More** (`LB.ShowMore`, core runtime). `data-lb-show-more="N"`
+  collapses a grid to N rows of its rendered column count and reveals
+  the rest via your own button (`data-lb-show-more-for`), wired with
+  aria-expanded/controls and a swapped label; phone row override,
+  scroll-back on collapse, ResizeObserver recompute, consumer-hidden
+  tiles respected. Ships a `[data-lb-show-more] > [hidden]` rule so a
+  tile's own display (inline styles included) never beats the collapse.
+- **Stepper dots** (`.lb-stepper--dots`): 12px content-free track —
+  filled complete/active, outlined upcoming, caption labels; the dot
+  corner binds `radius.interactive`, so dots follow the theme's
+  square/round preset.
+- **Fix: focus trap ignores untabbable elements** (shared by Modal,
+  Sheet and the new Lightbox) — hidden controls can no longer become
+  trap edges that let Tab walk out of a dialog.
+- **Fix:** `bar-chart-3` icon name aliases to the shipped `bar-chart`;
+  the chat context-budget meter no longer throws on `getRatio()`.
+
 ## [1.3.0] — 2026-09-15
 
 Minor: forms become a first-class surface — the custom pickers submit
