@@ -26,6 +26,10 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   error skin and message (typing clears it, LB.Form uses the same
   element); a form reset returns to the starting country. `getValue()`
   and `lb-phone-change` gain `e164`.
+- **`LB.observe(root)`** (opt-in): initialises markup added after load
+  automatically (MutationObserver, idempotent init per added subtree,
+  icon injections ignored); returns a stop function. README and llms.txt
+  now say that later markup needs `LB.init(container)` or this.
 - **Public `open()`, `close()` and `isOpen()`** on Select and
   Multi-Select instances (was only the private `_show()`).
 

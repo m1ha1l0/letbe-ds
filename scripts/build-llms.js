@@ -45,6 +45,10 @@ push('board, chat, media, timeline, selection — see the README vendor manifest
 push('for the exact file list). If a `data-lb-*` root has no controller loaded,');
 push('`lb.js` logs a console warning naming the missing script.');
 push();
+push('Markup inserted after load stays uninitialised until `LB.init(container)`');
+push('runs on it (idempotent), or call `LB.observe()` once to initialise every');
+push('element added under `document.body` automatically.');
+push();
 push('Class combos are contracts: copy the full combo from each demo (base +');
 push('variant + size, e.g. `lb-btn lb-btn--secondary lb-btn--medium`; every table');
 push('cell carries `lb-table__cell`). Base classes alone render unstyled.');

@@ -9141,6 +9141,29 @@ const LB = (() => {
     });
   }
 
+  // ─── OBSERVE (opt-in) ──────────────────────────────────────
+  // Markup added after load stays bare until LB.init(root) runs on it.
+  // LB.observe(root) does that for you: a MutationObserver re-runs the
+  // (idempotent) init on the parent of every added element, deduped per
+  // batch. Icon SVG injections are ignored so icon loads don't re-sweep.
+  // Returns a function that stops observing.
+  function observe(root = document.body) {
+    const mo = new MutationObserver((records) => {
+      const parents = new Set();
+      records.forEach((rec) => {
+        if (rec.target.closest && rec.target.closest('[data-lb-icon], svg')) return;
+        rec.addedNodes.forEach((n) => {
+          if (n.nodeType === 1 && !(n instanceof SVGElement) && n.parentElement) parents.add(n.parentElement);
+        });
+      });
+      // init(p) sweeps p's subtree, so a parent inside another is covered.
+      const list = [...parents];
+      list.filter((p) => p.isConnected && !list.some((q) => q !== p && q.contains(p))).forEach((p) => init(p));
+    });
+    mo.observe(root, { childList: true, subtree: true });
+    return () => mo.disconnect();
+  }
+
   // ─── CHECKBOX GLYPHS ────────────────────────────────────────
   //
   // Wraps every .lb-checkbox input in a .lb-checkbox-frame and injects
@@ -9254,6 +9277,7 @@ const LB = (() => {
     lockScroll,
     unlockScroll,
     playExit,
+    observe,
   };
 })();
 

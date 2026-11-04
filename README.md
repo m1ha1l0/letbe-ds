@@ -106,6 +106,14 @@ repo's gallery, wrong everywhere else. On a failed fetch the element keeps
 whatever fallback content you authored (so `<span data-lb-icon="x">×</span>`
 degrades to the ×).
 
+**Content added after load.** Components initialise from their `data-lb-*`
+markup once, on DOMContentLoaded. Markup you insert later (a fetched panel,
+a rendered list, a dashboard row) stays bare — no tick in a checkbox, no
+glyph in an icon, no behaviour — until you run `LB.init(container)` on it
+(idempotent, safe to repeat). Or call `LB.observe()` once and anything
+added under `document.body` is initialised for you; it returns a function
+that stops observing.
+
 **4. Optional:** `assets/flags/` (Phone input), `assets/avatars/` (demo only).
 `theme-editor.js`, `token-exporter.js`, and `gallery-layout.js` are gallery
 chrome — consumers never need them.
