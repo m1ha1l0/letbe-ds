@@ -341,9 +341,16 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   border: var(--lb-border-width-action) solid transparent;
   cursor: pointer;
   user-select: none;
-  transition: background-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), border-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
+  transition: background-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), border-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), scale var(--lb-animation-dur-fast) var(--lb-animation-ease-bounce);
   appearance: none;
   -webkit-appearance: none;
+}
+/* Press — buttons give a little under the pointer (the individual
+   `scale` property, so it composes with any transform). Reduced motion:
+   colour change only. */
+@media (prefers-reduced-motion: no-preference) {
+  .lb-btn:active:not(:disabled):not([aria-disabled="true"]),
+  .lb-icon-btn:active:not(:disabled):not([aria-disabled="true"]) { scale: 0.97; /* design-intent: press depth */ }
 }
 .lb-btn:focus-visible {
   outline: var(--lb-border-width-medium) solid var(--lb-border-focus);
@@ -418,7 +425,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   border-radius: var(--lb-radius-full);
   border: var(--lb-border-width-action) solid transparent;
   cursor: pointer;
-  transition: background-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), border-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
+  transition: background-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), border-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), scale var(--lb-animation-dur-fast) var(--lb-animation-ease-bounce);
   appearance: none;
   -webkit-appearance: none;
 }
@@ -833,6 +840,13 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   text-decoration: none;
   align-self: center;
 }
+/* Direction arrows nudge the way they point while the link is hovered
+   (the card nav-icon's 2px, same family). */
+@media (prefers-reduced-motion: no-preference) {
+  .lb-link__icon:is([data-lb-icon="arrow-up-right"], [data-lb-icon="arrow-right"]) { transition: translate var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+  .lb-link:is(:hover, :focus-visible) .lb-link__icon[data-lb-icon="arrow-up-right"] { translate: var(--lb-size-0-5x) calc(-1 * var(--lb-size-0-5x)); }
+  .lb-link:is(:hover, :focus-visible) .lb-link__icon[data-lb-icon="arrow-right"] { translate: var(--lb-size-0-5x) 0; }
+}
 .lb-link__icon svg { width: 100%; height: 100%; }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1165,6 +1179,12 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-card__media {
   overflow: hidden;
   background: var(--lb-bg-strong);
+}
+/* Media zoom (opt-in, --media-zoom): the picture eases in a touch while
+   the card is hovered or focused; the frame stays put (media clips). */
+@media (prefers-reduced-motion: no-preference) {
+  .lb-card--media-zoom .lb-card__media > :is(img, video) { transition: scale var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); }
+  .lb-card--media-zoom:is(:hover, :focus-visible) .lb-card__media > :is(img, video) { scale: 1.03; /* design-intent: hover zoom depth */ }
 }
 .lb-card__media img,
 .lb-card__media video {
@@ -2823,6 +2843,16 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-dropdown--clearable { padding-right: calc(var(--lb-size-3x) + 2.75rem); }
 .lb-dropdown-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 100; list-style: none; margin: 0; padding: var(--lb-size-1x) 0; background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); max-height: 220px; overflow-y: auto; animation: lb-dropdown-list-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 @keyframes lb-dropdown-list-in { from { opacity: 0; transform: translateY(-4px); /* design-intent: dropdown drop-in offset */ } to { opacity: 1; transform: translateY(0); } }
+/* Exit — Select / Multi-Select / Phone close their list through
+   LB.playExit: --leaving lifts it back up and fades it, then it goes. */
+@keyframes lb-dropdown-list-out { to { opacity: 0; transform: translateY(-4px); /* design-intent: dropdown drop-in offset */ } }
+.lb-dropdown-list--leaving, .lb-phone__dropdown--leaving { pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .lb-dropdown-list.lb-dropdown-list--leaving, .lb-phone__dropdown.lb-phone__dropdown--leaving { animation: lb-dropdown-list-out var(--lb-animation-dur-fast) var(--lb-animation-ease-out) forwards; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lb-dropdown-list, .lb-phone__dropdown.lb-phone__dropdown, .lb-datepicker__select-list { animation: none; }
+}
 .lb-dropdown-list__option { padding: var(--lb-size-2x) var(--lb-size-3x); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); color: var(--lb-fg-default); cursor: pointer; transition: background var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-dropdown-list__option--active { background: var(--lb-action-bg-ghost-hover); }
 .lb-dropdown-list__option--disabled { color: var(--lb-fg-disabled); cursor: not-allowed; }

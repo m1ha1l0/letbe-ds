@@ -1145,7 +1145,12 @@ const LB = (() => {
 
     _close() {
       this._open = false;
-      if (this._list) { this._list.remove(); this._list = null; }
+      if (this._list) {
+        const list = this._list;
+        this._list = null;
+        list.removeAttribute('id'); // the next open's list owns the id
+        playExit(list, 'lb-dropdown-list--leaving', () => list.remove());
+      }
       this.trigger.setAttribute('aria-expanded', 'false');
       this.trigger.removeAttribute('aria-activedescendant');
       const chev = this.trigger.querySelector('.lb-select-wrap__chevron');
@@ -7447,6 +7452,7 @@ const LB = (() => {
     }
 
     _openDropdown() {
+      if (this._cancelExit) { this._cancelExit(); this._cancelExit = null; }
       this.open = true;
       this.dropdown.hidden = false;
       this.trigger.setAttribute('aria-expanded', 'true');
@@ -7463,10 +7469,11 @@ const LB = (() => {
     }
 
     _close() {
+      if (!this.open) return;
       this.open = false;
-      this.dropdown.hidden = true;
       this.trigger.setAttribute('aria-expanded', 'false');
       this.chevron.classList.remove('lb-phone__chevron--open');
+      this._cancelExit = playExit(this.dropdown, 'lb-phone__dropdown--leaving', () => { this._cancelExit = null; this.dropdown.hidden = true; });
     }
 
     _applyCountry(country) {
@@ -7777,7 +7784,11 @@ const LB = (() => {
       this._open = false;
       this.trigger.setAttribute('aria-expanded', 'false');
       this.chevron.classList.remove('lb-multi-select-wrap__chevron--open');
-      if (this._list) { this._list.remove(); this._list = null; this._listInstance = null; }
+      if (this._list) {
+        const list = this._list;
+        this._list = null; this._listInstance = null;
+        playExit(list, 'lb-dropdown-list--leaving', () => list.remove());
+      }
       this.trigger.focus();
     }
 

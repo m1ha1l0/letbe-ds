@@ -5,6 +5,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Motion polish** (all off under reduced motion). Buttons and icon
+  buttons give a little under the pointer (`scale: 0.97` on the
+  individual property, so it composes with any transform; the DS owns
+  the transition list). `.lb-card--media-zoom` (opt-in) eases a card's
+  picture in 3% on hover or focus. Direction arrows in `.lb-link__icon`
+  (`arrow-up-right`, `arrow-right`) nudge 2px the way they point.
+- **Select, Multi-Select and Phone lists close with motion** (they open
+  with it already): the list lifts and fades out before it goes, through
+  `LB.playExit`; re-opening mid-exit is safe. The list entries now honour
+  reduced motion too.
 - **Scroll reveal** (`data-lb-reveal`, core runtime): a block rises a
   little and fades in the first time it scrolls into view; blocks that
   arrive together are staggered. Hidden only when motion is welcome and
