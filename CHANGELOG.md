@@ -16,6 +16,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   top. It moves the sticky `top`, not a transform, so the fixed drawer
   inside keeps working. Companion sticky bars follow through
   `--lb-header-visible` on `<html>` or the `lb-header-autohide` event.
+- **Media player shuffle and repeat buttons.** `[data-lb-media-shuffle]`
+  makes Next and auto-advance pick a random track not yet played this
+  round (repeat on: a new round starts; off: playback stops), Previous
+  walks back through what was played; `[data-lb-media-loop-toggle]` flips
+  repeat-all. Both use `aria-pressed` with the Playbar's accent styling;
+  `setShuffle()` / `getShuffle()` on the instance.
+- **`lb-media--no-volume`** drops mute and the volume slider (touch
+  screens, where iOS ignores a page's volume).
 
 ## [1.7.0] — 2026-11-04
 

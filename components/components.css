@@ -3174,6 +3174,11 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    players, so the row overflowed the box). Variants with their own
    arrangements defend themselves after this block (--compact nowrap,
    --card sub-rows). */
+/* No volume (--no-volume): drops mute and the slider, e.g. on touch
+   screens where iOS ignores a page's volume; the right-hand group keeps
+   its push (it sits after the duration, not on mute). */
+.lb-media--no-volume [data-lb-media-mute],
+.lb-media--no-volume .lb-media__volume { display: none; }
 @container (max-width: 480px) {
   .lb-media__controls { flex-wrap: wrap; }
   .lb-media__scrubber { order: -1; flex: 1 1 100%; }
@@ -10135,8 +10140,10 @@ button[aria-expanded="true"] [data-lb-icon="chevron-down"] { transform: rotate(1
   min-width: 0;
 }
 .lb-playbar__buttons { display: flex; align-items: center; gap: var(--lb-size-1x); }
-/* Toggle buttons (shuffle/repeat): pressed = accent. */
-.lb-playbar .lb-icon-btn[aria-pressed="true"] {
+/* Toggle buttons (shuffle/repeat): pressed = accent. Shared with the
+   media player's [data-lb-media-shuffle] / [data-lb-media-loop-toggle]. */
+.lb-playbar .lb-icon-btn[aria-pressed="true"],
+.lb-media .lb-icon-btn[aria-pressed="true"] {
   color: var(--lb-fg-accent);
   background: var(--lb-bg-accent-muted);
 }

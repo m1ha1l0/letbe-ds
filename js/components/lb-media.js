@@ -71,6 +71,8 @@
       this.speedBtn  = el.querySelector('[data-lb-media-speed]');
       this.prevBtn   = el.querySelector('[data-lb-media-prev]');
       this.nextBtn   = el.querySelector('[data-lb-media-next]');
+      this.shuffleBtn = el.querySelector('[data-lb-media-shuffle]');
+      this.loopBtn    = el.querySelector('[data-lb-media-loop-toggle]');
       this.fsBtn     = el.querySelector('[data-lb-media-fullscreen]');
       this.plToggleBtn = el.querySelector('[data-lb-media-playlist-toggle]');
       this.qualityWrap = el.querySelector('[data-lb-media-quality]');
@@ -117,6 +119,13 @@
       // ends, wrap to track 1 and keep playing instead of stopping.
       // Opt-in via data-lb-media-loop on the root, or setLoop(true).
       this.loop = el.hasAttribute('data-lb-media-loop');
+      // Shuffle: Next and auto-advance pick a random track not yet played
+      // this round; when the round is done, loop starts a new one, else
+      // playback stops. Previous walks back through what was played.
+      // On via a pressed [data-lb-media-shuffle] button or setShuffle(true).
+      this.shuffle = !!(this.shuffleBtn && this.shuffleBtn.getAttribute('aria-pressed') === 'true');
+      this._played = new Set(this._currentBtn ? [this._currentBtn] : []);
+      this._history = [];
 
       // Optional now-playing block: cover art + title/artist. Entirely
       // opt-in — present only if the consumer includes the markup.
@@ -191,6 +200,15 @@
       // prev rewinds to 0 and next is a no-op.
       if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prevTrack());
       if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.nextTrack());
+      // Shuffle / repeat toggles (aria-pressed is the state, as on Playbar).
+      if (this.shuffleBtn) {
+        this.shuffleBtn.setAttribute('aria-pressed', String(this.shuffle));
+        this.shuffleBtn.addEventListener('click', () => this.setShuffle(!this.shuffle));
+      }
+      if (this.loopBtn) {
+        this.loopBtn.setAttribute('aria-pressed', String(this.loop));
+        this.loopBtn.addEventListener('click', () => this.setLoop(!this.loop));
+      }
 
       // Speed — a button that cycles playback rate and shows it (e.g. "1×").
       if (this.speedBtn) {
@@ -370,13 +388,10 @@
           this.loadTrack(this._liveTracks().indexOf(btn), true);
         };
         this.tracks.forEach((btn) => btn.addEventListener('click', onTrackClick));
+        // Auto-advance follows the same rules as Next (order or shuffle,
+        // repeat-all wraps).
         m.addEventListener('ended', () => {
-          if (!this._currentBtn) return;
-          const live = this._liveTracks();
-          const idx = live.indexOf(this._currentBtn);
-          if (idx >= 0 && idx < live.length - 1) this.loadTrack(idx + 1, true);
-          // Repeat-all: last track ended → wrap to the first.
-          else if (this.loop && idx === live.length - 1 && live.length > 1) this.loadTrack(0, true);
+          if (this._currentBtn) this.nextTrack();
         });
         // Opt-in drag-to-reorder: a grip handle on the left, only the
         // handle starts a drag (so quick row clicks still play the track).
@@ -501,12 +516,33 @@
 
     prevTrack() {
       const live = this._liveTracks();
+      if (this.shuffle) {
+        // Back through the shuffled history (tracks still in the list).
+        while (this._history.length) {
+          const prev = this._history.pop();
+          const i = live.indexOf(prev);
+          if (i >= 0) { this._played.delete(this._currentBtn); this.loadTrack(i, true, true); return; }
+        }
+        this.seekTo(0);
+        return;
+      }
       const idx = live.indexOf(this._currentBtn);
       if (idx > 0) this.loadTrack(idx - 1, true);
       else this.seekTo(0); // already at start (or no playlist) → rewind
     }
     nextTrack() {
       const live = this._liveTracks();
+      if (this.shuffle && live.length > 1) {
+        let pool = live.filter((b) => b !== this._currentBtn && !this._played.has(b));
+        if (!pool.length) {
+          if (!this.loop) return; // round done, no repeat: stop
+          this._played = new Set([this._currentBtn]);
+          pool = live.filter((b) => b !== this._currentBtn);
+        }
+        if (this._currentBtn) this._history.push(this._currentBtn);
+        this.loadTrack(live.indexOf(pool[Math.floor(Math.random() * pool.length)]), true, true);
+        return;
+      }
       const idx = live.indexOf(this._currentBtn);
       if (idx >= 0 && idx < live.length - 1) this.loadTrack(idx + 1, true);
       // Repeat-all: Next on the last track wraps to the first.
@@ -514,12 +550,23 @@
     }
 
     // Repeat-all mode — programmatic control mirrors the
-    // data-lb-media-loop attribute (kept in sync for CSS hooks).
+    // data-lb-media-loop attribute (kept in sync for CSS hooks) and the
+    // repeat button's aria-pressed.
     setLoop(on) {
       this.loop = !!on;
       this.el.toggleAttribute('data-lb-media-loop', this.loop);
+      if (this.loopBtn) this.loopBtn.setAttribute('aria-pressed', String(this.loop));
     }
     getLoop() { return this.loop; }
+
+    // Shuffle — a new round starts from the current track.
+    setShuffle(on) {
+      this.shuffle = !!on;
+      this._played = new Set(this._currentBtn ? [this._currentBtn] : []);
+      this._history = [];
+      if (this.shuffleBtn) this.shuffleBtn.setAttribute('aria-pressed', String(this.shuffle));
+    }
+    getShuffle() { return this.shuffle; }
 
     toggleCaptions() {
       const tracks = this.media.textTracks;
@@ -912,13 +959,15 @@
       return this.playlist ? Array.from(this.playlist.querySelectorAll('[data-lb-media-track]')) : [];
     }
 
-    loadTrack(i, autoplay) {
+    loadTrack(i, autoplay, fromShuffle) {
       const live = this._liveTracks();
       const btn = live[i];
       if (!btn) return;
       const src = btn.getAttribute('data-src');
       if (!src) return;
+      if (this.shuffle && !fromShuffle && this._currentBtn && this._currentBtn !== btn) this._history.push(this._currentBtn);
       this._currentBtn = btn;
+      this._played.add(btn);
       this.media.src = src;
       live.forEach((b) => {
         const active = b === btn;
