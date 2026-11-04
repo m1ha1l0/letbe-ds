@@ -448,7 +448,10 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   pointer-events: none;
 }
 /* Fixed heights so buttons align with inputs (40px / 32px).
-   Padding controls horizontal spacing; vertical centering is via flex. */
+   Padding controls horizontal spacing; vertical centering is via flex.
+   Large (48px, the action-l type role) is for a screen's main thumb
+   action — it pairs with .lb-icon-btn--large, not with an input. */
+.lb-btn--large  { height: var(--lb-size-12x); padding: 0 var(--lb-size-6x); font-size: var(--lb-t-action-l-font-size); line-height: var(--lb-t-action-l-line-height); letter-spacing: var(--lb-t-action-l-letter-spacing); }
 .lb-btn--medium { height: 2.5rem; padding: 0 var(--lb-size-4x); }
 .lb-btn--small  { height: 2rem;   padding: 0 var(--lb-size-3x); font-size: var(--lb-t-action-s-font-size); line-height: var(--lb-t-action-s-line-height); letter-spacing: var(--lb-t-action-s-letter-spacing); }
 

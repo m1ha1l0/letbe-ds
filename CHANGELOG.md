@@ -66,6 +66,9 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   until hover on every device. It now hides only where a mouse can
   hover (`(hover: hover) and (pointer: fine)`); touch screens always
   show it.
+- **Large button** (new, value-deck btn-large): `.lb-btn--large`, 48px
+  (`--lb-size-12x`) with the action-l type role, for a screen's main
+  thumb action. Pairs with `.lb-icon-btn--large`.
 
 ## [1.12.0] — 2026-11-04
 
