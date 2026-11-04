@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Sheet keeps focus inside while open** (fix). The regular `LB.Sheet`
+  (not peek) locked scroll and focused its close button but never
+  trapped focus, so Tab walked out of the `aria-modal` sheet to the page
+  behind the scrim. `open()` now uses the shared focus trap, like Modal
+  and the peek sheet. It holds until the exit has played, survives a
+  re-open mid-exit, and focus returns to the opener on close.
+
 ## [1.14.0] — 2026-11-04
 
 Minor: the peek bottom sheet (value-deck sheet-peek). No new tokens.

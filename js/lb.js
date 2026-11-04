@@ -684,6 +684,7 @@ const LB = (() => {
       this.overlay = el.querySelector('.lb-sheet-overlay');
       this.onClose = options.onClose || null;
       this._previousFocus = null;
+      this._releaseTrap = null;
       this._isOpen = false;
       this._cancelExit = null;
       this._init();
@@ -755,15 +756,18 @@ const LB = (() => {
     }
 
     // Same two-step close as Modal: .lb-sheet-root--leaving plays the
-    // slide-out, then the root hides and lb-sheet-close fires.
+    // slide-out, then the root hides and lb-sheet-close fires. Focus stays
+    // trapped in the sheet until the exit has played.
     open() {
       if (this.peek) { this._expand(); return; }
+      // Re-opened mid-exit: stay open, focus trap and lock are still held.
       if (this._cancelExit) { this._cancelExit(); this._cancelExit = null; this._isOpen = true; return; }
       if (this._isOpen) return;
       this._isOpen = true;
       this._previousFocus = document.activeElement;
       this.root.style.display = 'flex';
       lockScroll(this);
+      if (this.sheet) this._releaseTrap = trapFocus(this.sheet);
       const closeBtn = this.sheet?.querySelector('.lb-sheet__close');
       if (closeBtn) closeBtn.focus();
       this.root.dispatchEvent(new CustomEvent('lb-sheet-open'));
@@ -777,6 +781,7 @@ const LB = (() => {
         this._cancelExit = null;
         this.root.style.display = 'none';
         unlockScroll(this);
+        if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
         if (this._previousFocus) this._previousFocus.focus();
         if (this.onClose) this.onClose();
         this.root.dispatchEvent(new CustomEvent('lb-sheet-close'));
