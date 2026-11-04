@@ -5,6 +5,28 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Ghost controls work on any surface** (new tokens, owner-approved).
+  The ghost background pointed at the page colour, so on a tinted
+  surface (board lanes, the vertical nav, raised panels) every ghost
+  button, icon button, nav item and pagination button showed a box, and
+  its hover vanished. New L1 `--lb-transparent` and 4 see-through
+  neutral washes (`--lb-neutral-alpha-900-4` / `-900-11` for light,
+  `--lb-neutral-alpha-50-5` / `-50-13` for dark); new L2
+  `--lb-bg-transparent`, `--lb-bg-translucent`,
+  `--lb-bg-translucent-strong`. Ghost rest is now transparent, hover
+  and pressed are see-through: identical on the page ground, visible on
+  any tint. Every hover that shares the ghost hover token (list rows,
+  dropdown options, tree rows, nav items, calendar days) gains the same.
+  Plugin registration pending (PLUGIN-HANDOFF 39, blocking alpha fix).
+- **Disabled ghost buttons have no fill** (visual change): a clear
+  button with disabled text, instead of the grey box every disabled
+  variant shared. Uses the existing `action-bg/fg-ghost-disabled`.
+- **Counter on ghost / neutral / subtle buttons**: the digit now uses
+  `--lb-fg-inverse` (no change in light, a step lighter in dark) — the
+  old binding would have gone invisible with the transparent ghost.
+- Removed the media player's local "transparent ghost" override; the
+  tokens cover it now.
+
 ## [1.12.0] — 2026-11-04
 
 Minor: the Kbd keycap component, and a keyboard layer on the gallery

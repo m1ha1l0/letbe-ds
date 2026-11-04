@@ -95,6 +95,13 @@
   --lb-cyan-900: #02181d;
   --lb-cyan-950: #010a0d;
 
+  /* ─── L1 — Alpha color primitives ─── */
+  --lb-transparent: #00000000;
+  --lb-neutral-alpha-900-4: #13110e0b;
+  --lb-neutral-alpha-900-11: #13110e1c;
+  --lb-neutral-alpha-50-5: #f7f5f10d;
+  --lb-neutral-alpha-50-13: #f7f5f122;
+
   /* ─── L1 — Size primitives (spacing) ─── */
   --lb-size-0: 0px;
   --lb-size-hairline: 1px;
@@ -272,6 +279,9 @@
   --lb-bg-default: var(--lb-neutral-50);
   --lb-bg-strong: var(--lb-neutral-100);
   --lb-bg-bolder: var(--lb-neutral-200);
+  --lb-bg-transparent: var(--lb-transparent);
+  --lb-bg-translucent: var(--lb-neutral-alpha-900-4);
+  --lb-bg-translucent-strong: var(--lb-neutral-alpha-900-11);
   --lb-bg-inverse: var(--lb-neutral-900);
   --lb-bg-accent-subtle: var(--lb-violet-50);
   --lb-bg-accent-muted: var(--lb-violet-200);
@@ -600,10 +610,10 @@
   --lb-action-border-danger-hover: var(--lb-bg-danger-strong);
   --lb-action-border-danger-pressed: var(--lb-bg-danger-bolder);
   --lb-action-border-danger-disabled: var(--lb-border-disabled);
-  --lb-action-bg-ghost-default: var(--lb-bg-default);
-  --lb-action-bg-ghost-hover: var(--lb-bg-strong);
-  --lb-action-bg-ghost-pressed: var(--lb-bg-bolder);
-  --lb-action-bg-ghost-disabled: var(--lb-bg-disabled);
+  --lb-action-bg-ghost-default: var(--lb-bg-transparent);
+  --lb-action-bg-ghost-hover: var(--lb-bg-translucent);
+  --lb-action-bg-ghost-pressed: var(--lb-bg-translucent-strong);
+  --lb-action-bg-ghost-disabled: var(--lb-bg-transparent);
   --lb-action-fg-ghost-default: var(--lb-fg-default);
   --lb-action-fg-ghost-hover: var(--lb-fg-default);
   --lb-action-fg-ghost-pressed: var(--lb-fg-default);
@@ -701,6 +711,9 @@
   --lb-bg-default: var(--lb-neutral-950);
   --lb-bg-strong: var(--lb-neutral-900);
   --lb-bg-bolder: var(--lb-neutral-800);
+  --lb-bg-transparent: var(--lb-transparent);
+  --lb-bg-translucent: var(--lb-neutral-alpha-50-5);
+  --lb-bg-translucent-strong: var(--lb-neutral-alpha-50-13);
   --lb-bg-inverse: var(--lb-neutral-50);
   --lb-bg-accent-subtle: var(--lb-violet-950);
   --lb-bg-accent-muted: var(--lb-violet-800);
@@ -816,10 +829,10 @@
   --lb-action-border-danger-hover: var(--lb-bg-danger-strong);
   --lb-action-border-danger-pressed: var(--lb-bg-danger-bolder);
   --lb-action-border-danger-disabled: var(--lb-border-disabled);
-  --lb-action-bg-ghost-default: var(--lb-bg-default);
-  --lb-action-bg-ghost-hover: var(--lb-bg-strong);
-  --lb-action-bg-ghost-pressed: var(--lb-bg-bolder);
-  --lb-action-bg-ghost-disabled: var(--lb-bg-disabled);
+  --lb-action-bg-ghost-default: var(--lb-bg-transparent);
+  --lb-action-bg-ghost-hover: var(--lb-bg-translucent);
+  --lb-action-bg-ghost-pressed: var(--lb-bg-translucent-strong);
+  --lb-action-bg-ghost-disabled: var(--lb-bg-transparent);
   --lb-action-fg-ghost-default: var(--lb-fg-default);
   --lb-action-fg-ghost-hover: var(--lb-fg-default);
   --lb-action-fg-ghost-pressed: var(--lb-fg-default);
@@ -914,6 +927,9 @@
     --lb-bg-default: var(--lb-neutral-950);
     --lb-bg-strong: var(--lb-neutral-900);
     --lb-bg-bolder: var(--lb-neutral-800);
+    --lb-bg-transparent: var(--lb-transparent);
+    --lb-bg-translucent: var(--lb-neutral-alpha-50-5);
+    --lb-bg-translucent-strong: var(--lb-neutral-alpha-50-13);
     --lb-bg-inverse: var(--lb-neutral-50);
     --lb-bg-accent-subtle: var(--lb-violet-950);
     --lb-bg-accent-muted: var(--lb-violet-800);
@@ -1029,10 +1045,10 @@
     --lb-action-border-danger-hover: var(--lb-bg-danger-strong);
     --lb-action-border-danger-pressed: var(--lb-bg-danger-bolder);
     --lb-action-border-danger-disabled: var(--lb-border-disabled);
-    --lb-action-bg-ghost-default: var(--lb-bg-default);
-    --lb-action-bg-ghost-hover: var(--lb-bg-strong);
-    --lb-action-bg-ghost-pressed: var(--lb-bg-bolder);
-    --lb-action-bg-ghost-disabled: var(--lb-bg-disabled);
+    --lb-action-bg-ghost-default: var(--lb-bg-transparent);
+    --lb-action-bg-ghost-hover: var(--lb-bg-translucent);
+    --lb-action-bg-ghost-pressed: var(--lb-bg-translucent-strong);
+    --lb-action-bg-ghost-disabled: var(--lb-bg-transparent);
     --lb-action-fg-ghost-default: var(--lb-fg-default);
     --lb-action-fg-ghost-hover: var(--lb-fg-default);
     --lb-action-fg-ghost-pressed: var(--lb-fg-default);

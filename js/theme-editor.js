@@ -406,6 +406,14 @@
         }
       }
     }
+    // L1 — alpha colours (transparent + neutral washes)
+    if (data.primitives.transparent && data.primitives.transparent.$value !== undefined) {
+      push(rootDecls, '--lb-transparent', renderValue(data, data.primitives.transparent.$value, 'light'));
+    }
+    const nAlpha = data.primitives['neutral-alpha'] || {};
+    for (const step in nAlpha) {
+      if (nAlpha[step] && nAlpha[step].$value !== undefined) push(rootDecls, `--lb-neutral-alpha-${step}`, renderValue(data, nAlpha[step].$value, 'light'));
+    }
     // L1 — size
     if (data.primitives.size) {
       for (const k in data.primitives.size) {

@@ -492,6 +492,33 @@
         "$description": "oklch(0.115 0.005 75) — Near-black warm. bg-default in dark theme."
       }
     },
+    "transparent": {
+      "$value": "#00000000",
+      "$type": "color",
+      "$description": "Fully transparent — the CSS `transparent` keyword as hex (alpha 0). For controls that take the colour of whatever surface they sit on. Added 2026-11-04 (value-deck ghost-on-tint)."
+    },
+    "neutral-alpha": {
+      "900-4": {
+        "$value": "#13110e0b",
+        "$type": "color",
+        "$description": "neutral.900 at 4% alpha. Over neutral.50 it reproduces neutral.100 (bg.strong, light) within one RGB step, and darkens any other surface by the same amount. Keep the RGB in step with neutral.900."
+      },
+      "900-11": {
+        "$value": "#13110e1c",
+        "$type": "color",
+        "$description": "neutral.900 at 11% alpha. Over neutral.50 it reproduces neutral.200 (bg.bolder, light) within one RGB step. Keep the RGB in step with neutral.900."
+      },
+      "50-5": {
+        "$value": "#f7f5f10d",
+        "$type": "color",
+        "$description": "neutral.50 at 5% alpha. Over neutral.950 it reproduces neutral.900 (bg.strong, dark) within two RGB steps, and lightens any other surface by the same amount. Keep the RGB in step with neutral.50."
+      },
+      "50-13": {
+        "$value": "#f7f5f122",
+        "$type": "color",
+        "$description": "neutral.50 at 13% alpha. Over neutral.950 it reproduces neutral.800 (bg.bolder, dark) within two RGB steps. Keep the RGB in step with neutral.50."
+      }
+    },
     "red": {
       "50": {
         "$value": "#faf3f2",
@@ -1646,6 +1673,21 @@
           "$type": "color",
           "$description": "Background two steps UP from default — most present neutral chrome bg (pressed/active state, divider fills, inset regions). Position +2 on the L2 intensity scale."
         },
+        "transparent": {
+          "$value": "{transparent}",
+          "$type": "color",
+          "$description": "No fill — the control shows the surface it sits on (ghost and icon buttons at rest). Measure contrast over the surface underneath."
+        },
+        "translucent": {
+          "$value": "{neutral-alpha.900-4}",
+          "$type": "color",
+          "$description": "See-through wash one step up from the surface underneath. Over bg.default it matches bg.strong; on a tinted surface it still shows. For fills that must work on any surface."
+        },
+        "translucent-strong": {
+          "$value": "{neutral-alpha.900-11}",
+          "$type": "color",
+          "$description": "See-through wash two steps up from the surface underneath. Over bg.default it matches bg.bolder; on a tinted surface it still shows."
+        },
         "inverse": {
           "$value": "{neutral.900}",
           "$type": "color",
@@ -2167,6 +2209,21 @@
           "$value": "{neutral.800}",
           "$type": "color",
           "$description": "Background two steps UP from default — most present neutral chrome bg (pressed/active state, divider fills, inset regions). Position +2 on the L2 intensity scale. Mirrors light theme's neutral.50 → neutral.200 progression with neutral.950 → neutral.800."
+        },
+        "transparent": {
+          "$value": "{transparent}",
+          "$type": "color",
+          "$description": "No fill — the control shows the surface it sits on (ghost and icon buttons at rest). Measure contrast over the surface underneath."
+        },
+        "translucent": {
+          "$value": "{neutral-alpha.50-5}",
+          "$type": "color",
+          "$description": "See-through wash one step up from the surface underneath. Over bg.default it matches bg.strong; on a tinted surface it still shows. For fills that must work on any surface."
+        },
+        "translucent-strong": {
+          "$value": "{neutral-alpha.50-13}",
+          "$type": "color",
+          "$description": "See-through wash two steps up from the surface underneath. Over bg.default it matches bg.bolder; on a tinted surface it still shows."
         },
         "inverse": {
           "$value": "{neutral.50}",
@@ -3574,24 +3631,24 @@
         "$description": "Filled danger button border — disabled."
       },
       "bg-ghost-default": {
-        "$value": "{bg.default}",
+        "$value": "{bg.transparent}",
         "$type": "color",
-        "$description": "Ghost button background — default (transparent)."
+        "$description": "Ghost button background — default (transparent, shows the surface underneath). Was {bg.default} until 2026-11-04, which painted a page-coloured box on tinted surfaces."
       },
       "bg-ghost-hover": {
-        "$value": "{bg.strong}",
+        "$value": "{bg.translucent}",
         "$type": "color",
-        "$description": "Ghost button background — hovered."
+        "$description": "Ghost button background — hovered. See-through so the hover shows on any surface (same look as bg.strong on the page ground). Shared hover wash for list rows, nav items and other quiet controls."
       },
       "bg-ghost-pressed": {
-        "$value": "{bg.bolder}",
+        "$value": "{bg.translucent-strong}",
         "$type": "color",
-        "$description": "Ghost button background — pressed."
+        "$description": "Ghost button background — pressed. See-through (same look as bg.bolder on the page ground)."
       },
       "bg-ghost-disabled": {
-        "$value": "{bg.disabled}",
+        "$value": "{bg.transparent}",
         "$type": "color",
-        "$description": "Ghost button background — disabled."
+        "$description": "Ghost button background — disabled. No fill: a disabled ghost stays quieter than an enabled one (Material text button, Carbon ghost)."
       },
       "fg-ghost-default": {
         "$value": "{fg.default}",

@@ -1252,3 +1252,61 @@ entry/exit motion and `LB.playExit`, the shared scroll lock, the
 declarative modal opener, lightbox motion/swipe/video, hide-on-scroll
 header, `--lb-header-bg` / `--lb-header-pad-*` hooks, form-native
 Phone, `LB.observe`, scroll reveal and count-up, button press motion.
+
+### 39. Ghost on any surface — 5 new L1 + 3 new L2 alpha colour tokens (v1.13.0) ⬜ PLUGIN: 1 blocking fix before the next re-import, then re-import (2026-11-04, owner-approved)
+
+From value-deck finding ghost-on-tint. `action/bg-ghost-default` pointed
+at `bg/default`, so every ghost control painted a page-coloured box on a
+tinted surface (board lanes, the vertical nav, raised panels), and the
+ghost hover (`bg/strong`) vanished on those same surfaces. The ghost
+family now uses see-through colours:
+
+| Tier | Token | Value |
+|---|---|---|
+| L1 | `transparent` → `--lb-transparent` | `#00000000` |
+| L1 | `neutral-alpha.900-4` → `--lb-neutral-alpha-900-4` | `#13110e0b` (neutral.900 at 4%) |
+| L1 | `neutral-alpha.900-11` → `--lb-neutral-alpha-900-11` | `#13110e1c` (neutral.900 at 11%) |
+| L1 | `neutral-alpha.50-5` → `--lb-neutral-alpha-50-5` | `#f7f5f10d` (neutral.50 at 5%) |
+| L1 | `neutral-alpha.50-13` → `--lb-neutral-alpha-50-13` | `#f7f5f122` (neutral.50 at 13%) |
+| L2 | `bg/transparent` | light + dark → `{transparent}` |
+| L2 | `bg/translucent` | light → `{neutral-alpha.900-4}`, dark → `{neutral-alpha.50-5}` |
+| L2 | `bg/translucent-strong` | light → `{neutral-alpha.900-11}`, dark → `{neutral-alpha.50-13}` |
+
+L3 re-pointed (no renames): `action/bg-ghost-default` and
+`action/bg-ghost-disabled` → `bg/transparent`; `action/bg-ghost-hover` →
+`bg/translucent`; `action/bg-ghost-pressed` → `bg/translucent-strong`.
+The washes are tuned so that over `bg/default` they reproduce today's
+`bg/strong` / `bg/bolder` within 1–2 RGB steps (CONTRAST.md: ghost
+hover 15.83 vs 15.82, pressed 13.76 vs 13.78 light) — the page ground
+looks the same, tinted surfaces now get a visible hover.
+
+Plugin (checked read-only against letbe-tokens-figma, 2026-11-04):
+- **BLOCKING — fix before any re-import:** `hexToFigmaRGB` (main.js)
+  reads 6 hex digits and always returns `a: 1`. With it,
+  `#00000000` imports as opaque BLACK and every ghost button in the
+  library turns black. Read the 7th–8th digits into `a` when the hex has
+  8 digits (`parseInt(h.slice(6, 8), 16) / 255`). Check any other place
+  that converts a token hex to a Figma colour for the same 6-digit
+  assumption.
+- **No other code change needed for registration:** the 5 L1 land in
+  letbe/Core through `flattenTokens(primitives)`; the 3 L2 are in the
+  themed `bg` group and register in letbe/Semantic with Light/Dark.
+- **Contrast is already handled:** `wcagClassifyValue` knows
+  `#RRGGBBAA` and `transparent`, and the 3 ghost pairs in
+  `$schema.wcag_pairs` already carry `"over": "bg/default"`.
+- **Theme tab (judgement call for the plugin session):** the 3 new
+  `bg/*` rows hold see-through colours. Measuring them alone gives
+  nonsense contrast, and relinking them to an opaque L1 would bring the
+  box back. Show them as fixed rows (or leave them out of the relink /
+  explore grids).
+
+Library (after the plugin fix and re-import):
+- Ghost button and ghost icon-button fills stay bound to
+  `action/bg-ghost-*` and turn clear / see-through on their own.
+- Disabled ghost: no fill, `action/fg-ghost-disabled` text. If the
+  library's disabled ghost variants bind the generic `bg/disabled` +
+  `border/disabled`, rebind them to `action/bg-ghost-disabled` (clear,
+  no border).
+- Counter on ghost / neutral / subtle buttons: the digit is now
+  `fg/inverse` (was `action/bg-ghost-default`, which would be invisible)
+  — rebind the counter text in those variants.

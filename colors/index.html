@@ -18,7 +18,7 @@
 <main class="gallery-main">
   <section class="gallery-section" id="colors">
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Colors</h1>
-    <p class="gallery-section__desc">Eight L1 color palettes — neutral, violet (brand), blue (info), green (success), yellow (warning), red (danger), orange, cyan — each with 11 steps from 50 (lightest) to 950 (darkest). Primitives are immutable; theming happens by remapping L2 semantic tokens to different L1 palettes. Picking a brand color in the theme editor generates a new <code class="lb-code">brand.*</code> palette. Orange and cyan extend the palette into a full 8-hue rotation for the L2 categorical groups (data, code) used by charts and code blocks.</p>
+    <p class="gallery-section__desc">Eight L1 color palettes — neutral, violet (brand), blue (info), green (success), yellow (warning), red (danger), orange, cyan — each with 11 steps from 50 (lightest) to 950 (darkest). Primitives are immutable; theming happens by remapping L2 semantic tokens to different L1 palettes. Picking a brand color in the theme editor generates a new <code class="lb-code">brand.*</code> palette. Orange and cyan extend the palette into a full 8-hue rotation for the L2 categorical groups (data, code) used by charts and code blocks. A small Alpha group adds <code class="lb-code">transparent</code> and 4 see-through neutral washes for fills that must work on any surface.</p>
 
 <hr class="gallery-desc-divider">
 
@@ -701,6 +701,49 @@
           <div class="color-swatch__info">
             <div class="color-swatch__step">950</div>
             <div class="color-swatch__token">--lb-cyan-950</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="color-palette">
+      <div class="color-palette__header">
+        <h3 class="color-palette__name">Alpha</h3>
+        <p class="color-palette__desc">Colours with an alpha channel. <code class="lb-code">transparent</code> is the fill of ghost buttons at rest (L2 <code class="lb-code">bg-transparent</code>). The 4 neutral washes sit behind <code class="lb-code">bg-translucent</code> and <code class="lb-code">bg-translucent-strong</code>, the hover and pressed fills of ghost buttons, list rows and nav items: dark ink at 4% and 11% for the light theme, light ink at 5% and 13% for the dark theme. On the page ground they match bg-strong and bg-bolder, and on a tinted surface they still show. Each chip shows the wash over the page ground (left half) and a tinted surface (right half).</p>
+      </div>
+      <div class="color-palette__grid">
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background: linear-gradient(var(--lb-transparent), var(--lb-transparent)), repeating-conic-gradient(var(--lb-neutral-200) 0 25%, var(--lb-neutral-50) 0 50%) 0 0 / 12px 12px;"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__step">transparent</div>
+            <div class="color-swatch__token">--lb-transparent</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background: linear-gradient(var(--lb-neutral-alpha-900-4), var(--lb-neutral-alpha-900-4)), linear-gradient(90deg, var(--lb-neutral-50) 50%, var(--lb-neutral-100) 50%);"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__step">900-4</div>
+            <div class="color-swatch__token">--lb-neutral-alpha-900-4</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background: linear-gradient(var(--lb-neutral-alpha-900-11), var(--lb-neutral-alpha-900-11)), linear-gradient(90deg, var(--lb-neutral-50) 50%, var(--lb-neutral-100) 50%);"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__step">900-11</div>
+            <div class="color-swatch__token">--lb-neutral-alpha-900-11</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background: linear-gradient(var(--lb-neutral-alpha-50-5), var(--lb-neutral-alpha-50-5)), linear-gradient(90deg, var(--lb-neutral-950) 50%, var(--lb-neutral-900) 50%);"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__step">50-5</div>
+            <div class="color-swatch__token">--lb-neutral-alpha-50-5</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-swatch__chip" style="background: linear-gradient(var(--lb-neutral-alpha-50-13), var(--lb-neutral-alpha-50-13)), linear-gradient(90deg, var(--lb-neutral-950) 50%, var(--lb-neutral-900) 50%);"></div>
+          <div class="color-swatch__info">
+            <div class="color-swatch__step">50-13</div>
+            <div class="color-swatch__token">--lb-neutral-alpha-50-13</div>
           </div>
         </div>
       </div>

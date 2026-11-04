@@ -258,6 +258,17 @@ for (const palette of [...COLOR_HUE_PALETTES, ...COLOR_HUE_PALETTES_OPTIONAL]) {
   }
 }
 
+// Alpha colours (#rrggbbaa) — transparent plus the see-through neutral
+// washes behind bg.transparent / bg.translucent(-strong).
+heading('L1 — Alpha color primitives');
+if (data.primitives.transparent) {
+  lines.push(`  ${pathToCssVar('primitives.transparent', 'light')}: ${renderValue(data.primitives.transparent.$value, 'light')};`);
+}
+for (const step of Object.keys(data.primitives['neutral-alpha'] || {})) {
+  const tok = data.primitives['neutral-alpha'][step];
+  lines.push(`  ${pathToCssVar(`primitives.neutral-alpha.${step}`, 'light')}: ${renderValue(tok.$value, 'light')};`);
+}
+
 heading('L1 — Size primitives (spacing)');
 for (const step of Object.keys(data.primitives.size)) {
   const tok = data.primitives.size[step];

@@ -487,6 +487,10 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-btn--neutral:active:not(:disabled):not([aria-disabled="true"]),
 .lb-btn--subtle:active:not(:disabled):not([aria-disabled="true"]),
 .lb-btn--ghost:active:not(:disabled):not([aria-disabled="true"])  { background-color: var(--lb-action-bg-ghost-pressed); color: var(--lb-action-fg-ghost-pressed); }
+/* Disabled ghost keeps no fill: quieter than the enabled ghost, never a grey box. */
+.lb-btn--neutral:disabled, .lb-btn--neutral[aria-disabled="true"],
+.lb-btn--subtle:disabled, .lb-btn--subtle[aria-disabled="true"],
+.lb-btn--ghost:disabled, .lb-btn--ghost[aria-disabled="true"] { background-color: var(--lb-action-bg-ghost-disabled); border-color: transparent; color: var(--lb-action-fg-ghost-disabled); }
 
 .lb-btn__icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: var(--lb-size-6x); height: var(--lb-size-6x); }
 .lb-btn__icon svg { width: 100%; height: 100%; }
@@ -549,6 +553,9 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-icon-btn--neutral:hover:not(:disabled):not([aria-disabled="true"]),
 .lb-icon-btn--subtle:hover:not(:disabled):not([aria-disabled="true"]),
 .lb-icon-btn--ghost:hover:not(:disabled):not([aria-disabled="true"]) { background-color: var(--lb-action-bg-ghost-hover); color: var(--lb-action-fg-ghost-hover); }
+.lb-icon-btn--neutral:disabled, .lb-icon-btn--neutral[aria-disabled="true"],
+.lb-icon-btn--subtle:disabled, .lb-icon-btn--subtle[aria-disabled="true"],
+.lb-icon-btn--ghost:disabled, .lb-icon-btn--ghost[aria-disabled="true"] { background-color: var(--lb-action-bg-ghost-disabled); border-color: transparent; color: var(--lb-action-fg-ghost-disabled); }
 
 /* ═══════════════════════════════════════════════════════════
    BUTTON GROUP
@@ -689,7 +696,9 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 
 /* Per-button-variant colour mapping — bg = host's text colour,
    digit = host's bg colour. Matches the inverted-pill pattern the
-   old .lb-btn__count had. */
+   old .lb-btn__count had. Ghost-family hosts have no bg of their own
+   (transparent), so their digit takes fg-inverse, the ink made for a
+   fg-default fill. */
 .lb-btn--primary   .lb-counter--on-btn { background: var(--lb-action-fg-primary-default);   color: var(--lb-action-bg-primary-default); }
 .lb-btn--accent-2  .lb-counter--on-btn { background: var(--lb-action-fg-accent-2-default);  color: var(--lb-action-bg-accent-2-default); }
 .lb-btn--accent-3  .lb-counter--on-btn { background: var(--lb-action-fg-accent-3-default);  color: var(--lb-action-bg-accent-3-default); }
@@ -697,7 +706,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-btn--secondary .lb-counter--on-btn { background: var(--lb-action-fg-secondary-default); color: var(--lb-action-bg-secondary-default); }
 .lb-btn--neutral   .lb-counter--on-btn,
 .lb-btn--subtle    .lb-counter--on-btn,
-.lb-btn--ghost     .lb-counter--on-btn { background: var(--lb-action-fg-ghost-default);     color: var(--lb-action-bg-ghost-default); }
+.lb-btn--ghost     .lb-counter--on-btn { background: var(--lb-action-fg-ghost-default);     color: var(--lb-fg-inverse); }
 
 /* When inside a small button, downsize automatically without
    needing a second --small modifier on the counter. */
@@ -3275,15 +3284,6 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media__speed:hover { background: var(--lb-action-bg-ghost-hover); }
 .lb-media__speed:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: var(--lb-size-0-5x); }
 
-/* Minimal aesthetic for the audio / album / compact / card variants
-   (NOT --video). Transparent at rest, faint ghost-hover on hover —
-   mirrors the pattern the video variant already uses. Scoped to
-   .lb-media so it doesn't affect any other .lb-icon-btn--ghost elsewhere
-   in the DS. */
-.lb-media:not(.lb-media--video) .lb-icon-btn--ghost,
-.lb-media:not(.lb-media--video) .lb-media__speed { background-color: transparent; }
-.lb-media:not(.lb-media--video) .lb-icon-btn--ghost:hover:not(:disabled):not([aria-disabled="true"]),
-.lb-media:not(.lb-media--video) .lb-media__speed:hover { background-color: var(--lb-bg-bolder); }
 
 /* Scrubber + volume share the same rail/fill structure. The native
    range input sits transparent on top for keyboard + drag; the visible

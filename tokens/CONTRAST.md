@@ -52,9 +52,9 @@ but are tracked so drift stays visible. Regenerate after any token change.
 | ✓ | `action-fg-secondary-default` on `action-bg-secondary-default` | secondary button | 17.31 | 4.5 |
 | ✓ | `action-fg-secondary-hover` on `action-bg-secondary-hover` | secondary button hover | 15.82 | 4.5 |
 | ✓ | `action-fg-secondary-pressed` on `action-bg-secondary-pressed` | secondary button pressed | 13.78 | 4.5 |
-| ✓ | `action-fg-ghost-default` on `action-bg-ghost-default` | ghost button | 17.31 | 4.5 |
-| ✓ | `action-fg-ghost-hover` on `action-bg-ghost-hover` | ghost button hover | 15.82 | 4.5 |
-| ✓ | `action-fg-ghost-pressed` on `action-bg-ghost-pressed` | ghost button pressed | 13.78 | 4.5 |
+| ✓ | `action-fg-ghost-default` on `action-bg-ghost-default` (over bg-default) | ghost button | 17.31 | 4.5 |
+| ✓ | `action-fg-ghost-hover` on `action-bg-ghost-hover` (over bg-default) | ghost button hover | 15.83 | 4.5 |
+| ✓ | `action-fg-ghost-pressed` on `action-bg-ghost-pressed` (over bg-default) | ghost button pressed | 13.76 | 4.5 |
 | ✓ | `action-fg-danger-default` on `action-bg-danger-default` | danger button | 6.11 | 4.5 |
 | ✓ | `action-fg-danger-hover` on `action-bg-danger-hover` | danger button hover | 9.91 | 4.5 |
 | ✓ | `action-fg-danger-pressed` on `action-bg-danger-pressed` | danger button pressed | 14.47 | 4.5 |
@@ -135,9 +135,9 @@ but are tracked so drift stays visible. Regenerate after any token change.
 | ✓ | `action-fg-secondary-default` on `action-bg-secondary-default` | secondary button | 17.09 | 4.5 |
 | ✓ | `action-fg-secondary-hover` on `action-bg-secondary-hover` | secondary button hover | 15.82 | 4.5 |
 | ✓ | `action-fg-secondary-pressed` on `action-bg-secondary-pressed` | secondary button pressed | 12.83 | 4.5 |
-| ✓ | `action-fg-ghost-default` on `action-bg-ghost-default` | ghost button | 17.09 | 4.5 |
-| ✓ | `action-fg-ghost-hover` on `action-bg-ghost-hover` | ghost button hover | 15.82 | 4.5 |
-| ✓ | `action-fg-ghost-pressed` on `action-bg-ghost-pressed` | ghost button pressed | 12.83 | 4.5 |
+| ✓ | `action-fg-ghost-default` on `action-bg-ghost-default` (over bg-default) | ghost button | 17.09 | 4.5 |
+| ✓ | `action-fg-ghost-hover` on `action-bg-ghost-hover` (over bg-default) | ghost button hover | 15.83 | 4.5 |
+| ✓ | `action-fg-ghost-pressed` on `action-bg-ghost-pressed` (over bg-default) | ghost button pressed | 12.84 | 4.5 |
 | ✓ | `action-fg-danger-default` on `action-bg-danger-default` | danger button | 6.11 | 4.5 |
 | ✓ | `action-fg-danger-hover` on `action-bg-danger-hover` | danger button hover | 9.91 | 4.5 |
 | ✓ | `action-fg-danger-pressed` on `action-bg-danger-pressed` | danger button pressed | 14.47 | 4.5 |
