@@ -5,6 +5,18 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Overlays animate in and out** (motion change). Modal: the backdrop
+  fades and the dialog rises in on every open; `close()` adds
+  `.lb-modal-backdrop--leaving`, waits for its exit (fade plus a short
+  drop), then hides and fires `lb-modal-close`. Sheet slides back out
+  (`.lb-sheet-root--leaving`), the header drawer slides out with its scrim
+  fading (`.lb-header--drawer-leaving`). Each leaving class is a hook:
+  style it and the close waits for your animation. The helper is public
+  as `LB.playExit(el, leavingClass, done)`. Reduced motion: no entry or
+  exit, closes stay instant (Sheet's entry slide now honours it too).
+  `isOpen()` on Modal and Sheet; re-opening mid-exit cancels the exit.
+  `LB.alert` dialogs leave the DOM on every close path (Esc included).
+
 ## [1.5.0] — 2026-11-04
 
 Minor: fixes from the mihailo.net and mihailo.ink findings, plus two

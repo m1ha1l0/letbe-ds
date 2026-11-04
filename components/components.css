@@ -2597,6 +2597,23 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-modal__close:not(.lb-icon-btn):focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: var(--lb-size-0-5x); }
 .lb-modal__body { padding: var(--lb-size-6x); overflow-y: auto; flex: 1; color: var(--lb-fg-default); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); line-height: var(--lb-t-body-m-line-height); }
 .lb-modal__footer { padding: var(--lb-size-4x) var(--lb-size-6x); border-top: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); display: flex; justify-content: flex-end; gap: var(--lb-size-2x); font-family: var(--lb-t-body-m-font-family); }
+/* Motion — the entry replays every time the backdrop is shown (display
+   none → flex restarts it): backdrop fades, dialog fades and rises. On
+   close LB.Modal adds --leaving and hides only after the exit has
+   played: fade plus a short drop. The --leaving class is the hook for a
+   custom exit (LB.Modal waits for whatever finite animation it starts).
+   Reduced motion: no entry, no exit, the close is instant. */
+@keyframes lb-overlay-fade-in { from { opacity: 0; } }
+@keyframes lb-overlay-fade-out { to { opacity: 0; } }
+@keyframes lb-modal-rise-in { from { opacity: 0; transform: translateY(var(--lb-size-2x)); } }
+@keyframes lb-modal-drop-out { to { opacity: 0; transform: translateY(var(--lb-size-2x)); } }
+.lb-modal-backdrop--leaving { pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .lb-modal-backdrop { animation: lb-overlay-fade-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
+  .lb-modal-backdrop > .lb-modal { animation: lb-modal-rise-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
+  .lb-modal-backdrop--leaving { animation: lb-overlay-fade-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-modal-backdrop--leaving > .lb-modal { animation: lb-modal-drop-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+}
 
 /* ═══════════════════════════════════════════════════════════
    LIGHTBOX — image viewer chrome over the modal anatomy
@@ -2646,6 +2663,24 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 @keyframes lb-sheet-left-in   { from { transform: translateX(-100%); } to { transform: translateX(0); } }
 @keyframes lb-sheet-bottom-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
 @keyframes lb-sheet-top-in    { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+/* Exit — LB.Sheet adds --leaving on close and hides after the slide-out
+   (the reverse of the entry, accelerating). Reduced motion: no slide
+   either way. */
+@keyframes lb-sheet-right-out  { to { transform: translateX(100%); } }
+@keyframes lb-sheet-left-out   { to { transform: translateX(-100%); } }
+@keyframes lb-sheet-bottom-out { to { transform: translateY(100%); } }
+@keyframes lb-sheet-top-out    { to { transform: translateY(-100%); } }
+.lb-sheet-root--leaving { pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .lb-sheet-root--leaving .lb-sheet-overlay { animation: lb-overlay-fade-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet--right  { animation: lb-sheet-right-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet--left   { animation: lb-sheet-left-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet--bottom { animation: lb-sheet-bottom-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet--top    { animation: lb-sheet-top-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lb-sheet, .lb-sheet-overlay { animation: none; }
+}
 .lb-sheet__header { display: flex; align-items: center; justify-content: space-between; padding: var(--lb-size-4x) var(--lb-size-4x) var(--lb-size-3x); border-bottom: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); flex-shrink: 0; }
 .lb-sheet__title { margin: 0; font-family: var(--lb-t-heading-s-font-family); font-size: var(--lb-t-heading-s-font-size); font-weight: var(--lb-t-heading-s-font-weight); line-height: var(--lb-t-heading-s-line-height); letter-spacing: var(--lb-t-heading-s-letter-spacing); color: var(--lb-fg-default); }
 .lb-sheet__close { display: flex; align-items: center; justify-content: center; width: var(--lb-size-8x); height: var(--lb-size-8x); padding: 0; background: none; border: none; border-radius: var(--lb-radius-interactive); color: var(--lb-fg-muted); cursor: pointer; transition: background var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); margin-left: auto; }
@@ -8706,6 +8741,17 @@ img.lb-list__icon--round { object-fit: cover; }
    without `hidden` stays closed instead of flashing open on load. */
 .lb-header__drawer:not([role="dialog"]) { display: none; }
 @keyframes lb-header-drawer-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+/* Exit — LB.Header adds --drawer-leaving on close and hides the drawer
+   after it has slid out and the scrim has faded. The class is the hook
+   for a custom exit. */
+@keyframes lb-header-drawer-out { to { transform: translateX(100%); } }
+.lb-header--drawer-leaving .lb-header__drawer,
+.lb-header--drawer-leaving .lb-header__scrim { pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .lb-header__scrim { animation: lb-overlay-fade-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
+  .lb-header--drawer-leaving .lb-header__drawer { animation: lb-header-drawer-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-header--drawer-leaving .lb-header__scrim { animation: lb-overlay-fade-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+}
 .lb-header__drawer-head {
   display: flex;
   align-items: center;

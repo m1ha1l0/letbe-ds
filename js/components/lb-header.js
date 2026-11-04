@@ -66,6 +66,7 @@
 
       // ── Mobile drawer wiring ──
       this._drawerOpen = false;
+      this._cancelExit = null;
       this._releaseTrap = null;
       this._prevFocus = null;
       if (this._toggle && this._drawer) {
@@ -156,7 +157,16 @@
     }
 
     // ── Mobile drawer ──
+    // Closing plays an exit: lb-header--drawer-leaving on the header (the
+    // public hook — style it for your own exit), then the drawer hides.
     openDrawer() {
+      if (this._cancelExit) {
+        // Re-opened mid-exit: everything is still in its open state.
+        this._cancelExit(); this._cancelExit = null;
+        this._drawerOpen = true;
+        this._toggle.setAttribute('aria-expanded', 'true');
+        return;
+      }
       if (this._drawerOpen || !this._drawer) return;
       this._prevFocus = document.activeElement;
       this._drawer.hidden = false;
@@ -173,15 +183,21 @@
     }
     closeDrawer() {
       if (!this._drawerOpen) return;
-      this._drawer.hidden = true;
-      this._scrim.hidden = true;
-      this.el.classList.remove('lb-header--drawer-open');
-      LB.unlockScroll(this);
-      this._toggle.setAttribute('aria-expanded', 'false');
       this._drawerOpen = false;
-      if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
-      if (this._prevFocus && this._prevFocus.focus) this._prevFocus.focus();
-      this.el.dispatchEvent(new CustomEvent('lb-header-drawer-close', { bubbles: true }));
+      this._toggle.setAttribute('aria-expanded', 'false');
+      const hide = () => {
+        this._cancelExit = null;
+        this._drawer.hidden = true;
+        this._scrim.hidden = true;
+        this.el.classList.remove('lb-header--drawer-open');
+        LB.unlockScroll(this);
+        if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
+        if (this._prevFocus && this._prevFocus.focus) this._prevFocus.focus();
+        this.el.dispatchEvent(new CustomEvent('lb-header-drawer-close', { bubbles: true }));
+      };
+      // Resized up to desktop: the drawer is display:none already, no exit.
+      if (LB.playExit && this._isMobile()) this._cancelExit = LB.playExit(this.el, 'lb-header--drawer-leaving', hide);
+      else hide();
     }
     toggleDrawer() { this._drawerOpen ? this.closeDrawer() : this.openDrawer(); }
     isDrawerOpen() { return this._drawerOpen; }

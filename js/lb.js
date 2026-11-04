@@ -79,6 +79,42 @@ const LB = (() => {
     if (!_scrollLockOwners.size) document.documentElement.classList.remove('lb-scroll-locked');
   }
 
+  // ─── EXIT MOTION ───────────────────────────────────────────
+  // An overlay closes in two steps: add a leaving class, wait for the
+  // finite CSS animations/transitions that class starts anywhere in `el`
+  // (infinite ones such as a spinner are ignored), then run `done`, which
+  // hides the element. With nothing to wait for (reduced motion, or a
+  // theme that sets no exit) `done` runs synchronously, exactly like the
+  // old instant close. A timeout guard means a cancelled or never-ending
+  // animation can never keep an overlay on screen. The leaving class is
+  // the public hook: style it to give any overlay your own exit.
+  // Returns a cancel function for re-opening mid-exit, or null when the
+  // close already finished synchronously.
+  function playExit(el, cls, done) {
+    el.classList.add(cls);
+    const anims = (el.getAnimations ? el.getAnimations({ subtree: true }) : [])
+      .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime));
+    let settled = false;
+    let guard = null;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(guard);
+      el.classList.remove(cls);
+      done();
+    };
+    if (!anims.length) { finish(); return null; }
+    const longest = Math.max(...anims.map((a) => a.effect.getComputedTiming().endTime - (a.currentTime || 0)));
+    guard = setTimeout(finish, Math.max(0, longest) + 100);
+    Promise.allSettled(anims.map((a) => a.finished)).then(finish);
+    return () => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(guard);
+      el.classList.remove(cls);
+    };
+  }
+
   // ─── POINTER DRAG ──────────────────────────────────────────
   // Shared lifecycle helper for pointer-event drags. Replaces the
   // hand-rolled pointerdown / setPointerCapture / pointermove / pointerup
@@ -394,6 +430,8 @@ const LB = (() => {
     }
 
     _init() {
+      this._isOpen = false;
+      this._cancelExit = null;
       const closeBtn = this.modal?.querySelector('.lb-modal__close');
       if (closeBtn) closeBtn.addEventListener('click', () => this.close());
 
@@ -408,7 +446,19 @@ const LB = (() => {
       });
     }
 
+    // Opening plays the CSS entry (backdrop fade, dialog rise); closing
+    // adds .lb-modal-backdrop--leaving and hides only once its exit has
+    // played (see playExit). lb-modal-close fires after the dialog is gone.
     open() {
+      if (this._cancelExit) {
+        // Re-opened mid-exit: stay open, focus and lock are still held.
+        this._cancelExit();
+        this._cancelExit = null;
+        this._isOpen = true;
+        return;
+      }
+      if (this._isOpen) return;
+      this._isOpen = true;
       this._previousFocus = document.activeElement;
       this.backdrop.style.display = 'flex';
       this.backdrop.setAttribute('aria-modal', 'true');
@@ -418,13 +468,20 @@ const LB = (() => {
     }
 
     close() {
-      this.backdrop.style.display = 'none';
-      unlockScroll(this);
-      if (this._releaseTrap) this._releaseTrap();
-      if (this._previousFocus) this._previousFocus.focus();
-      if (this.onClose) this.onClose();
-      this.backdrop.dispatchEvent(new CustomEvent('lb-modal-close'));
+      if (!this._isOpen) return;
+      this._isOpen = false;
+      this._cancelExit = playExit(this.backdrop, 'lb-modal-backdrop--leaving', () => {
+        this._cancelExit = null;
+        this.backdrop.style.display = 'none';
+        unlockScroll(this);
+        if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
+        if (this._previousFocus) this._previousFocus.focus();
+        if (this.onClose) this.onClose();
+        this.backdrop.dispatchEvent(new CustomEvent('lb-modal-close'));
+      });
     }
+
+    isOpen() { return this._isOpen; }
 
     static open(el) {
       const instance = el._lbModal || new Modal(el);
@@ -492,6 +549,9 @@ const LB = (() => {
 
       const instance = new Modal(backdrop);
       backdrop._lbModal = instance;
+      // Every close path (buttons, Esc) removes the dialog from the DOM
+      // once its exit has played and focus is back on the trigger.
+      backdrop.addEventListener('lb-modal-close', () => backdrop.remove(), { once: true });
 
       // Track whether we've resolved via an explicit button click. The
       // ESC / backdrop path goes through instance.close() which we
@@ -512,8 +572,6 @@ const LB = (() => {
         // override's resolve(false) inside instance.close().
         safeResolve(result);
         instance.close();
-        // Wait for close animation / focus restore, then remove from DOM
-        setTimeout(() => backdrop.remove(), 0);
       };
 
       backdrop.querySelector('[data-lb-alert-action="cancel"]').addEventListener('click', () => finish(false));
@@ -545,6 +603,8 @@ const LB = (() => {
       this.overlay = el.querySelector('.lb-sheet-overlay');
       this.onClose = options.onClose || null;
       this._previousFocus = null;
+      this._isOpen = false;
+      this._cancelExit = null;
       this._init();
     }
 
@@ -557,7 +617,12 @@ const LB = (() => {
       });
     }
 
+    // Same two-step close as Modal: .lb-sheet-root--leaving plays the
+    // slide-out, then the root hides and lb-sheet-close fires.
     open() {
+      if (this._cancelExit) { this._cancelExit(); this._cancelExit = null; this._isOpen = true; return; }
+      if (this._isOpen) return;
+      this._isOpen = true;
       this._previousFocus = document.activeElement;
       this.root.style.display = 'flex';
       lockScroll(this);
@@ -567,12 +632,19 @@ const LB = (() => {
     }
 
     close() {
-      this.root.style.display = 'none';
-      unlockScroll(this);
-      if (this._previousFocus) this._previousFocus.focus();
-      if (this.onClose) this.onClose();
-      this.root.dispatchEvent(new CustomEvent('lb-sheet-close'));
+      if (!this._isOpen) return;
+      this._isOpen = false;
+      this._cancelExit = playExit(this.root, 'lb-sheet-root--leaving', () => {
+        this._cancelExit = null;
+        this.root.style.display = 'none';
+        unlockScroll(this);
+        if (this._previousFocus) this._previousFocus.focus();
+        if (this.onClose) this.onClose();
+        this.root.dispatchEvent(new CustomEvent('lb-sheet-close'));
+      });
     }
+
+    isOpen() { return this._isOpen; }
   }
 
   // ─── DROPDOWN (Combobox) ───────────────────────────────────
@@ -9042,6 +9114,7 @@ const LB = (() => {
     setFlagBasePath,
     lockScroll,
     unlockScroll,
+    playExit,
   };
 })();
 
