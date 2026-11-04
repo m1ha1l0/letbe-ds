@@ -5,6 +5,17 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Expressive motion tier** (new tokens, owner-approved). L1
+  `--lb-duration-700`, `--lb-ease-emphasized` (0.83, 0, 0.17, 1) and
+  `--lb-ease-emphasized-decelerate` (0.16, 1, 0.3, 1); L2
+  `--lb-animation-dur-expressive`, `--lb-animation-ease-expressive` and
+  `--lb-animation-ease-expressive-in`. For large surfaces and content
+  arriving, never for UI feedback (`duration.500` stays the longest UI
+  duration).
+- **Motion change:** the full-screen phone menu (fade + link stagger),
+  the full-screen modal entry, scroll reveal and card media zoom now run
+  on the expressive tier (700ms) instead of `dur-slow` (300ms). Theme
+  them by re-pointing the L2 aliases.
 ## [1.9.0] — 2026-11-04
 
 Minor: new components and motion from the mihailo.net and mihailo.ink

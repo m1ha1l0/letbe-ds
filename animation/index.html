@@ -137,7 +137,7 @@
 <main class="gallery-main">
   <section class="gallery-section" id="animation">
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Animation</h1>
-    <p class="gallery-section__desc">Motion tokens — durations (0–500ms) and easing curves. L2 aliases give semantic names like <code class="lb-code">dur-fast</code> (100ms, state changes), <code class="lb-code">dur-normal</code> (150ms, menus/tooltips), <code class="lb-code">dur-gentle</code> (200ms, transitions), <code class="lb-code">ease-ui</code> (standard UI), and <code class="lb-code">ease-bounce</code> (playful spring). Components that animate drop their motion individually under <code class="lb-code">prefers-reduced-motion: reduce</code> — there is no global reset.</p>
+    <p class="gallery-section__desc">Motion tokens — durations (0–500ms for UI, 700ms for expressive motion) and easing curves. L2 aliases give semantic names like <code class="lb-code">dur-fast</code> (100ms, state changes), <code class="lb-code">dur-normal</code> (150ms, menus/tooltips), <code class="lb-code">dur-gentle</code> (200ms, transitions), <code class="lb-code">ease-ui</code> (standard UI), and <code class="lb-code">ease-bounce</code> (playful spring). The expressive tier — <code class="lb-code">dur-expressive</code> (700ms), <code class="lb-code">ease-expressive</code> and <code class="lb-code">ease-expressive-in</code> — is for large surfaces and content arriving (full-screen menu and modal, scroll reveal, media zoom), never for UI feedback. Components that animate drop their motion individually under <code class="lb-code">prefers-reduced-motion: reduce</code> — there is no global reset.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> under <code class="lb-code">prefers-reduced-motion: reduce</code> the previews below freeze and a visible notice appears above them — the token values still resolve, only the motion stops. Each row carries a real <code class="lb-code">&lt;button aria-label="Play preview"&gt;</code>, so a preview is keyboard-triggerable rather than hover-only, and continuous looping is opt-in behind a <code class="lb-code">role=switch</code> toggle that starts off. Components with ambient or transform motion drop it under the same query — the badge pulse and the interactive-card lift, among others.</p>
     <hr class="gallery-desc-divider">
 
@@ -192,6 +192,11 @@
         <div class="anim-runway"><div class="anim-box"></div></div>
         <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
       </div>
+      <div class="anim-row" data-anim style="--_dur: 700ms;">
+        <div class="anim-row__info"><div class="anim-row__token">--lb-duration-700</div><div class="anim-row__value">700ms · expressive only</div></div>
+        <div class="anim-runway"><div class="anim-box"></div></div>
+        <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
+      </div>
     </div>
 
     <div class="gallery-label">L1 Easing primitives</div>
@@ -218,6 +223,16 @@
       </div>
       <div class="anim-row" data-anim style="--_dur: 800ms; --_ease: cubic-bezier(0.2, 1.4, 0.4, 1);">
         <div class="anim-row__info"><div class="anim-row__token">--lb-ease-spring</div><div class="anim-row__value">cubic-bezier(0.2, 1.4, 0.4, 1) — bounce</div></div>
+        <div class="anim-runway"><div class="anim-box"></div></div>
+        <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
+      </div>
+      <div class="anim-row" data-anim style="--_dur: 700ms; --_ease: var(--lb-ease-emphasized);">
+        <div class="anim-row__info"><div class="anim-row__token">--lb-ease-emphasized</div><div class="anim-row__value">cubic-bezier(0.83, 0, 0.17, 1) — expressive in-out</div></div>
+        <div class="anim-runway"><div class="anim-box"></div></div>
+        <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
+      </div>
+      <div class="anim-row" data-anim style="--_dur: 700ms; --_ease: var(--lb-ease-emphasized-decelerate);">
+        <div class="anim-row__info"><div class="anim-row__token">--lb-ease-emphasized-decelerate</div><div class="anim-row__value">cubic-bezier(0.16, 1, 0.3, 1) — expressive entrance</div></div>
         <div class="anim-runway"><div class="anim-box"></div></div>
         <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
       </div>
@@ -280,6 +295,16 @@
       </div>
       <div class="anim-row" data-anim style="--_dur: 800ms; --_ease: var(--lb-animation-ease-bounce);">
         <div class="anim-row__info"><div class="anim-row__token">--lb-animation-ease-bounce</div><div class="anim-row__value">→ ease-spring · Playful, notification-style motion</div></div>
+        <div class="anim-runway"><div class="anim-box"></div></div>
+        <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
+      </div>
+      <div class="anim-row" data-anim style="--_dur: var(--lb-animation-dur-expressive); --_ease: var(--lb-animation-ease-expressive);">
+        <div class="anim-row__info"><div class="anim-row__token">--lb-animation-dur-expressive · ease-expressive</div><div class="anim-row__value">→ duration-700 · ease-emphasized · A large surface moving into place (full-screen menu)</div></div>
+        <div class="anim-runway"><div class="anim-box"></div></div>
+        <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
+      </div>
+      <div class="anim-row" data-anim style="--_dur: var(--lb-animation-dur-expressive); --_ease: var(--lb-animation-ease-expressive-in);">
+        <div class="anim-row__info"><div class="anim-row__token">--lb-animation-ease-expressive-in</div><div class="anim-row__value">→ ease-emphasized-decelerate · Expressive entrances: scroll reveal, full-screen modal, media zoom</div></div>
         <div class="anim-runway"><div class="anim-box"></div></div>
         <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
       </div>

@@ -142,7 +142,7 @@
 @keyframes lb-reveal-in { from { opacity: 0; translate: 0 var(--lb-size-6x); } }
 @media (prefers-reduced-motion: no-preference) {
   .lb-reveal-on [data-lb-reveal]:not(.lb-revealed) { opacity: 0; }
-  .lb-reveal-on [data-lb-reveal].lb-revealed { animation: lb-reveal-in var(--lb-animation-dur-slow) var(--lb-animation-ease-in) var(--lb-reveal-delay, 0ms) backwards; }
+  .lb-reveal-on [data-lb-reveal].lb-revealed { animation: lb-reveal-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in) var(--lb-reveal-delay, 0ms) backwards; }
 }
 @media print {
   [data-lb-reveal] { opacity: 1 !important; translate: none !important; }
@@ -1239,7 +1239,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 /* Media zoom (opt-in, --media-zoom): the picture eases in a touch while
    the card is hovered or focused; the frame stays put (media clips). */
 @media (prefers-reduced-motion: no-preference) {
-  .lb-card--media-zoom .lb-card__media > :is(img, video) { transition: scale var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); }
+  .lb-card--media-zoom .lb-card__media > :is(img, video) { transition: scale var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in); }
   .lb-card--media-zoom:is(:hover, :focus-visible) .lb-card__media > :is(img, video) { scale: 1.03; /* design-intent: hover zoom depth */ }
 }
 .lb-card__media img,
@@ -2769,6 +2769,8 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 @media (prefers-reduced-motion: no-preference) {
   .lb-modal-backdrop { animation: lb-overlay-fade-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
   .lb-modal-backdrop > .lb-modal { animation: lb-modal-rise-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
+  /* A full-screen dialog is a large surface arriving: the expressive tier. */
+  .lb-modal-backdrop > .lb-modal--fullscreen { animation: lb-modal-rise-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in); }
   .lb-modal-backdrop--leaving { animation: lb-overlay-fade-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
   .lb-modal-backdrop--leaving > .lb-modal { animation: lb-modal-drop-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
 }
@@ -9049,9 +9051,9 @@ img.lb-list__icon--round { object-fit: cover; }
 .lb-header__drawer--full .lb-header__drawer-actions .lb-btn--primary { order: -1; }
 .lb-header__drawer--full > .lb-header__drawer-footer { justify-content: center; }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-header__drawer--full { animation: lb-overlay-fade-in var(--lb-animation-dur-slow) var(--lb-animation-ease-in); }
+  .lb-header__drawer--full { animation: lb-overlay-fade-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive); }
   .lb-header__drawer--full .lb-header__link {
-    animation: lb-modal-rise-in var(--lb-animation-dur-slow) var(--lb-animation-ease-in) backwards;
+    animation: lb-modal-rise-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in) backwards;
     animation-delay: calc(var(--lb-header-link-i, 0) * var(--lb-animation-dur-micro));
   }
   .lb-header--drawer-leaving .lb-header__drawer--full { animation: lb-overlay-fade-out var(--lb-animation-dur-gentle) var(--lb-animation-ease-out) forwards; }

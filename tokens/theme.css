@@ -213,6 +213,7 @@
   --lb-duration-200: 200ms;
   --lb-duration-300: 300ms;
   --lb-duration-500: 500ms;
+  --lb-duration-700: 700ms;
 
   /* ─── L1 — Ease primitives ─── */
   --lb-ease-linear: cubic-bezier(0, 0, 1, 1);
@@ -220,6 +221,8 @@
   --lb-ease-decelerate: cubic-bezier(0, 0, 0, 1);
   --lb-ease-accelerate: cubic-bezier(0.3, 0, 1, 1);
   --lb-ease-spring: cubic-bezier(0.2, 1.4, 0.4, 1);
+  --lb-ease-emphasized: cubic-bezier(0.83, 0, 0.17, 1);
+  --lb-ease-emphasized-decelerate: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* ─── L1 — Z-index primitives ─── */
   --lb-z-0: 0;
@@ -533,6 +536,9 @@
   --lb-animation-ease-in: var(--lb-ease-decelerate);
   --lb-animation-ease-out: var(--lb-ease-accelerate);
   --lb-animation-ease-bounce: var(--lb-ease-spring);
+  --lb-animation-dur-expressive: var(--lb-duration-700);
+  --lb-animation-ease-expressive: var(--lb-ease-emphasized);
+  --lb-animation-ease-expressive-in: var(--lb-ease-emphasized-decelerate);
 
   /* ─── L2 — Border-width semantic ─── */
   --lb-border-width-none: var(--lb-size-0);

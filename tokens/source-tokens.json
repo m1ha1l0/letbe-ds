@@ -1272,7 +1272,12 @@
       "500": {
         "$value": "500ms",
         "$type": "duration",
-        "$description": "Maximum allowed. Anything longer feels sluggish."
+        "$description": "Longest UI duration. Anything longer feels sluggish for feedback; expressive motion uses 700."
+      },
+      "700": {
+        "$value": "700ms",
+        "$type": "duration",
+        "$description": "Expressive only: full-screen surfaces arriving and content reveals. Never for UI feedback."
       }
     },
     "ease": {
@@ -1300,6 +1305,16 @@
         "$value": "cubic-bezier(0.2, 1.4, 0.4, 1)",
         "$type": "cubicBezier",
         "$description": "Overshoots then settles. Playful — use intentionally."
+      },
+      "emphasized": {
+        "$value": "cubic-bezier(0.83, 0, 0.17, 1)",
+        "$type": "cubicBezier",
+        "$description": "Slow start, fast middle, long settle. Expressive in-out for large surfaces moving into place."
+      },
+      "emphasized-decelerate": {
+        "$value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "$type": "cubicBezier",
+        "$description": "Fast arrival, very long settle. Expressive entrances: content rising in, a full-screen surface opening."
       }
     },
     "z": {
@@ -3246,6 +3261,21 @@
           "$value": "{ease.spring}",
           "$type": "cubicBezier",
           "$description": "Playful emphasis — use sparingly."
+        },
+        "dur-expressive": {
+          "$value": "{duration.700}",
+          "$type": "duration",
+          "$description": "Expressive motion: full-screen menus and modals arriving, scroll reveals, media zoom. Never for UI feedback."
+        },
+        "ease-expressive": {
+          "$value": "{ease.emphasized}",
+          "$type": "cubicBezier",
+          "$description": "Expressive in-out: a large surface moving into place (curtain, sheet-like reveal)."
+        },
+        "ease-expressive-in": {
+          "$value": "{ease.emphasized-decelerate}",
+          "$type": "cubicBezier",
+          "$description": "Expressive entrance: content rising in, a full-screen surface opening."
         }
       }
     },
