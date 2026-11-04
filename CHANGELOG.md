@@ -5,6 +5,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Icon List** (new, pure CSS): a short content list where each line
+  starts with an icon (principles, plan features, pros and cons). The
+  icon sits on the first line at the text's size and takes the text ink
+  or a status ink (`__icon--success|warning|danger|muted`); sizes follow
+  the type scale (default body-m, `--large` body-l, `--xlarge`
+  heading-xl).
 - **Description List** (new, pure CSS): label and value rows on a native
   `<dl>` — terms in the label role (muted), values in body ink; stacked,
   `--inline` (term column beside the values, stacks on phones) or

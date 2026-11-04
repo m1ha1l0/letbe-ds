@@ -110,6 +110,28 @@
 .lb-description-list--ruled { padding-block: var(--lb-size-6x); border-block: var(--lb-border-width-thin) solid var(--lb-border-default); }
 
 /* ═══════════════════════════════════════════════════════════
+   ICON LIST — <ul class="lb-icon-list">
+   A short content list where each line starts with an icon (the
+   principles a delivery meets, pros and cons, what a plan includes).
+   Not .lb-list, the interactive menu list. The icon sits on the first
+   line of its item at the text's own size (1lh box) and takes the ink
+   of the text unless a status modifier colours it. Sizes follow the
+   type scale: default body-m, --large body-l, --xlarge heading-xl.
+   Pure CSS; icons via data-lb-icon.
+   ═══════════════════════════════════════════════════════════ */
+.lb-icon-list { display: flex; flex-direction: column; gap: var(--lb-size-2x); margin: 0; padding: 0; list-style: none; font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); font-weight: var(--lb-t-body-m-font-weight); line-height: var(--lb-t-body-m-line-height); color: var(--lb-fg-default); }
+.lb-icon-list__item { display: flex; align-items: flex-start; gap: 0.5em; /* design-intent: icon gap scales with the list's type size */ }
+.lb-icon-list__icon,
+.lb-icon-list__icon[data-lb-icon] { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 1.1em; height: 1lh; } /* design-intent: icon a touch over the cap size, centred on the first line; ink inherited from the text */
+.lb-icon-list__icon svg { width: 100%; height: auto; }
+.lb-icon-list__icon--success[data-lb-icon] { color: var(--lb-fg-success); }
+.lb-icon-list__icon--warning[data-lb-icon] { color: var(--lb-fg-warning); }
+.lb-icon-list__icon--danger[data-lb-icon]  { color: var(--lb-fg-danger); }
+.lb-icon-list__icon--muted[data-lb-icon]   { color: var(--lb-fg-muted); }
+.lb-icon-list--large { gap: var(--lb-size-3x); font-family: var(--lb-t-body-l-font-family); font-size: var(--lb-t-body-l-font-size); font-weight: var(--lb-t-body-l-font-weight); line-height: var(--lb-t-body-l-line-height); }
+.lb-icon-list--xlarge { gap: var(--lb-size-4x); font-family: var(--lb-t-heading-xl-font-family); font-size: var(--lb-t-heading-xl-font-size); font-weight: var(--lb-t-heading-xl-font-weight); line-height: var(--lb-t-heading-xl-line-height); letter-spacing: var(--lb-t-heading-xl-letter-spacing); }
+
+/* ═══════════════════════════════════════════════════════════
    REVEAL — [data-lb-reveal] (LB.Reveal, core runtime)
    Hidden only under html.lb-reveal-on (set by lb.js, or early by a head
    script) and only when motion is welcome; lb.js adds .lb-revealed as
