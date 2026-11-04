@@ -5,6 +5,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.5.0] — 2026-11-04
+
+Minor: fixes from the mihailo.net and mihailo.ink findings, plus two
+small API additions they needed (`LB.lockScroll`/`LB.unlockScroll`, the
+`--lb-header-pad-y`/`-x` properties) and one visual change (the 40px
+modal close). No new tokens. Deletable consumer workarounds are named
+per item in each site's letbe-ds-findings.md.
+
 - **Fix: ticks visible in list checkboxes.** A selected Multi-Select row
   painted its tick in the row's text colour, which equals the primary
   fill in themes whose primary action is the default ink; the tick now
