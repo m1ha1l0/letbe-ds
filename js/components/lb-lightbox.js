@@ -64,7 +64,7 @@
                 '<h3 class="lb-modal__title" id="lb-lightbox-title"></h3>' +
                 '<p class="lb-lightbox__sub"></p>' +
               '</div>' +
-              '<button class="lb-modal__close" aria-label="Close"><span data-lb-icon="x"></span></button>' +
+              '<button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-modal__close" type="button" aria-label="Close"><span data-lb-icon="x"></span></button>' +
             '</div>' +
             '<div class="lb-modal__body lb-lightbox__body"><img class="lb-lightbox__img" alt=""></div>' +
             '<div class="lb-modal__footer lb-lightbox__footer">' +

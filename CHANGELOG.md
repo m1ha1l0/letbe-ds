@@ -36,6 +36,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 - **Fix: the narrow media layout keeps its right-hand controls right**
   when a page hides mute and volume: the push now sits after the duration
   instead of on the mute button.
+- **Fix: the phone lightbox fills the screen once the address bar hides**
+  (`100dvh`, with a `100vh` fallback line; was `100svh`).
+- **Modal close is a 40px icon button** (visual change). Canonical markup
+  is now `<button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium
+  lb-modal__close">`, so the close matches the dialog's other icon
+  controls; the lightbox renders it that way, which brings its 21px X up
+  to the size and ink of its arrows. A bare `.lb-modal__close` from older
+  markup gets the same 40px ghost look, so no dialog close stays under
+  the 24px WCAG 2.2 minimum target.
 
 ## [1.4.0] — 2026-09-15
 

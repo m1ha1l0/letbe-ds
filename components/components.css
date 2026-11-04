@@ -2584,9 +2584,17 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-modal__title { font-family: var(--lb-t-heading-m-font-family); font-size: var(--lb-t-heading-m-font-size); font-weight: var(--lb-t-heading-m-font-weight); line-height: var(--lb-t-heading-m-line-height); letter-spacing: var(--lb-t-heading-m-letter-spacing); color: var(--lb-fg-default); margin: 0; }
 .lb-modal--alert .lb-modal__alert-icon { display: flex; align-items: center; flex-shrink: 0; color: var(--lb-fg-danger); }
 .lb-modal--alert .lb-modal__title { color: var(--lb-fg-danger); }
-.lb-modal__close { background: none; border: none; cursor: pointer; padding: var(--lb-size-1x); color: var(--lb-fg-muted); display: flex; align-items: center; border-radius: var(--lb-radius-interactive); flex-shrink: 0; }
-.lb-modal__close:hover { color: var(--lb-fg-default); background: var(--lb-action-bg-ghost-hover); }
-.lb-modal__close:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: var(--lb-size-0-5x); }
+/* Close — canonical markup consumes the icon button:
+   <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-modal__close">,
+   a 40px target matching the dialog's other icon controls (the lightbox
+   arrows). .lb-modal__close stays the hook LB.Modal wires; a bare
+   .lb-modal__close from older markup gets the same 40px ghost look, so
+   no close drops under the 24px WCAG 2.2 minimum target. */
+.lb-modal__close { flex-shrink: 0; }
+.lb-modal__close:not(.lb-icon-btn) { display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; padding: 0; border: none; border-radius: var(--lb-radius-full); background-color: var(--lb-action-bg-ghost-default); color: var(--lb-action-fg-ghost-default); cursor: pointer; transition: background-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-modal__close:not(.lb-icon-btn) > [data-lb-icon] { width: 1.5rem; height: 1.5rem; }
+.lb-modal__close:not(.lb-icon-btn):hover { background-color: var(--lb-action-bg-ghost-hover); color: var(--lb-action-fg-ghost-hover); }
+.lb-modal__close:not(.lb-icon-btn):focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: var(--lb-size-0-5x); }
 .lb-modal__body { padding: var(--lb-size-6x); overflow-y: auto; flex: 1; color: var(--lb-fg-default); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); line-height: var(--lb-t-body-m-line-height); }
 .lb-modal__footer { padding: var(--lb-size-4x) var(--lb-size-6x); border-top: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); display: flex; justify-content: flex-end; gap: var(--lb-size-2x); font-family: var(--lb-t-body-m-font-family); }
 
@@ -2601,7 +2609,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    footer. Full screen on phones. Behaviour lives in
    js/components/lb-lightbox.js (opt-in module). */
 .lb-lightbox.lb-modal-backdrop { backdrop-filter: blur(var(--lb-size-3x)); -webkit-backdrop-filter: blur(var(--lb-size-3x)); }
-.lb-lightbox__dialog { width: auto; min-width: min(90vw, 28rem); /* design-intent: caption/footer chrome floor */ max-width: min(96vw, 90rem); /* design-intent: viewer cap on huge screens */ max-height: calc(100svh - var(--lb-size-8x)); }
+.lb-lightbox__dialog { width: auto; min-width: min(90vw, 28rem); /* design-intent: caption/footer chrome floor */ max-width: min(96vw, 90rem); /* design-intent: viewer cap on huge screens */ max-height: calc(100vh - var(--lb-size-8x)); max-height: calc(100dvh - var(--lb-size-8x)); }
 .lb-lightbox__body { flex: 1; min-height: 0; overflow: hidden; display: grid; place-items: center; padding: var(--lb-size-4x); background: var(--lb-bg-default); }
 .lb-lightbox__img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; transition: opacity var(--lb-animation-dur-normal) var(--lb-animation-ease-ui); }
 .lb-lightbox__img--switching { opacity: 0; }
@@ -2615,7 +2623,9 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    breakpoint family). */
 @media (max-width: 640px) {
   .lb-lightbox.lb-modal-backdrop { padding: 0; }
-  .lb-lightbox__dialog { width: 100vw; min-width: 0; max-width: none; height: 100svh; max-height: none; border: 0; border-radius: 0; }
+  /* dvh = the screen as it is now: svh (address bar showing) left the
+     viewer short by the bar once it slid away. vh line = fallback. */
+  .lb-lightbox__dialog { width: 100vw; min-width: 0; max-width: none; height: 100vh; height: 100dvh; max-height: none; border: 0; border-radius: 0; }
   .lb-lightbox__body { padding: 0; }
   .lb-lightbox .lb-modal__header, .lb-lightbox .lb-modal__footer { padding-inline: var(--lb-size-4x); }
 }

@@ -1588,7 +1588,7 @@
             <div class="lb-modal__header-title">
               <h3 class="lb-modal__title" id="theme-editor-help-title">How the Theme editor works</h3>
             </div>
-            <button class="lb-modal__close" aria-label="Close"><span data-lb-icon="x" style="width: 1.5rem; height: 1.5rem;">&times;</span></button>
+            <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-modal__close" type="button" aria-label="Close"><span data-lb-icon="x">&times;</span></button>
           </div>
           <div class="lb-modal__body theme-editor__help">
 ${HELP_CONTENT}
