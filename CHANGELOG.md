@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.10.0] — 2026-11-04
+
+Minor: the expressive motion tier (3 L1 + 3 L2 tokens, owner-approved)
+and the motions it now drives. Motion change: the full-screen menu and
+modal, scroll reveal and card media zoom run at 700ms on the emphasized
+curves (was 300ms). Plugin registration pending (PLUGIN-HANDOFF 37).
+
 - **Expressive motion tier** (new tokens, owner-approved). L1
   `--lb-duration-700`, `--lb-ease-emphasized` (0.83, 0, 0.17, 1) and
   `--lb-ease-emphasized-decelerate` (0.16, 1, 0.3, 1); L2
