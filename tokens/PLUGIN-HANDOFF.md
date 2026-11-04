@@ -1159,7 +1159,12 @@ corner bound to the radius/interactive variable. Same session can
 delete the `.deprecated/*` old stepper masters the registry still
 carries. Plugin: nothing.
 
-### 37. Expressive motion tier — 4 new L1 + 5 new L2 tokens (v1.10.0 + v1.11.0) ⬜ PLUGIN: re-import + 1 bug fix (2026-11-04, owner-approved: "do it last")
+### 37. Expressive motion tier — 4 new L1 + 5 new L2 tokens (v1.10.0 + v1.11.0) ✅ DONE in plugin v1.0.4 2026-11-05 (babb441: the 4 L1 registered in letbe/Core, all 8 eases import their real curves; animation L2 aliases stay out of Figma) — library: nothing
+
+**Resolved 2026-11-05:** plugin v1.0.4 published and the library file
+re-imported from letbe-ds main. `tokenToFigmaValue` keeps
+`cubic-bezier(...)` strings as authored (arrays still formatted), so the
+8 `ease/*` variables are no longer linear. Plugin commit babb441.
 
 From mihailo.net finding 24 (site motion.css carried its own expressive
 eases and 640/820 ms durations). Added to `tokens/source-tokens.json`,
@@ -1253,7 +1258,16 @@ declarative modal opener, lightbox motion/swipe/video, hide-on-scroll
 header, `--lb-header-bg` / `--lb-header-pad-*` hooks, form-native
 Phone, `LB.observe`, scroll reveal and count-up, button press motion.
 
-### 39. Ghost on any surface — 5 new L1 + 3 new L2 alpha colour tokens (v1.13.0) ⬜ PLUGIN: 1 blocking fix before the next re-import, then re-import (2026-11-04, owner-approved)
+### 39. Ghost on any surface — 5 new L1 + 3 new L2 alpha colour tokens (v1.13.0) ✅ PLUGIN DONE in v1.0.4 2026-11-05 (babb441 alpha import, cd96164 see-through rows fixed) — 🔵 LIBRARY part now unblocked (see "Library" below, relayed with item 40)
+
+**Resolved in the plugin 2026-11-05:** plugin v1.0.4 published and the
+library file re-imported from letbe-ds main. `hexToFigmaRGB` reads the
+alpha digits, so `transparent` lands at 0% and the four `neutral-alpha`
+washes at 4 / 11 / 5 / 13% (babb441). The 3 see-through `bg/*` rows and
+their L1s are fixed in the plugin: no relink, no contrast of their own,
+Auto-fix skips them (cd96164, plugin ADR-007). They are not on the Theme
+tab because `$schema.editor_rows` doesn't list them, which is intended.
+The library rebinds below can start now.
 
 From value-deck finding ghost-on-tint. `action/bg-ghost-default` pointed
 at `bg/default`, so every ghost control painted a page-coloured box on a
