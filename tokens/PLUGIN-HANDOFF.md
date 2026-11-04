@@ -1310,3 +1310,29 @@ Library (after the plugin fix and re-import):
 - Counter on ghost / neutral / subtle buttons: the digit is now
   `fg/inverse` (was `action/bg-ghost-default`, which would be invisible)
   — rebind the counter text in those variants.
+
+### 40. v1.13.0 variants and behaviour — library relay 🔵 LIBRARY (2026-11-04) — no plugin action beyond item 39
+
+From the value-deck findings. Library work, one component per round:
+
+- **Ghost family** — see item 39 (clear rest, see-through hover and
+  pressed, clear disabled, counter digit on `fg/inverse`).
+- **`lb-btn--large`**: 48px high (size/12x), 24px side padding
+  (size/6x), the action-l text style — new size on the button set,
+  pairs with `lb-icon-btn--large`.
+- **Menu panel**: sits 4px (size/1x) below its trigger (was touching);
+  a trailing kebab's panel lines up with the trigger's right edge
+  (`data-lb-menu-align="end"`).
+- **Board**: "Move to" rows use arrow-left / arrow-right (arrow-up /
+  arrow-down on a stacked board) instead of corner-down-right; card
+  menus may carry page items after a separator; new
+  `lb-board--stacked` layout (lanes stacked at full width); a lane
+  without a footer has a 12px bottom inset.
+- **Tooltip**: the bubble keeps to one line up to 15rem (was wrapping
+  word by word); near an edge the bubble slides and the arrow stays on
+  the trigger — model an end-aligned bubble with its arrow under the
+  trigger if the library shows edge placements.
+
+Code-only (never mirrored): top-layer menu placement and flip, delegated
+menu items, tooltip fitting, drag skipping form fields, kebab
+visibility on touch, stacked drag auto-scroll and keyboard.

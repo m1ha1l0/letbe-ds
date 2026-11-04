@@ -5,6 +5,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.13.0] — 2026-11-04
+
+Minor: the value-deck findings. Ghost controls work on any surface
+(5 L1 + 3 L2 alpha colour tokens, owner-approved), menus can't be
+clipped, the board gains a stacked layout and page menu items, plus a
+large button and edge-aware tooltips. Visual changes: disabled ghost
+buttons lose their grey box, menus sit 4px below their trigger,
+tooltips keep to one line. No consumer markup has to change. Plugin
+registration pending (PLUGIN-HANDOFF 39, a blocking alpha fix first).
+
 - **Ghost controls work on any surface** (new tokens, owner-approved).
   The ghost background pointed at the page colour, so on a tinted
   surface (board lanes, the vertical nav, raised panels) every ghost
