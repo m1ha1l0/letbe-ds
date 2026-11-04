@@ -15,6 +15,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   order (inputs, then phone, then pickers).
 - **Fix: the selected tab scrolls into a sideways-scrolled tab list**
   (phones, arrow keys, deep links). Only the list scrolls, never the page.
+- **Fix: the header drawer head sits exactly over the bar.** The bar and
+  the drawer now share `--lb-header-pad-y` / `--lb-header-pad-x` (unset
+  by default, like `--lb-header-max`), so the brand and close button no
+  longer jump when the phone menu opens; shrink-on-scroll moves both.
+  Set the properties on `.lb-header` to change the bar padding.
+- **Fix: the header drawer never flashes open before the script runs.**
+  The canonical markup now carries `hidden`, and an uninitialised drawer
+  stays closed in CSS.
 
 ## [1.4.0] — 2026-09-15
 

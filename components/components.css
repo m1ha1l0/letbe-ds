@@ -8462,14 +8462,17 @@ img.lb-list__icon--round { object-fit: cover; }
   outline: var(--lb-border-width-action) solid var(--lb-border-focus);
 }
 
-/* Inner container — brand | nav | actions | toggle. */
+/* Inner container — brand | nav | actions | toggle. Bar padding reads
+   --lb-header-pad-y / --lb-header-pad-x (unset by default, like
+   --lb-header-max) so the mobile drawer head can sit exactly over the
+   bar: set them on .lb-header to move both at once. */
 .lb-header__inner {
   display: flex;
   align-items: center;
   gap: var(--lb-size-4x);
   max-width: var(--lb-header-max, 75rem);
   margin: 0 auto;
-  padding: var(--lb-size-3x) var(--lb-size-6x);
+  padding: var(--lb-header-pad-y, var(--lb-size-3x)) var(--lb-header-pad-x, var(--lb-size-6x));
   transition: padding var(--lb-animation-dur-normal) var(--lb-animation-ease-ui);
 }
 
@@ -8646,10 +8649,12 @@ img.lb-list__icon--round { object-fit: cover; }
   backdrop-filter: blur(12px);
 }
 
-/* ── Shrink on scroll ── */
+/* ── Shrink on scroll ── (through the shared property, so a drawer
+   opened while shrunk still lines up with the bar) */
+.lb-header--shrink.lb-header--scrolled { --lb-header-pad-y: var(--lb-size-1-5x); }
 .lb-header--shrink.lb-header--scrolled .lb-header__inner {
-  padding-top: var(--lb-size-1-5x);
-  padding-bottom: var(--lb-size-1-5x);
+  padding-top: var(--lb-header-pad-y);
+  padding-bottom: var(--lb-header-pad-y);
 }
 
 /* ── Mobile drawer (modal) + scrim ── */
@@ -8670,7 +8675,9 @@ img.lb-list__icon--round { object-fit: cover; }
   display: flex;
   flex-direction: column;
   gap: var(--lb-size-1x);
-  padding: var(--lb-size-4x);
+  /* Top and sides = the bar's own padding, so the drawer head's brand and
+     close button land exactly where the bar's brand and toggle are. */
+  padding: var(--lb-header-pad-y, var(--lb-size-3x)) var(--lb-header-pad-x, var(--lb-size-4x)) var(--lb-size-4x);
   background: var(--lb-surface-bg-default);
   border-left: var(--lb-border-width-thin) solid var(--lb-surface-border-default);
   box-shadow: var(--lb-shadow-modal);
@@ -8678,6 +8685,9 @@ img.lb-list__icon--round { object-fit: cover; }
   animation: lb-header-drawer-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui);
 }
 .lb-header__drawer[hidden] { display: none; }
+/* Before lb-header.js runs (it sets role="dialog"), a drawer authored
+   without `hidden` stays closed instead of flashing open on load. */
+.lb-header__drawer:not([role="dialog"]) { display: none; }
 @keyframes lb-header-drawer-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
 .lb-header__drawer-head {
   display: flex;
@@ -8715,7 +8725,7 @@ img.lb-list__icon--round { object-fit: cover; }
   .lb-header__nav,
   .lb-header__inner > .lb-header__actions { display: none; }
   .lb-header__toggle { display: inline-flex; }
-  .lb-header__inner { padding-left: var(--lb-size-4x); padding-right: var(--lb-size-4x); }
+  .lb-header__inner { padding-left: var(--lb-header-pad-x, var(--lb-size-4x)); padding-right: var(--lb-header-pad-x, var(--lb-size-4x)); }
   .lb-header--floating { top: var(--lb-size-2x); padding-inline: var(--lb-size-3x); }
 }
 @media (min-width: 769px) {
