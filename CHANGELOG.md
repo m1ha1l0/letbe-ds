@@ -5,6 +5,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Expressive tier completed** (new tokens, owner-approved). L1
+  `--lb-ease-emphasized-accelerate` (0.3, 0, 0.8, 0.15) and L2
+  `--lb-animation-ease-expressive-out`, the exit that pairs with
+  `ease-expressive-in`; L2 `--lb-animation-dur-stagger` (→ 50ms), the
+  gap between items in a cascade.
+- **Motion change:** the full-screen menu and full-screen modal now
+  close on the expressive exit (300ms, `dur-slow`; the modal's backdrop
+  fades over the same time so it no longer cuts the exit short). The
+  menu-link cascade and scroll reveal both step by `dur-stagger` (scroll
+  reveal was 100ms apart, now 50ms).
 ## [1.10.0] — 2026-11-04
 
 Minor: the expressive motion tier (3 L1 + 3 L2 tokens, owner-approved)

@@ -1315,6 +1315,11 @@
         "$value": "cubic-bezier(0.16, 1, 0.3, 1)",
         "$type": "cubicBezier",
         "$description": "Fast arrival, very long settle. Expressive entrances: content rising in, a full-screen surface opening."
+      },
+      "emphasized-accelerate": {
+        "$value": "cubic-bezier(0.3, 0, 0.8, 0.15)",
+        "$type": "cubicBezier",
+        "$description": "Slow start, fast departure. Expressive exits: a full-screen surface leaving."
       }
     },
     "z": {
@@ -3276,6 +3281,16 @@
           "$value": "{ease.emphasized-decelerate}",
           "$type": "cubicBezier",
           "$description": "Expressive entrance: content rising in, a full-screen surface opening."
+        },
+        "ease-expressive-out": {
+          "$value": "{ease.emphasized-accelerate}",
+          "$type": "cubicBezier",
+          "$description": "Expressive exit: a full-screen surface leaving. Pair with a shorter duration than the entrance (dur-slow)."
+        },
+        "dur-stagger": {
+          "$value": "{duration.50}",
+          "$type": "duration",
+          "$description": "The gap between items in a cascade (list links rising in, blocks revealed together): item n starts n × dur-stagger later."
         }
       }
     },

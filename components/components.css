@@ -2769,10 +2769,15 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 @media (prefers-reduced-motion: no-preference) {
   .lb-modal-backdrop { animation: lb-overlay-fade-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
   .lb-modal-backdrop > .lb-modal { animation: lb-modal-rise-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
-  /* A full-screen dialog is a large surface arriving: the expressive tier. */
+  /* A full-screen dialog is a large surface arriving and leaving: the
+     expressive tier (a shorter exit, as everywhere). */
   .lb-modal-backdrop > .lb-modal--fullscreen { animation: lb-modal-rise-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in); }
   .lb-modal-backdrop--leaving { animation: lb-overlay-fade-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
   .lb-modal-backdrop--leaving > .lb-modal { animation: lb-modal-drop-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-modal-backdrop--leaving > .lb-modal--fullscreen { animation: lb-modal-drop-out var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
+  /* The backdrop is the dialog's parent: its fade must last as long, or
+     it cuts the full-screen exit short. */
+  .lb-modal-backdrop--leaving:has(> .lb-modal--fullscreen) { animation: lb-overlay-fade-out var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -9054,9 +9059,9 @@ img.lb-list__icon--round { object-fit: cover; }
   .lb-header__drawer--full { animation: lb-overlay-fade-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive); }
   .lb-header__drawer--full .lb-header__link {
     animation: lb-modal-rise-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in) backwards;
-    animation-delay: calc(var(--lb-header-link-i, 0) * var(--lb-animation-dur-micro));
+    animation-delay: calc(var(--lb-header-link-i, 0) * var(--lb-animation-dur-stagger));
   }
-  .lb-header--drawer-leaving .lb-header__drawer--full { animation: lb-overlay-fade-out var(--lb-animation-dur-gentle) var(--lb-animation-ease-out) forwards; }
+  .lb-header--drawer-leaving .lb-header__drawer--full { animation: lb-overlay-fade-out var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
 }
 
 /* ── Responsive: collapse nav → hamburger at ≤768px ── */

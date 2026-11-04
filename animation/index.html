@@ -137,7 +137,7 @@
 <main class="gallery-main">
   <section class="gallery-section" id="animation">
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Animation</h1>
-    <p class="gallery-section__desc">Motion tokens — durations (0–500ms for UI, 700ms for expressive motion) and easing curves. L2 aliases give semantic names like <code class="lb-code">dur-fast</code> (100ms, state changes), <code class="lb-code">dur-normal</code> (150ms, menus/tooltips), <code class="lb-code">dur-gentle</code> (200ms, transitions), <code class="lb-code">ease-ui</code> (standard UI), and <code class="lb-code">ease-bounce</code> (playful spring). The expressive tier — <code class="lb-code">dur-expressive</code> (700ms), <code class="lb-code">ease-expressive</code> and <code class="lb-code">ease-expressive-in</code> — is for large surfaces and content arriving (full-screen menu and modal, scroll reveal, media zoom), never for UI feedback. Components that animate drop their motion individually under <code class="lb-code">prefers-reduced-motion: reduce</code> — there is no global reset.</p>
+    <p class="gallery-section__desc">Motion tokens — durations (0–500ms for UI, 700ms for expressive motion) and easing curves. L2 aliases give semantic names like <code class="lb-code">dur-fast</code> (100ms, state changes), <code class="lb-code">dur-normal</code> (150ms, menus/tooltips), <code class="lb-code">dur-gentle</code> (200ms, transitions), <code class="lb-code">ease-ui</code> (standard UI), and <code class="lb-code">ease-bounce</code> (playful spring). The expressive tier — <code class="lb-code">dur-expressive</code> (700ms), <code class="lb-code">ease-expressive</code>, <code class="lb-code">ease-expressive-in</code> and <code class="lb-code">ease-expressive-out</code> (exits, on the shorter <code class="lb-code">dur-slow</code>) — is for large surfaces and content arriving and leaving (full-screen menu and modal, scroll reveal, media zoom), never for UI feedback. <code class="lb-code">dur-stagger</code> (50ms) is the gap between items in a cascade. Components that animate drop their motion individually under <code class="lb-code">prefers-reduced-motion: reduce</code> — there is no global reset.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> under <code class="lb-code">prefers-reduced-motion: reduce</code> the previews below freeze and a visible notice appears above them — the token values still resolve, only the motion stops. Each row carries a real <code class="lb-code">&lt;button aria-label="Play preview"&gt;</code>, so a preview is keyboard-triggerable rather than hover-only, and continuous looping is opt-in behind a <code class="lb-code">role=switch</code> toggle that starts off. Components with ambient or transform motion drop it under the same query — the badge pulse and the interactive-card lift, among others.</p>
     <hr class="gallery-desc-divider">
 
@@ -236,6 +236,11 @@
         <div class="anim-runway"><div class="anim-box"></div></div>
         <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
       </div>
+      <div class="anim-row" data-anim style="--_dur: 700ms; --_ease: var(--lb-ease-emphasized-accelerate);">
+        <div class="anim-row__info"><div class="anim-row__token">--lb-ease-emphasized-accelerate</div><div class="anim-row__value">cubic-bezier(0.3, 0, 0.8, 0.15) — expressive exit</div></div>
+        <div class="anim-runway"><div class="anim-box"></div></div>
+        <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
+      </div>
     </div>
 
     <div class="gallery-label">L2 Semantic aliases</div>
@@ -305,6 +310,16 @@
       </div>
       <div class="anim-row" data-anim style="--_dur: var(--lb-animation-dur-expressive); --_ease: var(--lb-animation-ease-expressive-in);">
         <div class="anim-row__info"><div class="anim-row__token">--lb-animation-ease-expressive-in</div><div class="anim-row__value">→ ease-emphasized-decelerate · Expressive entrances: scroll reveal, full-screen modal, media zoom</div></div>
+        <div class="anim-runway"><div class="anim-box"></div></div>
+        <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
+      </div>
+      <div class="anim-row" data-anim style="--_dur: var(--lb-animation-dur-slow); --_ease: var(--lb-animation-ease-expressive-out);">
+        <div class="anim-row__info"><div class="anim-row__token">--lb-animation-ease-expressive-out</div><div class="anim-row__value">→ ease-emphasized-accelerate · Expressive exits, on the shorter dur-slow: full-screen menu and modal closing</div></div>
+        <div class="anim-runway"><div class="anim-box"></div></div>
+        <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
+      </div>
+      <div class="anim-row" data-anim style="--_dur: var(--lb-animation-dur-stagger);">
+        <div class="anim-row__info"><div class="anim-row__token">--lb-animation-dur-stagger</div><div class="anim-row__value">→ duration-50 · The gap between items in a cascade: item n starts n × 50ms later (menu links, scroll reveal)</div></div>
         <div class="anim-runway"><div class="anim-box"></div></div>
         <button class="anim-row__play" type="button" aria-label="Play preview"><span data-lb-icon="play"></span></button>
       </div>

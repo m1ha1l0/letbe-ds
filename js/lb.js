@@ -6379,8 +6379,8 @@ const LB = (() => {
   // ─── REVEAL ────────────────────────────────────────────────
   // Scroll reveal: an element with data-lb-reveal rises a little and
   // fades in the first time it scrolls into view; blocks that arrive
-  // together come in one after another (a short stagger, at most 6
-  // steps). Accessible by construction:
+  // together come in one after another (--lb-animation-dur-stagger
+  // apart, at most 6 steps). Accessible by construction:
   //   - nothing is hidden unless motion is welcome and IntersectionObserver
   //     exists: lb.js then sets html.lb-reveal-on, and only that class
   //     hides [data-lb-reveal] (set it in a head script yourself to avoid
@@ -6397,8 +6397,8 @@ const LB = (() => {
     const motion = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
     let io = null, countIo = null;
     const stepMs = () => {
-      const v = getComputedStyle(document.documentElement).getPropertyValue('--lb-animation-dur-fast').trim();
-      return (v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000) || 100;
+      const v = getComputedStyle(document.documentElement).getPropertyValue('--lb-animation-dur-stagger').trim();
+      return (v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000) || 50;
     };
     function show(el, i = 0, instant = false) {
       if (el.classList.contains('lb-revealed')) return;
