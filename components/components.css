@@ -657,6 +657,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   font-weight: var(--lb-font-weight-semibold);
   user-select: none;
 }
+.lb-avatar--xlarge { width: var(--lb-size-16x); height: var(--lb-size-16x); font-size: var(--lb-t-heading-m-font-size); } /* profile headers, a portrait beside a large heading */
 .lb-avatar--large  { width: 3rem;   height: 3rem;   font-size: var(--lb-t-body-l-font-size); }
 .lb-avatar--medium { width: 2.5rem; height: 2.5rem; font-size: var(--lb-t-body-m-font-size); }
 .lb-avatar--small  { width: 2rem;   height: 2rem;   font-size: var(--lb-t-body-s-font-size); }

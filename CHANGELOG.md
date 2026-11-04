@@ -22,6 +22,8 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   walks back through what was played; `[data-lb-media-loop-toggle]` flips
   repeat-all. Both use `aria-pressed` with the Playbar's accent styling;
   `setShuffle()` / `getShuffle()` on the instance.
+- **Avatar `--xlarge`** (64px, `--lb-size-16x`, heading-m initials) for a
+  profile header or a portrait beside a large heading.
 - **`lb-media--no-volume`** drops mute and the volume slider (touch
   screens, where iOS ignores a page's volume).
 
