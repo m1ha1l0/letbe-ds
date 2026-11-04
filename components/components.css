@@ -1001,6 +1001,18 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
     transform: translateY(-50%);
   }
 }
+/* Leading nav icon (--start): the mirror for a "previous" card — left
+   edge, content padded on the left instead, nudges left on hover. */
+.lb-card__nav-icon--start { right: auto; left: var(--_card-pad); }
+.lb-card:has(.lb-card__nav-icon--start) .lb-card__body,
+.lb-card:has(.lb-card__nav-icon--start) .lb-card__header,
+.lb-card:has(.lb-card__nav-icon--start) .lb-card__footer { padding-right: var(--_card-pad); padding-left: calc(var(--_card-pad) + var(--lb-size-6x)); }
+@media (prefers-reduced-motion: no-preference) {
+  .lb-card--interactive:hover:not(.lb-card--disabled) .lb-card__nav-icon--start { transform: translateY(-50%) translateX(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lb-card--interactive:hover:not(.lb-card--disabled) .lb-card__nav-icon--start { transform: translateY(-50%); }
+}
 /* Back-compat: --clickable keeps working (alias). New code should use --interactive. */
 .lb-card--clickable { cursor: pointer; appearance: none; width: 100%; transition: border-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), box-shadow var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-card--clickable:hover {
@@ -1151,6 +1163,13 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-card--media-left .lb-card__body,
 .lb-card--media-left .lb-card__header,
 .lb-card--media-left .lb-card__footer { flex: 1; min-width: 0; }
+/* Right-stacked (--media-right): the mirror, e.g. the "previous" card of
+   a previous / next pair (with .lb-card__nav-icon--start). */
+.lb-card--media-right { flex-direction: row-reverse; align-items: stretch; }
+.lb-card--media-right .lb-card__media { width: 33%; max-width: 14rem; /* design-intent: same cover column cap as media-left */ flex-shrink: 0; }
+.lb-card--media-right .lb-card__body,
+.lb-card--media-right .lb-card__header,
+.lb-card--media-right .lb-card__footer { flex: 1; min-width: 0; }
 /* Full-bleed background: media covers the whole card; content overlays.
    Text uses fg.inverse-strong (theme-stable light) because the scrim is a
    hardcoded dark gradient that doesn't theme-flip. fg.inverse would

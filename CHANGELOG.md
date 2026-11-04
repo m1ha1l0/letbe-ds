@@ -26,6 +26,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   is styled (start-aligned above the table, caption-m in the default
   ink, lined up with the first column); `.lb-table--text` top-aligns
   every cell for reading tables with multi-line cells.
+- **Previous / next card pair.** `.lb-card__nav-icon--start` (a leading
+  chevron, content padded on the left, nudges left on hover) and
+  `.lb-card--media-right` (the mirror of `--media-left`) make the
+  "previous" card the mirror of the "next" one; the Card page shows the
+  pair in a labelled `<nav>`.
 - **Avatar `--xlarge`** (64px, `--lb-size-16x`, heading-m initials) for a
   profile header or a portrait beside a large heading.
 - **`lb-media--no-volume`** drops mute and the volume slider (touch

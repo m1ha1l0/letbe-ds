@@ -275,6 +275,28 @@
       </a>
     </div>
 
+    <!-- ────────────────── Previous / next pair ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Previous / next pair</h2>
+    <p class="gallery-section__desc">Links a detail page to its neighbours. Next is a <code class="lb-code">--media-left</code> card with the trailing chevron; Previous is its mirror: <code class="lb-code">.lb-card--media-right</code> with <code class="lb-code">.lb-card__nav-icon--start</code> (a leading chevron that nudges left on hover). Put the pair in a <code class="lb-code">&lt;nav&gt;</code> with an <code class="lb-code">aria-label</code>, Previous first.</p>
+    <nav aria-label="More case studies" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--lb-size-3x); max-width: 720px;">
+      <a href="#" class="lb-card lb-card--interactive lb-card--sm lb-card--media-right">
+        <div class="lb-card__media lb-card__media--4x3"><img src="../assets/media/about/mark-macro.jpg" alt=""></div>
+        <div class="lb-card__body">
+          <p class="lb-card__description">Previous</p>
+          <h3 class="lb-card__title">The mark</h3>
+        </div>
+        <span class="lb-card__nav-icon lb-card__nav-icon--start" aria-hidden="true" data-lb-icon="chevron-left"></span>
+      </a>
+      <a href="#" class="lb-card lb-card--interactive lb-card--sm lb-card--media-left">
+        <div class="lb-card__media lb-card__media--4x3"><img src="../assets/media/about/plugin-letbe-tokens.jpg" alt=""></div>
+        <div class="lb-card__body">
+          <p class="lb-card__description">Next</p>
+          <h3 class="lb-card__title">letbe tokens</h3>
+        </div>
+        <span class="lb-card__nav-icon" aria-hidden="true" data-lb-icon="chevron-right"></span>
+      </a>
+    </nav>
+
     <!-- ────────────────── Disabled ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Disabled</h2>
     <p class="gallery-section__desc">Reduced opacity, pointer events disabled. For options that exist but aren't available (out of stock, locked behind a plan). When the card is rendered as a real <code class="lb-code">&lt;button&gt;</code> use the native <code class="lb-code">disabled</code> attribute; otherwise add <code class="lb-code">aria-disabled="true"</code> + <code class="lb-code">tabindex="-1"</code> so assistive tech announces the unavailable state.</p>
