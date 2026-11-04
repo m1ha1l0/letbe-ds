@@ -5,8 +5,8 @@ letbe-ds bundles the following third-party assets. Their licenses are preserved 
 | Asset | Project | License | Files |
 |---|---|---|---|
 | Icons (outlined + filled) | [Lucide](https://lucide.dev/) | ISC | [`assets/icons/`](./assets/icons/) — see [`assets/icons/LICENSE.txt`](./assets/icons/LICENSE.txt) |
-| Brand/logo icons | [Simple Icons](https://simpleicons.org/) | CC0 1.0 | [`assets/icons/`](./assets/icons/) — 28 brand glyphs (tiktok, x-logo, spotify, apple-music, discord, whatsapp, …); see [`assets/icons/LICENSE.txt`](./assets/icons/LICENSE.txt) |
-| slack.svg | [Bootstrap Icons](https://icons.getbootstrap.com/) | MIT | [`assets/icons/slack.svg`](./assets/icons/slack.svg) — see [`assets/icons/LICENSE.txt`](./assets/icons/LICENSE.txt) |
+| Brand/logo icons | [Simple Icons](https://simpleicons.org/) | CC0 1.0 | [`assets/icons/`](./assets/icons/) — 32 brand glyphs (tiktok, x-logo, instagram, facebook, youtube, github, spotify, discord, …); see [`assets/icons/LICENSE.txt`](./assets/icons/LICENSE.txt) |
+| slack.svg, linkedin.svg, twitter.svg | [Bootstrap Icons](https://icons.getbootstrap.com/) | MIT | [`assets/icons/slack.svg`](./assets/icons/slack.svg), [`linkedin.svg`](./assets/icons/linkedin.svg), [`twitter.svg`](./assets/icons/twitter.svg) — see [`assets/icons/LICENSE.txt`](./assets/icons/LICENSE.txt) |
 | Country flags | [circle-flags by HatScripts](https://github.com/HatScripts/circle-flags) | MIT | [`assets/flags/`](./assets/flags/) — see [`assets/flags/LICENSE.txt`](./assets/flags/LICENSE.txt) |
 
 Modifications are limited to house-format normalization (whitespace, stripped license comments/`class`/`title` attributes, `width`/`height`/`fill="currentColor"` attributes) — all within what each license permits. The Lucide set also predates Lucide 1.0's removal of brand icons, so six legacy brand glyphs (facebook, instagram, twitter, linkedin, github, youtube) remain from older Lucide releases under the same ISC license.

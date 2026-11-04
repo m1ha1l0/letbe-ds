@@ -5,6 +5,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Brand icons are all filled logos** (visual change). `instagram`,
+  `facebook`, `youtube` and `github` now ship the filled Simple Icons
+  glyphs, `linkedin` and `twitter` the filled Bootstrap Icons ones (Simple
+  Icons no longer carries them); they were the old outlined Lucide
+  shapes, so a social row mixed outlines and solid logos. Names unchanged.
+
 ## [1.6.0] — 2026-11-04
 
 Minor: overlays and motion, from the mihailo.net and mihailo.ink

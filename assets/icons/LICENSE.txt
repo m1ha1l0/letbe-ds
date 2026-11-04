@@ -29,8 +29,9 @@ ADDITIONAL SOURCES (added 2026-07-15)
 Brand/logo icons (tiktok, x-logo, discord, whatsapp, telegram, reddit,
 twitch, pinterest, snapchat, threads, bluesky, mastodon, spotify,
 apple-music, soundcloud, bandcamp, patreon, gitlab, figma, google, apple,
-substack, medium, dribbble, behance, deezer, tidal, youtube-music) are
-derived from the Simple Icons set, released under CC0 1.0 Universal.
+substack, medium, dribbble, behance, deezer, tidal, youtube-music, and
+since 2026-11-04 instagram, facebook, youtube, github) are derived from
+the Simple Icons set, released under CC0 1.0 Universal.
 
 Project:   https://simpleicons.org/
 Source:    https://github.com/simple-icons/simple-icons
@@ -41,7 +42,8 @@ guidelines — see the Simple Icons legal disclaimer.
 
 ---------------------------------------------------------------------------
 
-slack.svg is derived from Bootstrap Icons, used under the MIT license.
+slack.svg, linkedin.svg and twitter.svg are derived from Bootstrap Icons
+(Simple Icons no longer ships those logos), used under the MIT license.
 
 Project:   https://icons.getbootstrap.com/
 Source:    https://github.com/twbs/icons
