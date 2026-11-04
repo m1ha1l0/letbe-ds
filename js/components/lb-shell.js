@@ -200,7 +200,7 @@
       this._sidebar.setAttribute('role', 'dialog');
       this._sidebar.setAttribute('aria-modal', 'true');
       if (!this._sidebar.hasAttribute('aria-label')) this._sidebar.setAttribute('aria-label', 'Navigation');
-      document.documentElement.classList.add('lb-scroll-locked');
+      LB.lockScroll(this);
       this._toggles.forEach((b) => b.setAttribute('aria-expanded', 'true'));
       this._drawerOpen = true;
       this._releaseTrap = trapFocus(this._sidebar);
@@ -214,7 +214,7 @@
       this._scrim.hidden = true;
       this._sidebar.removeAttribute('role');
       this._sidebar.removeAttribute('aria-modal');
-      document.documentElement.classList.remove('lb-scroll-locked');
+      LB.unlockScroll(this);
       this._toggles.forEach((b) => b.setAttribute('aria-expanded', String(!this.isCollapsed())));
       this._drawerOpen = false;
       if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
@@ -289,7 +289,7 @@
       document.removeEventListener('keydown', this._onKey);
       if (this._onResize) window.removeEventListener('resize', this._onResize);
       if (this._releaseTrap) this._releaseTrap();
-      document.documentElement.classList.remove('lb-scroll-locked');
+      LB.unlockScroll(this);
     }
   }
 

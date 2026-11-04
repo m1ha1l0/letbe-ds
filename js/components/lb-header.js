@@ -162,7 +162,7 @@
       this._drawer.hidden = false;
       this._scrim.hidden = false;
       this.el.classList.add('lb-header--drawer-open');
-      document.documentElement.classList.add('lb-scroll-locked');
+      LB.lockScroll(this);
       this._toggle.setAttribute('aria-expanded', 'true');
       this._drawerOpen = true;
       this._releaseTrap = trapFocus(this._drawer);
@@ -176,7 +176,7 @@
       this._drawer.hidden = true;
       this._scrim.hidden = true;
       this.el.classList.remove('lb-header--drawer-open');
-      document.documentElement.classList.remove('lb-scroll-locked');
+      LB.unlockScroll(this);
       this._toggle.setAttribute('aria-expanded', 'false');
       this._drawerOpen = false;
       if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
@@ -217,7 +217,7 @@
       if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
       if (this._onResize) window.removeEventListener('resize', this._onResize);
       if (this._releaseTrap) this._releaseTrap();
-      document.documentElement.classList.remove('lb-scroll-locked');
+      LB.unlockScroll(this);
     }
   }
 

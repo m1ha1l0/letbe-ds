@@ -61,6 +61,24 @@ const LB = (() => {
     return () => container.removeEventListener('keydown', handler);
   }
 
+  // ─── SCROLL LOCK ───────────────────────────────────────────
+  // One page lock shared by every overlay (Modal, Sheet, Command palette,
+  // header + shell drawers). It sets .lb-scroll-locked on <html>, which
+  // hides overflow on html AND body: a body-only lock silently fails as
+  // soon as a site gives html any overflow (e.g. overflow-x: clip), and
+  // an html-only lock misses sites that scroll the body. Owners are kept
+  // in a Set, so stacked overlays keep the page locked until the last
+  // one closes, and a repeated lock or unlock from one owner is a no-op.
+  const _scrollLockOwners = new Set();
+  function lockScroll(owner) {
+    _scrollLockOwners.add(owner);
+    document.documentElement.classList.add('lb-scroll-locked');
+  }
+  function unlockScroll(owner) {
+    _scrollLockOwners.delete(owner);
+    if (!_scrollLockOwners.size) document.documentElement.classList.remove('lb-scroll-locked');
+  }
+
   // ─── POINTER DRAG ──────────────────────────────────────────
   // Shared lifecycle helper for pointer-event drags. Replaces the
   // hand-rolled pointerdown / setPointerCapture / pointermove / pointerup
@@ -394,14 +412,14 @@ const LB = (() => {
       this._previousFocus = document.activeElement;
       this.backdrop.style.display = 'flex';
       this.backdrop.setAttribute('aria-modal', 'true');
-      document.body.style.overflow = 'hidden';
+      lockScroll(this);
       this._releaseTrap = trapFocus(this.modal);
       this.backdrop.dispatchEvent(new CustomEvent('lb-modal-open'));
     }
 
     close() {
       this.backdrop.style.display = 'none';
-      document.body.style.overflow = '';
+      unlockScroll(this);
       if (this._releaseTrap) this._releaseTrap();
       if (this._previousFocus) this._previousFocus.focus();
       if (this.onClose) this.onClose();
@@ -542,7 +560,7 @@ const LB = (() => {
     open() {
       this._previousFocus = document.activeElement;
       this.root.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      lockScroll(this);
       const closeBtn = this.sheet?.querySelector('.lb-sheet__close');
       if (closeBtn) closeBtn.focus();
       this.root.dispatchEvent(new CustomEvent('lb-sheet-open'));
@@ -550,7 +568,7 @@ const LB = (() => {
 
     close() {
       this.root.style.display = 'none';
-      document.body.style.overflow = '';
+      unlockScroll(this);
       if (this._previousFocus) this._previousFocus.focus();
       if (this.onClose) this.onClose();
       this.root.dispatchEvent(new CustomEvent('lb-sheet-close'));
@@ -7853,7 +7871,7 @@ const LB = (() => {
       this._open = true;
       this._previousFocus = document.activeElement;
       this.backdrop.removeAttribute('hidden');
-      document.body.style.overflow = 'hidden';
+      lockScroll(this);
       this._releaseTrap = trapFocus(this.shell);
       if (this.search) {
         this.search.value = '';
@@ -7881,7 +7899,7 @@ const LB = (() => {
       if (!this._open) return;
       this._open = false;
       this.backdrop.setAttribute('hidden', '');
-      document.body.style.overflow = '';
+      unlockScroll(this);
       if (this._releaseTrap) this._releaseTrap();
       if (this._previousFocus) this._previousFocus.focus();
       this.backdrop.dispatchEvent(new CustomEvent('lb-cmdk-close'));
@@ -9022,6 +9040,8 @@ const LB = (() => {
     initCheckboxGlyphs,
     setIconBasePath,
     setFlagBasePath,
+    lockScroll,
+    unlockScroll,
   };
 })();
 

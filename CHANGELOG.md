@@ -23,6 +23,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 - **Fix: the header drawer never flashes open before the script runs.**
   The canonical markup now carries `hidden`, and an uninitialised drawer
   stays closed in CSS.
+- **Fix: modal scroll lock holds when `html` has an overflow.** Modal,
+  Sheet and Command palette locked only `<body>`, which does nothing once
+  a site sets any overflow on `<html>` (e.g. `overflow-x: clip`). Every
+  overlay, the header and shell drawers included, now shares one lock on
+  `<html>` and `<body>`, kept until the last overlay closes. Public as
+  `LB.lockScroll(owner)` / `LB.unlockScroll(owner)` for your own overlays.
 
 ## [1.4.0] — 2026-09-15
 

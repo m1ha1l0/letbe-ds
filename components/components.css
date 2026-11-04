@@ -8419,8 +8419,12 @@ img.lb-list__icon--round { object-fit: cover; }
    root — never nested in a min-height:100vh wrapper (it stops sticking).
    ═══════════════════════════════════════════════════════════ */
 
-/* Scroll-lock helper — set on <html> while a modal drawer is open. */
-.lb-scroll-locked { overflow: hidden; }
+/* Scroll lock — LB.lockScroll() sets this on <html> while any overlay
+   (modal, sheet, command palette, drawer) is open. Both elements: a
+   body-only lock fails when html has an overflow of its own, an
+   html-only lock misses sites that scroll the body. */
+.lb-scroll-locked,
+.lb-scroll-locked > body { overflow: hidden; }
 
 .lb-header {
   position: relative;
