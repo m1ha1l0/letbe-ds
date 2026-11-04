@@ -1674,7 +1674,36 @@ const LB = (() => {
 
     _showImmediate() {
       this._cancelTimer();
+      this._fit();
       this.tooltip.classList.add('lb-tooltip--open');
+    }
+
+    // Keep the bubble inside the nearest clipping edge (a side panel, a
+    // scroll area) or the viewport: slide it along its cross axis via
+    // --lb-tooltip-shift; the CSS moves the arrow back so it stays on
+    // the trigger. Measured while closed (laid out, only hidden) with
+    // transitions off, so opening still only slides in from the trigger.
+    _fit() {
+      const t = this.tooltip;
+      const vertical = t.classList.contains('lb-tooltip--left') || t.classList.contains('lb-tooltip--right');
+      t.style.transition = 'none';
+      t.style.setProperty('--lb-tooltip-shift', '0px');
+      const r = t.getBoundingClientRect();
+      const c = clipRectOf(t);
+      const gutter = 8;
+      const lo = vertical ? r.top : r.left;
+      const hi = vertical ? r.bottom : r.right;
+      const min = (vertical ? c.top : c.left) + gutter;
+      const max = (vertical ? c.bottom : c.right) - gutter;
+      let shift = 0;
+      if (lo < min) shift = min - lo;
+      else if (hi > max) shift = Math.max(max - hi, min - lo);
+      // The arrow (6px half-width plus the corner) has to stay on the bubble.
+      const room = Math.max(0, (vertical ? r.height : r.width) / 2 - 14);
+      shift = Math.max(-room, Math.min(room, shift));
+      t.style.setProperty('--lb-tooltip-shift', `${Math.round(shift)}px`);
+      void t.offsetWidth;
+      t.style.transition = '';
     }
 
     _hide() {

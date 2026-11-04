@@ -69,6 +69,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 - **Large button** (new, value-deck btn-large): `.lb-btn--large`, 48px
   (`--lb-size-12x`) with the action-l type role, for a screen's main
   thumb action. Pairs with `.lb-icon-btn--large`.
+- **Tooltips fit near edges** (new behaviour, value-deck tooltip-end).
+  A bubble centred on a trigger near a panel or screen edge ran past it.
+  As it opens, `LB.Tooltip` now slides the bubble inside the nearest
+  clipping container or the viewport (`--lb-tooltip-shift`) and the
+  arrow stays on the trigger. Automatic, so no `--start` / `--end`
+  classes and no markup change.
+- **Tooltips keep to one line** (fix, visual): the bubble sits in a
+  trigger-sized wrap, so it wrapped word by word ("Tooltip / on / top").
+  It now takes `width: max-content` up to the existing 15rem cap.
 
 ## [1.12.0] — 2026-11-04
 

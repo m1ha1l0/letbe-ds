@@ -3097,6 +3097,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   line-height: var(--lb-t-caption-m-line-height);
   pointer-events: none;
   box-shadow: var(--lb-shadow-tooltip);
+  width: max-content; /* one line until the cap — the bubble sits in a trigger-sized wrap */
   max-width: 15rem; /* design-intent: tooltip line-length cap */
   white-space: normal;
   text-align: center;
@@ -3135,16 +3136,20 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   border-color: transparent;
 }
 
+/* --lb-tooltip-shift (set by LB.Tooltip as it opens) slides the bubble
+   along its cross axis to stay inside the nearest clipping edge or the
+   viewport; the arrow moves the other way, so it stays on the trigger. */
+
 /* Top: tooltip above trigger, arrow points down */
 .lb-tooltip--top {
   bottom: calc(100% + var(--lb-size-1-5x));
   left: 50%;
-  transform: translateX(-50%) translateY(var(--lb-size-1x));
+  transform: translateX(calc(-50% + var(--lb-tooltip-shift, 0px))) translateY(var(--lb-size-1x));
 }
-.lb-tooltip--top.lb-tooltip--open { transform: translateX(-50%) translateY(0); }
+.lb-tooltip--top.lb-tooltip--open { transform: translateX(calc(-50% + var(--lb-tooltip-shift, 0px))) translateY(0); }
 .lb-tooltip--top::after {
   top: 100%;
-  left: 50%;
+  left: calc(50% - var(--lb-tooltip-shift, 0px));
   transform: translateX(-50%);
   border-width: 6px 6px 0 6px; /* design-intent: triangle pseudo-border arrow */
   border-top-color: var(--lb-fg-default);
@@ -3154,12 +3159,12 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-tooltip--bottom {
   top: calc(100% + var(--lb-size-1-5x));
   left: 50%;
-  transform: translateX(-50%) translateY(calc(-1 * var(--lb-size-1x)));
+  transform: translateX(calc(-50% + var(--lb-tooltip-shift, 0px))) translateY(calc(-1 * var(--lb-size-1x)));
 }
-.lb-tooltip--bottom.lb-tooltip--open { transform: translateX(-50%) translateY(0); }
+.lb-tooltip--bottom.lb-tooltip--open { transform: translateX(calc(-50% + var(--lb-tooltip-shift, 0px))) translateY(0); }
 .lb-tooltip--bottom::after {
   bottom: 100%;
-  left: 50%;
+  left: calc(50% - var(--lb-tooltip-shift, 0px));
   transform: translateX(-50%);
   border-width: 0 6px 6px 6px; /* design-intent: triangle pseudo-border arrow */
   border-bottom-color: var(--lb-fg-default);
@@ -3169,12 +3174,12 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-tooltip--left {
   right: calc(100% + var(--lb-size-1-5x));
   top: 50%;
-  transform: translateY(-50%) translateX(var(--lb-size-1x));
+  transform: translateY(calc(-50% + var(--lb-tooltip-shift, 0px))) translateX(var(--lb-size-1x));
 }
-.lb-tooltip--left.lb-tooltip--open { transform: translateY(-50%) translateX(0); }
+.lb-tooltip--left.lb-tooltip--open { transform: translateY(calc(-50% + var(--lb-tooltip-shift, 0px))) translateX(0); }
 .lb-tooltip--left::after {
   left: 100%;
-  top: 50%;
+  top: calc(50% - var(--lb-tooltip-shift, 0px));
   transform: translateY(-50%);
   border-width: 6px 0 6px 6px; /* design-intent: triangle pseudo-border arrow */
   border-left-color: var(--lb-fg-default);
@@ -3184,12 +3189,12 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-tooltip--right {
   left: calc(100% + var(--lb-size-1-5x));
   top: 50%;
-  transform: translateY(-50%) translateX(calc(-1 * var(--lb-size-1x)));
+  transform: translateY(calc(-50% + var(--lb-tooltip-shift, 0px))) translateX(calc(-1 * var(--lb-size-1x)));
 }
-.lb-tooltip--right.lb-tooltip--open { transform: translateY(-50%) translateX(0); }
+.lb-tooltip--right.lb-tooltip--open { transform: translateY(calc(-50% + var(--lb-tooltip-shift, 0px))) translateX(0); }
 .lb-tooltip--right::after {
   right: 100%;
-  top: 50%;
+  top: calc(50% - var(--lb-tooltip-shift, 0px));
   transform: translateY(-50%);
   border-width: 6px 6px 6px 0; /* design-intent: triangle pseudo-border arrow */
   border-right-color: var(--lb-fg-default);
