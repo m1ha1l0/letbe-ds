@@ -169,6 +169,48 @@
       </div>
     </div>
 
+    <!-- ────────────────── D. Full-screen phone menu ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">D · Full-screen phone menu — <code class="lb-code">__drawer--full</code></h2>
+    <p class="gallery-section__desc">Add <code class="lb-code">.lb-header__drawer--full</code> to the drawer and the phone menu covers the screen: its head sits on the bar's row (brand on the brand, close on the menu button), the page names are large and centred, the actions sit at the foot with the primary first, and an optional <code class="lb-code">.lb-header__drawer-footer</code> row holds social links (<code class="lb-code">.lb-icon-btn--large</code>, 48px). It fades in with the links rising in a short stagger, and fades out on close; reduced motion skips both. Narrow the window below 769px and open the menu to try it.</p>
+    <div style="border: var(--lb-border-width-thin) solid var(--lb-border-muted); border-radius: var(--lb-radius-overlay); overflow: hidden;">
+      <header class="lb-header" data-lb-header>
+        <a class="lb-header__skip" href="#demoD-main">Skip to content</a>
+        <div class="lb-header__inner" data-lb-header-inner>
+          <a class="lb-header__brand" href="#"><span class="lb-header__logo" data-lb-icon="letbe"></span> letbe</a>
+          <nav class="lb-header__nav" aria-label="Primary (full-screen menu demo)">
+            <a class="lb-header__link lb-header__link--active" href="#" aria-current="page">Work</a>
+            <a class="lb-header__link" href="#">About</a>
+            <a class="lb-header__link" href="#">Writing</a>
+          </nav>
+          <div class="lb-header__actions">
+            <a class="lb-btn lb-btn--primary lb-btn--small" href="#">Contact</a>
+          </div>
+          <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-header__toggle" data-lb-header-toggle aria-label="Open menu"><span data-lb-icon="menu"></span></button>
+        </div>
+        <div class="lb-header__drawer lb-header__drawer--full" data-lb-header-drawer aria-label="Menu" hidden>
+          <div class="lb-header__drawer-head">
+            <a class="lb-header__brand" href="#"><span class="lb-header__logo" data-lb-icon="letbe"></span> letbe</a>
+            <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-header__toggle" data-lb-header-drawer-close aria-label="Close menu"><span data-lb-icon="x"></span></button>
+          </div>
+          <a class="lb-header__link lb-header__link--active" href="#" aria-current="page">Work</a>
+          <a class="lb-header__link" href="#">About</a>
+          <a class="lb-header__link" href="#">Writing</a>
+          <div class="lb-header__drawer-actions">
+            <a class="lb-btn lb-btn--secondary lb-btn--medium" href="#">Download CV</a>
+            <a class="lb-btn lb-btn--primary lb-btn--medium" href="#">Contact</a>
+          </div>
+          <div class="lb-header__drawer-footer">
+            <a class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--large" href="#" aria-label="LinkedIn"><span data-lb-icon="linkedin"></span></a>
+            <a class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--large" href="#" aria-label="GitHub"><span data-lb-icon="github"></span></a>
+            <a class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--large" href="#" aria-label="Medium"><span data-lb-icon="medium"></span></a>
+          </div>
+        </div>
+      </header>
+      <div id="demoD-main" tabindex="0" style="height: 160px; overflow-y: auto; padding: var(--lb-size-4x); background: var(--lb-bg-default);">
+        <p class="gallery-section__desc">Page content.</p>
+      </div>
+    </div>
+
     <!-- ────────────────── Scroll behaviors ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Scroll behaviors</h2>
     <ul class="gallery-section__desc">

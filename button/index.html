@@ -194,7 +194,7 @@
 
     <!-- ─────────────────────────── Icon-only — lb-icon-btn ─────────────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Icon-only — <code class="lb-code">.lb-icon-btn</code></h2>
-    <p class="gallery-section__desc">Separate component for icon-only buttons. Square shape, fixed box dimensions (40px medium, 32px small) with the icon glyph centered (24px medium, 16px small). <strong>Always require an <code class="lb-code">aria-label</code></strong> — there's no visible text, so assistive tech needs the verb.</p>
+    <p class="gallery-section__desc">Separate component for icon-only buttons. Square shape, fixed box dimensions (48px large, 40px medium, 32px small) with the icon glyph centered (32px large, 24px medium, 16px small). Large is for a social row in a menu or footer that has to carry the weight of the text beside it. <strong>Always require an <code class="lb-code">aria-label</code></strong> — there's no visible text, so assistive tech needs the verb.</p>
     <div class="gallery-label">Medium — all variants</div>
     <div class="gallery-row">
       <button class="lb-icon-btn lb-icon-btn--primary lb-icon-btn--medium" aria-label="Add">
@@ -212,6 +212,12 @@
       <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium" aria-label="Close" disabled>
         <span data-lb-icon="x" aria-hidden="true"></span>
       </button>
+    </div>
+    <div class="gallery-label" style="margin-top: var(--lb-size-3x);">Large — a social row</div>
+    <div class="gallery-row">
+      <a class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--large" href="#" aria-label="LinkedIn"><span data-lb-icon="linkedin" aria-hidden="true"></span></a>
+      <a class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--large" href="#" aria-label="GitHub"><span data-lb-icon="github" aria-hidden="true"></span></a>
+      <a class="lb-icon-btn lb-icon-btn--secondary lb-icon-btn--large" href="#" aria-label="Medium"><span data-lb-icon="medium" aria-hidden="true"></span></a>
     </div>
     <div class="gallery-label" style="margin-top: var(--lb-size-3x);">Small — all variants</div>
     <div class="gallery-row">

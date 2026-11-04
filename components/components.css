@@ -390,16 +390,21 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 }
 .lb-icon-btn:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: var(--lb-size-0-5x); }
 .lb-icon-btn:disabled, .lb-icon-btn[aria-disabled="true"] { background-color: var(--lb-bg-disabled); border-color: var(--lb-border-disabled); color: var(--lb-fg-muted); cursor: not-allowed; pointer-events: none; }
+.lb-icon-btn--large  { width: var(--lb-size-12x); height: var(--lb-size-12x); }
 .lb-icon-btn--medium { width: 2.5rem; height: 2.5rem; }
 .lb-icon-btn--small  { width: 2rem;   height: 2rem; }
 /* Icon sizing — applies whether the consumer uses the .lb-icon-btn__icon
    wrapper or puts [data-lb-icon] directly inside .lb-icon-btn. Medium
-   icons are 24px (1.5rem), small icons 16px (1rem). */
+   icons are 24px (1.5rem), small icons 16px (1rem), large 32px. */
 .lb-icon-btn__icon,
 .lb-icon-btn > [data-lb-icon] { display: inline-flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; }
 .lb-icon-btn__icon svg { width: 100%; height: 100%; }
 .lb-icon-btn--small .lb-icon-btn__icon,
 .lb-icon-btn--small > [data-lb-icon] { width: 1rem; height: 1rem; }
+/* Large — 48px target, 32px icon: a social row in a menu or footer that
+   carries the weight of the text beside it. */
+.lb-icon-btn--large .lb-icon-btn__icon,
+.lb-icon-btn--large > [data-lb-icon] { width: var(--lb-size-8x); height: var(--lb-size-8x); }
 
 /* Primary */
 .lb-icon-btn--primary { background-color: var(--lb-action-bg-primary-default); border-color: var(--lb-action-border-primary-default); color: var(--lb-action-fg-primary-default); }
@@ -8798,6 +8803,64 @@ img.lb-list__icon--round { object-fit: cover; }
   border-top: var(--lb-border-width-thin) solid var(--lb-surface-border-default);
 }
 .lb-header__drawer-actions .lb-btn { width: 100%; }
+/* Footer slot — a row at the foot of the drawer (social links, legal),
+   pushed down by its auto margin. Pairs with .lb-icon-btn--large. */
+.lb-header__drawer-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lb-size-2x);
+  margin-top: auto;
+  padding-top: var(--lb-size-4x);
+}
+.lb-header__drawer-actions + .lb-header__drawer-footer { margin-top: 0; }
+
+/* ── Full-screen phone menu (.lb-header__drawer--full) ──
+   The drawer covers the screen: head on the bar's row (same padding, so
+   brand and close sit on the bar's brand and toggle), the page names
+   large and centred in the free space, actions at the foot with the
+   primary first, then the footer row. Fades in instead of sliding, the
+   links rise in a short stagger (index from lb-header.js); reduced
+   motion: neither. Same dialog, focus trap, scroll lock and Esc. */
+.lb-header__drawer--full {
+  inset: 0;
+  width: auto;
+  align-items: center;
+  border-left: 0;
+  box-shadow: none;
+  padding-bottom: max(var(--lb-size-6x), env(safe-area-inset-bottom));
+}
+.lb-header__drawer--full > .lb-header__drawer-head { align-self: stretch; margin-bottom: auto; }
+.lb-header__drawer--full .lb-header__link {
+  width: auto;
+  justify-content: center;
+  padding: var(--lb-size-2x) var(--lb-size-4x);
+  font-family: var(--lb-t-heading-l-font-family);
+  font-size: var(--lb-t-heading-l-font-size);
+  font-weight: var(--lb-t-heading-l-font-weight);
+  line-height: var(--lb-t-heading-l-line-height);
+  letter-spacing: var(--lb-t-heading-l-letter-spacing);
+}
+/* Centred rows take the bar's underline, not the side-list fill + bar. */
+.lb-header__drawer--full .lb-header__link--active { background-color: transparent; }
+.lb-header__drawer--full .lb-header__link--active::before { content: none; }
+.lb-header__drawer--full .lb-header__link--active::after { content: ''; }
+.lb-header__drawer--full > .lb-header__drawer-actions {
+  align-self: stretch;
+  margin-top: auto;
+  padding-top: var(--lb-size-6x);
+  border-top: 0;
+}
+.lb-header__drawer--full .lb-header__drawer-actions .lb-btn--primary { order: -1; }
+.lb-header__drawer--full > .lb-header__drawer-footer { justify-content: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .lb-header__drawer--full { animation: lb-overlay-fade-in var(--lb-animation-dur-slow) var(--lb-animation-ease-in); }
+  .lb-header__drawer--full .lb-header__link {
+    animation: lb-modal-rise-in var(--lb-animation-dur-slow) var(--lb-animation-ease-in) backwards;
+    animation-delay: calc(var(--lb-header-link-i, 0) * var(--lb-animation-dur-micro));
+  }
+  .lb-header--drawer-leaving .lb-header__drawer--full { animation: lb-overlay-fade-out var(--lb-animation-dur-gentle) var(--lb-animation-ease-out) forwards; }
+}
 
 /* ── Responsive: collapse nav → hamburger at ≤768px ── */
 @media (max-width: 768px) {

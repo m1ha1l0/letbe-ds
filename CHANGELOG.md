@@ -25,6 +25,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   button opens that modal, no page script; it gets
   `aria-haspopup="dialog"`, focus returns to it on close, and modifier
   clicks on links still open a new tab.
+- **Full-screen phone menu** (`.lb-header__drawer--full`): the drawer
+  covers the screen with its head on the bar's row (brand on the brand,
+  close on the menu button), the page names large and centred, actions
+  at the foot with the primary first. Fades in with a short link
+  stagger, fades out on close; reduced motion skips both.
+- **Drawer footer slot** (`.lb-header__drawer-footer`): a row at the foot
+  of either drawer for social links or legal lines.
+- **Large icon button** (`.lb-icon-btn--large`, 48px with a 32px icon) for
+  a social row that carries the weight of the text beside it.
 
 ## [1.5.0] — 2026-11-04
 

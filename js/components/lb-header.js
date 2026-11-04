@@ -90,6 +90,8 @@
           el.appendChild(this._scrim);
         }
         this._scrim.addEventListener('click', () => this.closeDrawer());
+        // Link index for the full-screen menu's staggered entry.
+        this._drawer.querySelectorAll('.lb-header__link').forEach((a, i) => a.style.setProperty('--lb-header-link-i', i));
         // Close drawer when a link inside it is followed.
         this._drawer.addEventListener('click', (e) => {
           if (e.target.closest('a[href]')) this.closeDrawer();
