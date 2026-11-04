@@ -20,9 +20,20 @@
  *   - The dialog hugs the image: each step sizes the <img> explicitly to
  *     the largest fit inside the viewport caps (mirrored in the
  *     .lb-lightbox CSS), so the chrome wraps the picture instead of
- *     letterboxing it; steps cross-fade (skipped under
- *     prefers-reduced-motion), neighbours are preloaded, and a resize
- *     refits the current image.
+ *     letterboxing it; neighbours are preloaded, a resize refits the
+ *     current image, and a link's image is prefetched as soon as it is
+ *     hovered, touched or focused.
+ *   - Motion (all of it skipped under prefers-reduced-motion): opening,
+ *     the backdrop fades in while the frame waits unseen for the photo
+ *     (at most 4s), then the frame rises in at its final size and the
+ *     photo fades in inside it; between images the old one fades out
+ *     fast, the frame glides to the new size, and the new one fades in
+ *     and settles with its caption and count; closing is the Modal exit.
+ *   - Swipe on touch screens: a mostly sideways move of 50px (or a quick
+ *     flick) steps, the image follows the finger; touches from the
+ *     screen edges (system back gestures), second fingers and a zoomed
+ *     page are left alone, vertical scroll and pinch stay the browser's
+ *     (touch-action: pan-y pinch-zoom). The arrows stay.
  *   - Full screen on phones (the CSS ≤640px block), blurred backdrop.
  *
  * Modifier clicks (cmd/ctrl/shift/middle) fall through to the browser so
@@ -51,6 +62,7 @@
       this._index = 0;
       this._switching = 0;
       this._open = false;
+      this._swipe = null;
       this._build();
     }
 
@@ -99,6 +111,8 @@
         if (e.key === 'ArrowLeft') this.show(this._index - 1);
       };
       document.addEventListener('keydown', this._onKey);
+
+      this._bindSwipe(this.el.querySelector('.lb-lightbox__body'));
 
       let t;
       this._onResize = () => {
@@ -156,7 +170,51 @@
       });
     }
 
+    // Swipe — pointer events on the stage. The browser keeps vertical
+    // pans and pinch (touch-action: pan-y pinch-zoom in the CSS), so a
+    // sideways move reaches us; we decide after ~10px which way it goes.
+    _bindSwipe(stage) {
+      const EDGE = 24, MIN = 50, FLICK = 0.5; // px, px, px/ms
+      const zoomed = () => window.visualViewport && window.visualViewport.scale > 1.01;
+      const reset = () => {
+        this.el.classList.remove('lb-lightbox--dragging');
+        this._img.style.translate = '';
+        this._swipe = null;
+      };
+      stage.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' || this._items.length < 2) return;
+        if (this._swipe) { reset(); return; } // a second finger: not a swipe
+        if (!e.isPrimary || zoomed() || e.clientX < EDGE || e.clientX > window.innerWidth - EDGE) return;
+        this._swipe = { id: e.pointerId, x: e.clientX, y: e.clientY, t: e.timeStamp, dx: 0, axis: null };
+      });
+      stage.addEventListener('pointermove', (e) => {
+        const sw = this._swipe;
+        if (!sw || e.pointerId !== sw.id) return;
+        sw.dx = e.clientX - sw.x;
+        const dy = e.clientY - sw.y;
+        if (!sw.axis && (Math.abs(sw.dx) > 10 || Math.abs(dy) > 10)) {
+          sw.axis = Math.abs(sw.dx) > Math.abs(dy) ? 'x' : 'y';
+          if (sw.axis === 'y') { reset(); return; }
+          if (!reduced()) this.el.classList.add('lb-lightbox--dragging');
+        }
+        if (sw.axis === 'x' && !reduced()) this._img.style.translate = sw.dx + 'px 0';
+      });
+      const end = (e) => {
+        const sw = this._swipe;
+        if (!sw || e.pointerId !== sw.id) return;
+        const v = Math.abs(sw.dx) / Math.max(1, e.timeStamp - sw.t);
+        const step = e.type === 'pointerup' && sw.axis === 'x' && (Math.abs(sw.dx) >= MIN || (Math.abs(sw.dx) > 20 && v > FLICK));
+        this.el.classList.remove('lb-lightbox--dragging'); // snap back animates
+        if (step) this.show(this._index + (sw.dx < 0 ? 1 : -1));
+        else this._img.style.translate = '';
+        this._swipe = null;
+      };
+      stage.addEventListener('pointerup', end);
+      stage.addEventListener('pointercancel', end);
+    }
+
     _place(it, size) {
+      this._img.style.translate = '';
       this._img.style.width = size.w + 'px';
       this._img.style.height = size.h + 'px';
       this._img.src = it.href;
@@ -167,28 +225,59 @@
       this._count.textContent = `${this._index + 1} of ${this._items.length}`;
     }
 
-    show(i, instant) {
+    // Placement without the size glide (first image of an opening, refit
+    // on resize): the transition is off for this one frame.
+    _placeInstant(it, size) {
+      this._img.style.transition = 'none';
+      this._place(it, size);
+      void this._img.offsetWidth;
+      this._img.style.transition = '';
+      this.el.classList.remove('lb-lightbox--switching');
+    }
+
+    // onPlaced (opening only): called once the frame can show — when the
+    // photo has loaded, or after 4s with a stand-in frame (the real size
+    // then glides in when the photo arrives).
+    show(i, instant, onPlaced) {
       if (!this._items.length) return;
       this._index = (i + this._items.length) % this._items.length;
       const it = this._items[this._index];
       const ticket = ++this._switching;
-      this._load(it.href).then((nat) => {
-        if (ticket !== this._switching) return;
-        const size = this._fit(nat.w, nat.h);
-        if (instant || reduced()) {
-          this._place(it, size);
-          this._img.classList.remove('lb-lightbox__img--switching');
-          return;
-        }
-        this._img.classList.add('lb-lightbox__img--switching');
-        setTimeout(() => {
+      const loading = this._load(it.href);
+      if (onPlaced) {
+        let placed = false;
+        const guard = setTimeout(() => {
+          if (ticket !== this._switching || placed) return;
+          placed = true;
+          this._placeInstant(it, this._fit(1600, 1000));
+          onPlaced();
+        }, 4000);
+        loading.then((nat) => {
+          clearTimeout(guard);
           if (ticket !== this._switching) return;
-          this._place(it, size);
+          const size = this._fit(nat.w, nat.h);
+          if (placed) { this._place(it, size); return; }
+          placed = true;
+          this._placeInstant(it, size);
+          onPlaced();
+        });
+      } else {
+        loading.then((nat) => {
+          if (ticket !== this._switching) return;
+          const size = this._fit(nat.w, nat.h);
+          if (instant || reduced()) { this._placeInstant(it, size); return; }
+          // Old image and caption fade out fast, the frame glides to the
+          // new size, the new image fades in and settles half-way through.
+          this.el.classList.add('lb-lightbox--switching');
           setTimeout(() => {
-            if (ticket === this._switching) this._img.classList.remove('lb-lightbox__img--switching');
-          }, tokenMs('--lb-animation-dur-gentle'));
-        }, tokenMs('--lb-animation-dur-normal'));
-      });
+            if (ticket !== this._switching) return;
+            this._place(it, size);
+            setTimeout(() => {
+              if (ticket === this._switching) this.el.classList.remove('lb-lightbox--switching');
+            }, tokenMs('--lb-animation-dur-slow') / 2);
+          }, tokenMs('--lb-animation-dur-normal'));
+        });
+      }
       // warm the neighbours
       if (this._items.length > 1) {
         [1, -1].forEach((d) => {
@@ -204,7 +293,17 @@
       const href = link.getAttribute('href');
       const start = this._items.findIndex((it) => it.href === href);
       this._nav.hidden = this._items.length < 2;
-      this.show(start < 0 ? 0 : start, true);
+      // The frame stays unseen (--loading) until the photo is in place,
+      // then rises in at its final size and the photo fades in after it.
+      const motion = !reduced();
+      if (motion) this.el.classList.add('lb-lightbox--loading');
+      this.show(start < 0 ? 0 : start, true, () => {
+        if (!motion) return;
+        this.el.classList.remove('lb-lightbox--loading');
+        this.el.classList.add('lb-lightbox--revealing');
+        void this._img.offsetWidth;
+        setTimeout(() => this.el.classList.remove('lb-lightbox--revealing'), tokenMs('--lb-animation-dur-gentle'));
+      });
       LB.Modal.open(this.el);
     }
 
@@ -221,6 +320,20 @@
     if (!_instance) _instance = new Lightbox();
     return _instance;
   }
+
+  // Prefetch: warm a link's image as soon as it is hovered, touched or
+  // focused, so the viewer usually opens on a cached photo.
+  const warmed = new Set();
+  const warm = (e) => {
+    const link = e.target.closest && e.target.closest(SEL);
+    const href = link && link.getAttribute('href');
+    if (!href || warmed.has(href) || !IMG_RE.test(href)) return;
+    warmed.add(href);
+    const p = new Image(); p.src = href;
+  };
+  document.addEventListener('pointerover', warm, { passive: true });
+  document.addEventListener('touchstart', warm, { passive: true });
+  document.addEventListener('focusin', warm);
 
   document.addEventListener('click', (e) => {
     const link = e.target.closest && e.target.closest(SEL);

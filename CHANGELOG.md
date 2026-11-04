@@ -34,6 +34,17 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   of either drawer for social links or legal lines.
 - **Large icon button** (`.lb-icon-btn--large`, 48px with a 32px icon) for
   a social row that carries the weight of the text beside it.
+- **Lightbox motion and swipe.** Opening: the backdrop fades in while
+  the frame waits unseen for the photo (at most 4s), then rises in at its
+  final size and the photo fades in. Between images the frame glides to
+  the new size while the image, caption and count fade (it no longer
+  jumps). Closing plays the Modal exit. Swipe steps on touch screens (50px
+  or a quick flick; the image follows the finger) with
+  `touch-action: pan-y pinch-zoom`, ignoring edge gestures, second
+  fingers and a zoomed page. Linked images prefetch on hover, touch or
+  focus. Reduced motion: all instant, swipe still steps.
+- **Fix:** pages with lightbox links no longer log a false "controller is
+  not loaded" warning when `lb-lightbox.js` is loaded.
 
 ## [1.5.0] — 2026-11-04
 

@@ -8803,12 +8803,13 @@ const LB = (() => {
     ['[data-lb-thread]', 'lb-chat.js'],
     ['[data-lb-conv-list]', 'lb-chat.js'],
     ['[data-lb-artifact]', 'lb-chat-artifact.js'],
-    ['a[data-lb-lightbox]', 'lb-lightbox.js'],
+    ['a[data-lb-lightbox]', 'lb-lightbox.js', 'lightbox'],
   ];
   function _warnMissingModules() {
-    _OPT_IN_MODULES.forEach(([sel, file]) => {
+    _OPT_IN_MODULES.forEach(([sel, file, name]) => {
       if (!document.querySelector(sel)) return;
-      if (_registered.some((r) => r.selector === sel)) return;
+      // Delegated singletons (the lightbox) register by name, no selector.
+      if (_registered.some((r) => r.selector === sel || (name && r.name === name))) return;
       console.warn(`letbe-ds: found ${sel} but its controller is not loaded — include js/components/${file} after lb.js.`);
     });
   }
