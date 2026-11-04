@@ -10,6 +10,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   glyphs, `linkedin` and `twitter` the filled Bootstrap Icons ones (Simple
   Icons no longer carries them); they were the old outlined Lucide
   shapes, so a social row mixed outlines and solid logos. Names unchanged.
+- **Flags: the full ISO 3166-1 set.** 78 flags added (250 in all: every
+  ISO 3166-1 alpha-2 code plus XK), so territories such as FO, AX, GL,
+  GI, VA and XK no longer render blank in Flag, Bar List or a country
+  list. Same circle-flags source and shape; `scripts/fetch-flags.js`
+  now vendors the full ISO list.
 
 ## [1.6.0] — 2026-11-04
 

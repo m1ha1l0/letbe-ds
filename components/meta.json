@@ -216,7 +216,7 @@
     },
     "flag": {
       "name": "Flag",
-      "description": "Country flag with optional code or name label. Uses the same vendored flag set as the Phone input (173 ISO-coded SVGs at `/assets/flags/`). Three sizes (small / medium / large). Default circular shape matches Phone; `--rect` flips to a rectangular thumbnail for table rows where a non-circular icon reads more naturally. Pairs with Bar List, Bar Chart, Table, and Stat for compact country representation in dashboards and analytics views.",
+      "description": "Country flag with optional code or name label. Uses the same vendored flag set as the Phone input: the full ISO 3166-1 alpha-2 set plus XK (Kosovo), 250 circular SVGs at `/assets/flags/{iso}.svg`, lowercase codes. Three sizes (small / medium / large). Default circular shape matches Phone; `--rect` flips to a rectangular thumbnail for table rows where a non-circular icon reads more naturally. Pairs with Bar List, Bar Chart, Table, and Stat for compact country representation in dashboards and analytics views.",
       "usage": "`<span class=\"lb-flag\"><img class=\"lb-flag__img\" src=\"/assets/flags/us.svg\" alt=\"\"><span class=\"lb-flag__code\">US</span></span>`. Use `.lb-flag__label` instead of `.lb-flag__code` for a full country name. Modifiers: `.lb-flag--small`, `.lb-flag--large`, `.lb-flag--rect` (rectangular flag for tables). Always set `alt=\"\"` on the img — the code or label span carries the accessible name."
     },
     "footer": {

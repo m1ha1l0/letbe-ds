@@ -253,7 +253,7 @@ the components rebuilt as Figma component sets, bound to the same variables.
 All bundled media lives under `assets/`:
 
 - **`assets/icons/`** — 246 SVG icons: [Lucide](https://lucide.dev/) outlined/filled set (ISC) plus one Lucide-style custom (`square-rounded.svg`), brand logos from [Simple Icons](https://simpleicons.org/) (CC0 code; logos remain trademarks of their owners) and `slack.svg` from [Bootstrap Icons](https://icons.getbootstrap.com/) (MIT) — full details in [THIRD-PARTY-LICENSES.md](./THIRD-PARTY-LICENSES.md)
-- **`assets/flags/`** — 172 country flags, [circle-flags by HatScripts](https://github.com/HatScripts/circle-flags) (MIT)
+- **`assets/flags/`** — 250 flags (ISO 3166-1 alpha-2 + XK), [circle-flags by HatScripts](https://github.com/HatScripts/circle-flags) (MIT)
 - **`assets/avatars/`** — local avatar images used in the Avatar demos
 - **`assets/brand/`** — letbe.design logo, mark, favicon
 
@@ -261,7 +261,8 @@ See [`THIRD-PARTY-LICENSES.md`](./THIRD-PARTY-LICENSES.md) for full license text
 
 ## Re-vendoring flags
 
-If the Phone input's country list grows, re-run:
+The set is the full ISO 3166-1 alpha-2 list plus XK, and every country in
+the Phone input's list. If either grows, re-run:
 
 ```bash
 node scripts/fetch-flags.js           # fetch missing flags only
