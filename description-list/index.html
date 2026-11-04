@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <!-- theme-preamble:v1 -->
+  <script>(function(){try{var t=localStorage.getItem('letbe-ds-dark-mode');if(t==='1')document.documentElement.setAttribute('data-theme','dark');else if(t==='0')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta data-lb-page="description-list">
+  <title>Description List — letbe-ds</title>
+  <link rel="stylesheet" href="../tokens/theme.css">
+  <link rel="stylesheet" href="../tokens/fonts.css">
+  <link rel="stylesheet" href="../components/components.css">
+  <link rel="stylesheet" href="../components/theme-editor.css">
+  <link rel="stylesheet" href="../components/gallery.css">
+  </head>
+<body data-lb-base="..">
+
+<main class="gallery-main">
+  <section class="gallery-section" id="description-list">
+    <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Description List</h1>
+    <p class="gallery-section__desc">Label and value rows on a real <code class="lb-code">&lt;dl&gt;</code>: the facts of a case study, a spec sheet, a profile's details. Terms in the label role (muted), values in body ink. Three layouts — stacked, terms beside their values, or groups side by side — plus a large value size and rules above and below. Pure CSS. For a list of actions, use List; for numbers with trends, use Stat.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> it stays a native <code class="lb-code">&lt;dl&gt;</code>, so screen readers announce terms and their descriptions as pairs; a <code class="lb-code">&lt;div&gt;</code> around a term and its values is valid HTML and is how the grid layout groups them. No roles are added.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> <code class="lb-code">&lt;dl class="lb-description-list"&gt;</code> with <code class="lb-code">&lt;dt class="lb-description-list__term"&gt;</code> and <code class="lb-code">&lt;dd class="lb-description-list__details"&gt;</code> (several <code class="lb-code">dd</code> per term are fine). Layouts: default (stacked), <code class="lb-code">--inline</code> (term column, width <code class="lb-code">--lb-description-list-term</code>; stacks on phones), <code class="lb-code">--grid</code> (wrap each pair in a <code class="lb-code">&lt;div&gt;</code>; column floor <code class="lb-code">--lb-description-list-min</code>). <code class="lb-code">--large</code> sets values in heading-m, <code class="lb-code">--ruled</code> adds a rule above and below.</p>
+
+    <hr class="gallery-desc-divider">
+
+    <h2 class="gallery-section__title">Stacked</h2>
+    <p class="gallery-section__desc">The default: each term above its values.</p>
+    <dl class="lb-description-list" style="max-width: 24rem;">
+      <dt class="lb-description-list__term">Role</dt>
+      <dd class="lb-description-list__details">Lead Product Designer</dd>
+      <dt class="lb-description-list__term">Areas</dt>
+      <dd class="lb-description-list__details">Design System</dd>
+      <dd class="lb-description-list__details">Onboarding</dd>
+    </dl>
+
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Inline — <code class="lb-code">--inline</code></h2>
+    <p class="gallery-section__desc">Terms in a column beside their values; on phones it stacks again.</p>
+    <dl class="lb-description-list lb-description-list--inline" style="max-width: 36rem;">
+      <dt class="lb-description-list__term">Plan</dt>
+      <dd class="lb-description-list__details">Team, billed yearly</dd>
+      <dt class="lb-description-list__term">Seats</dt>
+      <dd class="lb-description-list__details">12 of 20 in use</dd>
+      <dt class="lb-description-list__term">Renews</dt>
+      <dd class="lb-description-list__details">14 March 2027</dd>
+    </dl>
+
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Grid, large, ruled — <code class="lb-code">--grid --large --ruled</code></h2>
+    <p class="gallery-section__desc">Facts side by side between 2 rules, values in heading-m: a case study hero.</p>
+    <dl class="lb-description-list lb-description-list--grid lb-description-list--large lb-description-list--ruled">
+      <div><dt class="lb-description-list__term">Role</dt><dd class="lb-description-list__details">Lead Designer</dd></div>
+      <div><dt class="lb-description-list__term">Team</dt><dd class="lb-description-list__details">6 people</dd></div>
+      <div><dt class="lb-description-list__term">Company</dt><dd class="lb-description-list__details">Fintech scale-up</dd></div>
+      <div><dt class="lb-description-list__term">Year</dt><dd class="lb-description-list__details">2025</dd></div>
+    </dl>
+  </section>
+</main>
+
+<script src="../js/lb.js"></script>
+<script src="../js/slot-engine.js"></script>
+<script src="../js/theme-editor.js"></script>
+<script src="../js/token-exporter.js"></script>
+<script src="../js/gallery-layout.js"></script>
+</body>
+</html>

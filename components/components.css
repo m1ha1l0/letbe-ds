@@ -76,6 +76,40 @@
 .lb-carousel--static .lb-carousel__controls { display: none; }
 
 /* ═══════════════════════════════════════════════════════════
+   DESCRIPTION LIST — <dl class="lb-description-list">
+   Label and value rows (case facts, specs, a profile's details). Terms
+   are .lb-description-list__term (<dt>, label role, muted), values
+   .lb-description-list__details (<dd>, body, default ink); a <div> may
+   group a term with its values. Layouts:
+     default  each term above its values
+     --inline the terms in a column beside their values (column width
+              --lb-description-list-term), stacked again on phones
+     --grid   <div> groups side by side in auto-fit columns
+              (--lb-description-list-min per column)
+   --large sets the values in heading-m; --ruled draws a rule above and
+   below the whole list. Pure CSS.
+   ═══════════════════════════════════════════════════════════ */
+.lb-description-list { display: grid; row-gap: var(--lb-size-4x); margin: 0; }
+.lb-description-list > div { display: grid; row-gap: var(--lb-size-1x); }
+.lb-description-list__term { margin: 0; font-family: var(--lb-t-label-m-font-family); font-size: var(--lb-t-label-m-font-size); font-weight: var(--lb-t-label-m-font-weight); line-height: var(--lb-t-label-m-line-height); letter-spacing: var(--lb-t-label-m-letter-spacing); color: var(--lb-fg-muted); }
+.lb-description-list__details { margin: 0; font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); font-weight: var(--lb-t-body-m-font-weight); line-height: var(--lb-t-body-m-line-height); color: var(--lb-fg-default); }
+/* Default: a term sits tight above its values, the next term a row-gap away. */
+.lb-description-list:not(.lb-description-list--inline):not(.lb-description-list--grid) > .lb-description-list__details { margin-top: calc(-1 * var(--lb-size-3x)); }
+.lb-description-list--inline { grid-template-columns: var(--lb-description-list-term, minmax(8rem, max-content)) 1fr; /* design-intent: term column floor */ column-gap: var(--lb-size-6x); row-gap: var(--lb-size-3x); align-items: baseline; }
+.lb-description-list--inline > div { display: contents; }
+.lb-description-list--inline .lb-description-list__term { grid-column: 1; }
+.lb-description-list--inline .lb-description-list__details { grid-column: 2; }
+@media (max-width: 640px) {
+  .lb-description-list--inline { grid-template-columns: 1fr; row-gap: var(--lb-size-1x); }
+  .lb-description-list--inline .lb-description-list__term,
+  .lb-description-list--inline .lb-description-list__details { grid-column: 1; }
+  .lb-description-list--inline .lb-description-list__term:not(:first-child) { margin-top: var(--lb-size-3x); }
+}
+.lb-description-list--grid { grid-template-columns: repeat(auto-fit, minmax(var(--lb-description-list-min, 10rem), 1fr)); /* design-intent: grid column floor */ column-gap: var(--lb-size-6x); row-gap: var(--lb-size-6x); }
+.lb-description-list--large .lb-description-list__details { font-family: var(--lb-t-heading-m-font-family); font-size: var(--lb-t-heading-m-font-size); font-weight: var(--lb-t-heading-m-font-weight); line-height: var(--lb-t-heading-m-line-height); letter-spacing: var(--lb-t-heading-m-letter-spacing); }
+.lb-description-list--ruled { padding-block: var(--lb-size-6x); border-block: var(--lb-border-width-thin) solid var(--lb-border-default); }
+
+/* ═══════════════════════════════════════════════════════════
    REVEAL — [data-lb-reveal] (LB.Reveal, core runtime)
    Hidden only under html.lb-reveal-on (set by lb.js, or early by a head
    script) and only when motion is welcome; lb.js adds .lb-revealed as

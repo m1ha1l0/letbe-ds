@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Description List** (new, pure CSS): label and value rows on a native
+  `<dl>` — terms in the label role (muted), values in body ink; stacked,
+  `--inline` (term column beside the values, stacks on phones) or
+  `--grid` (div-grouped pairs side by side), `--large` values in
+  heading-m, `--ruled` rules above and below.
 - **Motion polish** (all off under reduced motion). Buttons and icon
   buttons give a little under the pointer (`scale: 0.97` on the
   individual property, so it composes with any transform; the DS owns

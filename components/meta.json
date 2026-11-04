@@ -11,7 +11,7 @@
       "name": "Components",
       "items": [
         "accordion", "avatar", "badge", "banner", "breadcrumb", "button",
-        "calendar", "card", "carousel", "chat", "checkbox", "chip", "code-block", "color-picker", "command-palette", "counter", "datepicker", "divider",
+        "calendar", "card", "carousel", "chat", "checkbox", "chip", "code-block", "color-picker", "command-palette", "counter", "datepicker", "description-list", "divider",
         "dropdown", "empty-state", "file-uploader", "flag", "footer", "forms", "header", "input", "kanban", "lightbox", "link", "list", "media-player", "menu", "modal", "navigation",
         "pagination", "popover", "progress", "radio", "rating", "resizable", "scroll-area", "segmented", "select", "sheet", "show-more",
         "skeleton", "slider", "spinner", "stepper", "switch", "table", "tabs",
@@ -182,6 +182,11 @@
       "name": "Date Picker",
       "description": "Calendar date selection. Supports single-date and range modes; available inline or in a popover. Month/year navigation via custom selects. Use when the user needs to pick a specific day (booking, scheduling, filtering). For less precise time inputs prefer a standard input with format hint. Form-native: `data-lb-name` renders hidden input(s) that submit the picked value (`name-start`/`name-end` in range and week modes; `data-lb-format` = iso default with local dates, or epoch), `data-lb-required` announces the state, and `getValue`/`setError(msg)`/`clearError()` land on the instance; the field follows form reset.",
       "usage": "`<div class=\"lb-datepicker--inline\" data-lb-datepicker data-lb-variant=\"inline\" data-lb-mode=\"single\"></div>` — mount it EMPTY; the controller renders every inner node itself. Input variant is `<div class=\"lb-datepicker-field\" data-lb-datepicker data-lb-variant=\"input\" data-lb-mode=\"range\" data-lb-label=\"…\" data-lb-placeholder=\"…\" data-lb-size=\"small|medium|large\">`. Modes: `single`, `range`, `week`, `month`, `time` (time mode is documented on the Time Picker page); further attributes `data-lb-hint`, `data-lb-error`, `data-lb-disabled`, `data-lb-week-start` (`0`=Sun, default `1`=Mon/ISO), `data-lb-time-format`, `data-lb-time-step`. Auto-inits via `data-lb-datepicker` (instance at `el._lbDatePicker`); `minDate`, `maxDate`, `formatDate`, `onChange`, `onRangeChange` have no attribute form and need `new LB.DatePicker(el, options)`. Every mode dispatches the one event `lb-datepicker-change` on the host element (non-bubbling — listen on the element itself) with `detail.mode` + `detail.value`, plus `detail.rangeStart`/`rangeEnd` in range mode and `detail.weekStart`/`weekEnd` in week mode; methods are `setValue(date)`, `setRange(start, end)`, `setTime({ hours, minutes })`, `destroy()`."
+    },
+    "description-list": {
+      "name": "Description List",
+      "description": "Label and value rows on a native `<dl>` — case-study facts, spec sheets, profile details. Terms in the label role (muted), values in body ink. Layouts: stacked (default), `--inline` (term column beside the values, stacks on phones), `--grid` (div-grouped pairs side by side in auto-fit columns); `--large` sets values in heading-m, `--ruled` adds a rule above and below. Pure CSS, no roles added (screen readers read term/description pairs natively).",
+      "usage": "`<dl class=\"lb-description-list\">` with `<dt class=\"lb-description-list__term\">` and one or more `<dd class=\"lb-description-list__details\">`; for `--grid` wrap each pair in a `<div>`. Custom properties: `--lb-description-list-term` (inline term column width), `--lb-description-list-min` (grid column floor)."
     },
     "divider": {
       "name": "Divider",
