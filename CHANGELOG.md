@@ -5,6 +5,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.9.0] — 2026-11-04
+
+Minor: new components and motion from the mihailo.net and mihailo.ink
+findings — Carousel, Description List, Icon List, scroll reveal and
+count-up, button press / media zoom / arrow nudge, list exit motion.
+Motion change: buttons now give a little under the pointer (off under
+reduced motion). No new tokens.
+
 - **Icon List** (new, pure CSS): a short content list where each line
   starts with an icon (principles, plan features, pros and cons). The
   icon sits on the first line at the text's size and takes the text ink
