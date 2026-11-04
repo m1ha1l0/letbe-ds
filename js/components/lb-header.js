@@ -19,6 +19,12 @@
  *   - Scroll state: a rAF-throttled listener toggles `--scrolled` past a
  *     threshold, driving transparent→solid and shrink. Only attached
  *     when the header opts into `--transparent` or `--shrink`.
+ *   - Hide on scroll (`--autohide`): the bar slides up as you read down,
+ *     following the scroll like a phone's address bar, comes back on the
+ *     way up, settles shown or hidden at rest, and is always back for the
+ *     drawer, for Tab (before focus moves) and near the top. It publishes
+ *     the visible height as `--lb-header-visible` on <html> and an
+ *     `lb-header-autohide` event, so companion sticky bars can follow.
  *   - CSS gotcha handled in docs, not here: a sticky header must be a
  *     direct child of the scroll root.
  *
@@ -145,7 +151,54 @@
         this._onScroll(); // set initial state
       }
 
+      if (this.el.classList.contains('lb-header--autohide')) this._initAutohide();
+
       if (LB.initIcons) LB.initIcons(this.el);
+    }
+
+    _initAutohide() {
+      this._hide = 0;
+      this._lastY = window.scrollY;
+      this._ahRaf = null;
+      const full = () => {
+        const top = parseFloat(getComputedStyle(this.el).top) || 0;
+        return this.el.offsetHeight + Math.max(0, top + this._hide); // floating: its gap too
+      };
+      const apply = (hide, settle) => {
+        const h = full();
+        hide = Math.max(0, Math.min(h, hide, Math.max(0, window.scrollY))); // never hidden at the top
+        this.el.classList.toggle('lb-header--settling', !!settle);
+        if (hide === this._hide && !settle) return;
+        this._hide = hide;
+        this.el.style.setProperty('--lb-header-hide', hide + 'px');
+        document.documentElement.style.setProperty('--lb-header-visible', (h - hide) + 'px');
+        this.el.dispatchEvent(new CustomEvent('lb-header-autohide', { bubbles: true, detail: { hidden: hide, height: h } }));
+      };
+      this.showBar = () => apply(0, false);
+      let rest;
+      this._onAutohideScroll = () => {
+        if (this._drawerOpen || this._ahRaf) return;
+        this._ahRaf = requestAnimationFrame(() => {
+          this._ahRaf = null;
+          const y = window.scrollY;
+          apply(this._hide + (y - this._lastY), false);
+          this._lastY = y;
+          clearTimeout(rest);
+          // At rest: settle to whichever end is nearer.
+          rest = setTimeout(() => {
+            const h = full();
+            if (this._hide > 0 && this._hide < h) apply(this._hide > h / 2 ? h : 0, true);
+          }, 150);
+        });
+      };
+      window.addEventListener('scroll', this._onAutohideScroll, { passive: true });
+      // Tab: bring the bar back BEFORE focus moves, so focus never makes
+      // the page jump to a hidden header.
+      this._onAutohideKey = (e) => { if (e.key === 'Tab' && this._hide > 0) apply(0, false); };
+      document.addEventListener('keydown', this._onAutohideKey, true);
+      this.el.addEventListener('focusin', this.showBar);
+      this.el.addEventListener('lb-header-drawer-open', this.showBar);
+      apply(0, false);
     }
 
     _megaPanelFor(btn) {
@@ -234,6 +287,8 @@
       if (this._onMegaOutside) document.removeEventListener('click', this._onMegaOutside);
       if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
       if (this._onResize) window.removeEventListener('resize', this._onResize);
+      if (this._onAutohideScroll) window.removeEventListener('scroll', this._onAutohideScroll);
+      if (this._onAutohideKey) document.removeEventListener('keydown', this._onAutohideKey, true);
       if (this._releaseTrap) this._releaseTrap();
       LB.unlockScroll(this);
     }

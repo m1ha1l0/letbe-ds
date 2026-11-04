@@ -8537,6 +8537,16 @@ img.lb-list__icon--round { object-fit: cover; }
   font-family: var(--lb-t-action-m-font-family);
 }
 .lb-header--sticky { position: sticky; top: 0; }
+/* Hide on scroll (--autohide, with --sticky or --floating): lb-header.js
+   moves the sticky top by --lb-header-hide as you read down, pixel for
+   pixel, brings it back on the way up, and settles it shown or hidden at
+   rest (--settling animates that last step). It moves `top`, never a
+   transform, so the fixed drawer inside keeps the viewport as its box. */
+.lb-header--autohide.lb-header--sticky { top: calc(0px - var(--lb-header-hide, 0px)); }
+.lb-header--autohide.lb-header--floating { top: calc(var(--lb-size-4x) - var(--lb-header-hide, 0px)); }
+@media (prefers-reduced-motion: no-preference) {
+  .lb-header--autohide.lb-header--settling { transition: top var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+}
 
 /* Skip-to-content — visually hidden until focused (WCAG bypass block).
    Uses clip-based hiding (not transform) so the box never peeks out of a
@@ -8902,6 +8912,7 @@ img.lb-list__icon--round { object-fit: cover; }
   .lb-header__toggle { display: inline-flex; }
   .lb-header__inner { padding-left: var(--lb-header-pad-x, var(--lb-size-4x)); padding-right: var(--lb-header-pad-x, var(--lb-size-4x)); }
   .lb-header--floating { top: var(--lb-size-2x); padding-inline: var(--lb-size-3x); }
+  .lb-header--autohide.lb-header--floating { top: calc(var(--lb-size-2x) - var(--lb-header-hide, 0px)); }
 }
 @media (min-width: 769px) {
   .lb-header__drawer, .lb-header__scrim { display: none !important; }

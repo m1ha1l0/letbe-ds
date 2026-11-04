@@ -9,6 +9,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   `--lb-header-max`): set it on `.lb-header` to change the bar's fill at
   rest and scrolled, e.g. a `color-mix()` with transparent for a bar a
   page background shows through.
+- **Hide-on-scroll header** (`.lb-header--autohide`, with `--sticky` or
+  `--floating`): the bar follows the window scroll up as you read down,
+  comes back on the way up, settles shown or hidden at rest, and is
+  always back for the drawer, for Tab (before focus moves) and near the
+  top. It moves the sticky `top`, not a transform, so the fixed drawer
+  inside keeps working. Companion sticky bars follow through
+  `--lb-header-visible` on `<html>` or the `lb-header-autohide` event.
 
 ## [1.7.0] — 2026-11-04
 
