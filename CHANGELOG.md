@@ -11,6 +11,19 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   behind the scrim. `open()` now uses the shared focus trap, like Modal
   and the peek sheet. It holds until the exit has played, survives a
   re-open mid-exit, and focus returns to the opener on close.
+- **Color Picker redraws on presets and the eyedropper** (fix, since
+  v1.0.0). A preset click or an eyedropper pick changed the value and
+  fired `lb-color-change`, but the surface, sliders, fields and active
+  preset kept showing the old colour (typing a hex only looked right
+  because leaving the field redraws). Every value change now redraws
+  before it emits.
+- **Color Picker emits the colour it shows** (fix). `lb-color-change`
+  and `getValue()` truncated the RGB channels, so some colours came out
+  one step off (`#22c55e` emitted as `#21c55e`). They round now, and the
+  RGB fields match the hex field.
+- **Popover Color Picker shows its eyedropper icon** (fix). The popover
+  panel is built off-page, so its eyedropper button rendered as an empty
+  box. The picker now loads its own icons.
 
 ## [1.14.0] — 2026-11-04
 

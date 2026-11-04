@@ -4299,6 +4299,10 @@ const LB = (() => {
       if (!rgb) return;
       const hsv = _rgbToHsv(rgb);
       this._h = hsv.h; this._s = hsv.s; this._v = hsv.v; this._a = rgb.a ?? 1;
+      // Repaint before emitting, so presets, the eyedropper and the hex
+      // field all redraw. Skipped while the constructor seeds the state
+      // (nothing is rendered yet; _renderInline syncs at its end).
+      if (this._surface) this._sync();
       if (emit) this._emit();
     }
 
@@ -4420,6 +4424,9 @@ const LB = (() => {
         ${presets}
       `;
       host.appendChild(body);
+      // The popover body is built off-page (appended on first open), so
+      // the page-level icon sweep never reaches its eyedropper glyph.
+      initIcons(body);
 
       this._surface = body.querySelector('.lb-color-picker__surface');
       this._cursor  = body.querySelector('.lb-color-picker__cursor');
@@ -4625,7 +4632,7 @@ const LB = (() => {
     _sync() {
       const baseHue = `hsl(${this._h.toFixed(0)}, 100%, 50%)`;
       const rgb = _hsvToRgb({ h: this._h, s: this._s, v: this._v });
-      const r = rgb.r | 0, g = rgb.g | 0, b = rgb.b | 0;
+      const r = Math.round(rgb.r), g = Math.round(rgb.g), b = Math.round(rgb.b);
       const hex = _rgbToHex({ ...rgb, a: this._a });
       // Surface: bg = hue (full sat/val) → white horizontal, black vertical
       this._surface.style.background = `
@@ -4688,7 +4695,9 @@ const LB = (() => {
 
     _emit() {
       const rgb = _hsvToRgb({ h: this._h, s: this._s, v: this._v });
-      const r = rgb.r | 0, g = rgb.g | 0, b = rgb.b | 0;
+      // Round, never truncate: HSV round-trips land a hair under the
+      // integer (#22c55e → 33.9999 → #21c55e).
+      const r = Math.round(rgb.r), g = Math.round(rgb.g), b = Math.round(rgb.b);
       const hsl = _rgbToHsl({ r, g, b });
       const hex = _rgbToHex({ r, g, b, a: this._a });
       this.el.dataset.lbValue = hex;
@@ -4709,7 +4718,7 @@ const LB = (() => {
     // Pass false from initial-paint code paths (e.g. theme editor's
     // syncUiFromState) to avoid logging a "change" when the picker is
     // just being seeded with the same value it already represents.
-    setValue(s, emit = true) { this._setFromString(s, emit); this._sync(); }
+    setValue(s, emit = true) { this._setFromString(s, emit); }
   }
   ColorPicker._counter = 0;
 
