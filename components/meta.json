@@ -12,7 +12,7 @@
       "items": [
         "accordion", "avatar", "badge", "banner", "breadcrumb", "button",
         "calendar", "card", "carousel", "chat", "checkbox", "chip", "code-block", "color-picker", "command-palette", "counter", "datepicker", "description-list", "divider",
-        "dropdown", "empty-state", "file-uploader", "flag", "footer", "forms", "header", "icon-list", "input", "kanban", "lightbox", "link", "list", "media-player", "menu", "modal", "navigation",
+        "dropdown", "empty-state", "file-uploader", "flag", "footer", "forms", "header", "icon-list", "input", "kanban", "kbd", "lightbox", "link", "list", "media-player", "menu", "modal", "navigation",
         "pagination", "popover", "progress", "radio", "rating", "resizable", "scroll-area", "segmented", "select", "sheet", "show-more",
         "skeleton", "slider", "spinner", "stepper", "switch", "table", "tabs",
         "time-picker", "timeline", "toast", "tooltip", "tree"
@@ -381,6 +381,11 @@
       "description": "Kanban board vocabulary (`LB.Board`, Stage-5 item #2; the verified gap: no mainstream free design system ships one \u2014 it is a paid-tier item everywhere). The PROJECTION model: columns are values of a field, the board owns zero data \u2014 the DOM is the state and every mutation dispatches `lb-board-move` {card, from, to, index} for the consumer to persist. Anatomy: `.lb-board` horizontal rail \u00b7 `.lb-board__column` (bg-strong surface, 17rem column width) with header (title + self-maintaining count badge + kebab) \u00b7 scrollable `__column-body` \u00b7 `__column-footer` add-card slot. Card = `.lb-card--sm.lb-card--interactive` composition with FIXED slots (NN/g scannability): `__card-row` (title + hover-reveal kebab) \u2192 `__card-meta` (badges/labels) in the body \u2192 avatar + `__card-due` in the CANONICAL `.lb-card__footer--spread` (its built-in hairline divides the footer zone). MENU-MOVE FIRST: every card kebab gets auto-built \"Move to <column>\" items \u2014 the single-pointer non-drag path WCAG 2.5.7 requires; moves are announced via a polite live region (no ARIA DnD vocabulary exists \u2014 authored announcements are the pattern). Pointer drag is progressive enhancement (see page). Card PROPERTY VOCABULARY (2026-08-04 benchmark, 10/10 verified): cover (`.lb-card__media` + ratios), plain-mono `__card-id`, priority badge (flag icon), checklist `.lb-progress-inline`, quiet `__card-stats` icon+count pairs, `.lb-avatar-group`, due-date states `__card-due--overdue/-soon/-done` (never red on done), blocked warning badge; advisory WIP via `data-lb-board-wip` on a column (count renders n/limit, warning tone only while over - advisory only, never blocks). Quiet by design: neutral cards, accent only for state.",
       "usage": "`<div class=\"lb-board\" data-lb-board>` containing `.lb-board__column[data-lb-board-column=\"Name\"]` \u2192 `__column-header` (`__column-title` + `.lb-badge--small[data-lb-board-count]` + optional column kebab) + `__column-body` with `.lb-card.lb-card--sm.lb-card--interactive.lb-board__card[data-lb-board-card]` cards + `__column-footer` (ghost add button). Load js/components/lb-board.js. API at `el._lbBoard`: `moveCard(card, column, index?)`, `refresh()` (re-sync counts + menus after external changes), `announce(msg)`. Event: `lb-board-move`. Empty column: `.lb-empty-state--sm` in the body.",
       "status": "kanban program K1-K2"
+    },
+    "kbd": {
+      "name": "Kbd",
+      "description": "A keyboard key for shortcut hints — menus, search fields, help lists, command palettes: a mono keycap (code-s) on the strong neutral fill, on the native `<kbd>` element. One `<kbd>` per key; adjacent keys keep a hairline gap. The command palette footer shares the recipe; the dark tooltip keeps `.lb-tooltip__kbd`.",
+      "usage": "`<kbd class=\"lb-kbd\">⌘</kbd><kbd class=\"lb-kbd\">K</kbd>`. Show ⌘ on Apple devices and Ctrl elsewhere. When the hint repeats a control's label, mark it `aria-hidden=\"true\"` and put `aria-keyshortcuts` on the control."
     },
     "app-shell": {
       "name": "App Shell",

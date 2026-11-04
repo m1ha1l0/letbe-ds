@@ -76,6 +76,33 @@
 .lb-carousel--static .lb-carousel__controls { display: none; }
 
 /* ═══════════════════════════════════════════════════════════
+   KBD — a keyboard key (<kbd class="lb-kbd">)
+   Shortcut hints in menus, search fields, help lists and button
+   tooltips: a mono keycap on the strong neutral fill. One <kbd> per key
+   (⌘ then K) so screen readers and copy-paste read keys apart; adjacent
+   keys keep a hairline gap. The command palette footer uses the same
+   recipe; the dark tooltip keeps its own .lb-tooltip__kbd.
+   ═══════════════════════════════════════════════════════════ */
+.lb-kbd,
+.lb-cmdk__footer kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.125rem;
+  min-height: 1.125rem;
+  padding: 0 var(--lb-size-1-5x);
+  border-radius: var(--lb-radius-interactive);
+  background: var(--lb-bg-strong);
+  /* t-code-s: keycaps read as mono (the item-17 kbd-mono wish). */
+  font-family: var(--lb-t-code-s-font-family);
+  font-size: var(--lb-t-code-s-font-size);
+  line-height: 1;
+  color: var(--lb-fg-default);
+  white-space: nowrap;
+}
+.lb-kbd + .lb-kbd { margin-inline-start: var(--lb-size-0-5x); }
+
+/* ═══════════════════════════════════════════════════════════
    DESCRIPTION LIST — <dl class="lb-description-list">
    Label and value rows (an order summary, specs, account details). Terms
    are .lb-description-list__term (<dt>, label role, muted), values
@@ -2168,19 +2195,8 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   color: var(--lb-fg-muted);
   flex-shrink: 0;
 }
-.lb-cmdk__footer kbd {
-  display: inline-flex;
-  align-items: center;
-  padding: 0 var(--lb-size-1-5x);
-  min-height: 1.125rem;
-  margin: 0 var(--lb-size-0-5x);
-  border-radius: var(--lb-radius-interactive);
-  background: var(--lb-bg-strong);
-  /* t-code-s: keycaps read as mono (the item-17 kbd-mono wish). */
-  font-family: var(--lb-t-code-s-font-family);
-  font-size: var(--lb-t-code-s-font-size);
-  color: var(--lb-fg-default);
-}
+/* Footer keycaps share the .lb-kbd recipe (KBD section). */
+.lb-cmdk__footer kbd { margin: 0 var(--lb-size-0-5x); }
 
 /* Inside the results, reuse list primitive — scope a couple of
    command-palette-specific tweaks without fighting the base rules */

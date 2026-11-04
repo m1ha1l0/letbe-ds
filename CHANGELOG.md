@@ -5,6 +5,9 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Kbd** (new, pure CSS): `<kbd class="lb-kbd">` — a mono keycap on
+  the strong neutral fill for shortcut hints. The command palette footer
+  now shares its recipe (no visual change).
 ## [1.11.0] — 2026-11-04
 
 Minor: completes the expressive motion tier with an exit curve and a

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <!-- theme-preamble:v1 -->
+  <script>(function(){try{var t=localStorage.getItem('letbe-ds-dark-mode');if(t==='1')document.documentElement.setAttribute('data-theme','dark');else if(t==='0')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta data-lb-page="kbd">
+  <title>Kbd — letbe-ds</title>
+  <link rel="stylesheet" href="../tokens/theme.css">
+  <link rel="stylesheet" href="../tokens/fonts.css">
+  <link rel="stylesheet" href="../components/components.css">
+  <link rel="stylesheet" href="../components/theme-editor.css">
+  <link rel="stylesheet" href="../components/gallery.css">
+  </head>
+<body data-lb-base="..">
+
+<main class="gallery-main">
+  <section class="gallery-section" id="kbd">
+    <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Kbd</h1>
+    <p class="gallery-section__desc">A keyboard key, for shortcut hints in menus, search fields, help lists and command palettes: a mono keycap on the strong neutral fill. Pure CSS on the native <code class="lb-code">&lt;kbd&gt;</code> element.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> <code class="lb-code">&lt;kbd&gt;</code> tells assistive tech the text is keyboard input. Write one <code class="lb-code">&lt;kbd&gt;</code> per key so a chord reads as separate keys. When a hint repeats a control's visible label, hide the hint (<code class="lb-code">aria-hidden="true"</code>) and put the shortcut on the control with <code class="lb-code">aria-keyshortcuts</code> instead. Show the platform's modifier: ⌘ on Apple devices, Ctrl elsewhere.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> <code class="lb-code">&lt;kbd class="lb-kbd"&gt;⌘&lt;/kbd&gt;&lt;kbd class="lb-kbd"&gt;K&lt;/kbd&gt;</code>. Adjacent keys keep a hairline gap. Inside a list row, the trailing <code class="lb-code">.lb-list__hint</code> slot holds them; inside the dark tooltip, use <code class="lb-code">.lb-tooltip__kbd</code>.</p>
+
+    <hr class="gallery-desc-divider">
+
+    <h2 class="gallery-section__title">Keys and chords</h2>
+    <div class="gallery-row" style="gap: var(--lb-size-6x); align-items: center;">
+      <span><kbd class="lb-kbd">⌘</kbd><kbd class="lb-kbd">K</kbd></span>
+      <span><kbd class="lb-kbd">Ctrl</kbd><kbd class="lb-kbd">K</kbd></span>
+      <span><kbd class="lb-kbd">Shift</kbd><kbd class="lb-kbd">?</kbd></span>
+      <span><kbd class="lb-kbd">Esc</kbd></span>
+      <span><kbd class="lb-kbd">/</kbd></span>
+      <span><kbd class="lb-kbd">[</kbd><kbd class="lb-kbd">]</kbd></span>
+    </div>
+
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">In running text</h2>
+    <p class="gallery-section__desc" style="max-width: 36rem;">Press <kbd class="lb-kbd">⌘</kbd><kbd class="lb-kbd">K</kbd> to open the command palette, or <kbd class="lb-kbd">/</kbd> to jump to search.</p>
+  </section>
+</main>
+
+<script src="../js/lb.js"></script>
+<script src="../js/slot-engine.js"></script>
+<script src="../js/theme-editor.js"></script>
+<script src="../js/token-exporter.js"></script>
+<script src="../js/gallery-layout.js"></script>
+</body>
+</html>
