@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <!-- theme-preamble:v1 -->
+  <script>(function(){try{var t=localStorage.getItem('letbe-ds-dark-mode');if(t==='1')document.documentElement.setAttribute('data-theme','dark');else if(t==='0')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta data-lb-page="carousel">
+  <title>Carousel — letbe-ds</title>
+  <link rel="stylesheet" href="../tokens/theme.css">
+  <link rel="stylesheet" href="../tokens/fonts.css">
+  <link rel="stylesheet" href="../components/components.css">
+  <link rel="stylesheet" href="../components/theme-editor.css">
+  <link rel="stylesheet" href="../components/gallery.css">
+  <style>
+    /* demo-local tiles */
+    .cr-quote { margin: 0; padding: var(--lb-size-6x); background: var(--lb-bg-strong); border-radius: var(--lb-radius-surface); font-family: var(--lb-t-body-l-font-family); font-size: var(--lb-t-body-l-font-size); line-height: var(--lb-t-body-l-line-height); color: var(--lb-fg-default); }
+    .cr-quote cite { display: block; margin-top: var(--lb-size-3x); font-style: normal; font-size: var(--lb-t-caption-m-font-size); color: var(--lb-fg-muted); }
+  </style>
+</head>
+<body data-lb-base="..">
+
+<main class="gallery-main">
+  <section class="gallery-section" id="carousel">
+    <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Carousel</h1>
+    <p class="gallery-section__desc">A row that pages one item per click — <code class="lb-code">LB.Carousel</code>, core runtime. It runs on native scroll-snap, so touch swipes and trackpads simply scroll it; the arrows step one item. Optional endless loop. A row that already fits stays still and hides its controls. For a plain sideways overflow without paging, use Scroll Area.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> the root becomes <code class="lb-code">role="region"</code> with <code class="lb-code">aria-roledescription="carousel"</code> (name it with <code class="lb-code">aria-label</code>), each item a <code class="lb-code">role="group"</code> slide labelled "n of N", and a polite status announces the position after every step. <kbd>←</kbd>/<kbd>→</kbd> step while focus is inside. Loop clones are <code class="lb-code">inert</code> and <code class="lb-code">aria-hidden</code>, so links and buttons exist once for keyboards and screen readers. Without loop the arrows disable at the ends. Reduced motion: steps jump instead of gliding.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> <code class="lb-code">&lt;section class="lb-carousel" data-lb-carousel aria-label="…"&gt;</code> holding <code class="lb-code">.lb-carousel__viewport &gt; .lb-carousel__track &gt; items</code> and a <code class="lb-code">.lb-carousel__controls</code> row with <code class="lb-code">[data-lb-carousel-prev]</code> / <code class="lb-code">[data-lb-carousel-next]</code> icon buttons (and an optional visible <code class="lb-code">.lb-carousel__status</code>). Add <code class="lb-code">data-lb-carousel-loop</code> for the endless row, <code class="lb-code">.lb-carousel--cards</code> for a card row where the next card peeks in. Sizing: <code class="lb-code">--lb-carousel-item</code> (item width) and <code class="lb-code">--lb-carousel-gap</code>. Instance at <code class="lb-code">el._lbCarousel</code>: <code class="lb-code">next()</code>, <code class="lb-code">prev()</code>, <code class="lb-code">goTo(i)</code>, <code class="lb-code">refresh()</code> (after changing items); emits <code class="lb-code">lb-carousel-change</code> <code class="lb-code">{ index, count }</code>.</p>
+
+    <hr class="gallery-desc-divider">
+
+    <h2 class="gallery-section__title">One item per view, endless</h2>
+    <p class="gallery-section__desc">Quotes, one at a time, looping both ways with no visible reset. The status is shown here; leave it out and it stays for screen readers only.</p>
+    <section class="lb-carousel" data-lb-carousel data-lb-carousel-loop aria-label="Kind words" style="max-width: 36rem;">
+      <div class="lb-carousel__viewport">
+        <div class="lb-carousel__track">
+          <blockquote class="cr-quote">The token handoff saved our team a week on the redesign.<cite>Design lead, product studio</cite></blockquote>
+          <blockquote class="cr-quote">Every component came with its states and its keyboard story already worked out.<cite>Front-end engineer</cite></blockquote>
+          <blockquote class="cr-quote">We themed the whole system for a client in an afternoon.<cite>Agency founder</cite></blockquote>
+          <blockquote class="cr-quote">Accessible by default, which is rarer than it should be.<cite>Accessibility consultant</cite></blockquote>
+        </div>
+      </div>
+      <div class="lb-carousel__controls">
+        <span class="lb-carousel__status"></span>
+        <button class="lb-icon-btn lb-icon-btn--secondary lb-icon-btn--medium" type="button" data-lb-carousel-prev aria-label="Previous"><span data-lb-icon="chevron-left"></span></button>
+        <button class="lb-icon-btn lb-icon-btn--secondary lb-icon-btn--medium" type="button" data-lb-carousel-next aria-label="Next"><span data-lb-icon="chevron-right"></span></button>
+      </div>
+    </section>
+
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Card row — <code class="lb-code">--cards</code></h2>
+    <p class="gallery-section__desc">Interactive cards in a row where the next one peeks in; no loop, so the arrows disable at the ends. On a screen wide enough for all of them, the row stays still and the arrows go away.</p>
+    <section class="lb-carousel lb-carousel--cards" data-lb-carousel aria-label="More work">
+      <div class="lb-carousel__viewport">
+        <div class="lb-carousel__track">
+          <a href="#" class="lb-card lb-card--interactive"><div class="lb-card__media lb-card__media--top lb-card__media--16x9"><img src="../assets/media/about/mark-macro.jpg" alt=""></div><div class="lb-card__body"><h3 class="lb-card__title">The mark</h3><p class="lb-card__description">Brand study</p></div></a>
+          <a href="#" class="lb-card lb-card--interactive"><div class="lb-card__media lb-card__media--top lb-card__media--16x9"><img src="../assets/media/about/plugin-letbe-tokens.jpg" alt=""></div><div class="lb-card__body"><h3 class="lb-card__title">letbe tokens</h3><p class="lb-card__description">Figma plugin</p></div></a>
+          <a href="#" class="lb-card lb-card--interactive"><div class="lb-card__media lb-card__media--top lb-card__media--16x9"><img src="../assets/media/letbe-design-hero.jpg" alt=""></div><div class="lb-card__body"><h3 class="lb-card__title">letbe.design</h3><p class="lb-card__description">Docs site</p></div></a>
+          <a href="#" class="lb-card lb-card--interactive"><div class="lb-card__media lb-card__media--top lb-card__media--16x9"><img src="../assets/media/about/mark-macro.jpg" alt=""></div><div class="lb-card__body"><h3 class="lb-card__title">Theme editor</h3><p class="lb-card__description">Live theming</p></div></a>
+          <a href="#" class="lb-card lb-card--interactive"><div class="lb-card__media lb-card__media--top lb-card__media--16x9"><img src="../assets/media/about/plugin-letbe-tokens.jpg" alt=""></div><div class="lb-card__body"><h3 class="lb-card__title">Component library</h3><p class="lb-card__description">Figma file</p></div></a>
+        </div>
+      </div>
+      <div class="lb-carousel__controls">
+        <button class="lb-icon-btn lb-icon-btn--secondary lb-icon-btn--medium" type="button" data-lb-carousel-prev aria-label="Previous"><span data-lb-icon="chevron-left"></span></button>
+        <button class="lb-icon-btn lb-icon-btn--secondary lb-icon-btn--medium" type="button" data-lb-carousel-next aria-label="Next"><span data-lb-icon="chevron-right"></span></button>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script src="../js/lb.js"></script>
+<script src="../js/slot-engine.js"></script>
+<script src="../js/theme-editor.js"></script>
+<script src="../js/token-exporter.js"></script>
+<script src="../js/gallery-layout.js"></script>
+</body>
+</html>

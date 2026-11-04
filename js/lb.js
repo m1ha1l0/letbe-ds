@@ -6192,6 +6192,176 @@ const LB = (() => {
     }
   }
 
+  // ─── CAROUSEL ──────────────────────────────────────────────
+  // A row that pages one item per click on native scroll-snap (touch
+  // swipes and trackpads simply scroll it). Markup:
+  //
+  //   <section class="lb-carousel" data-lb-carousel aria-label="Kind words"
+  //            data-lb-carousel-loop>
+  //     <div class="lb-carousel__viewport"><div class="lb-carousel__track">
+  //       …items…
+  //     </div></div>
+  //     <div class="lb-carousel__controls">
+  //       <button class="lb-icon-btn lb-icon-btn--secondary lb-icon-btn--medium"
+  //               type="button" data-lb-carousel-prev aria-label="Previous">…</button>
+  //       <button … data-lb-carousel-next aria-label="Next">…</button>
+  //     </div>
+  //   </section>
+  //
+  // A row that fits stays still (--static: no clones, controls hidden).
+  // Without data-lb-carousel-loop the arrows disable at the ends; with it
+  // the item set is cloned on both sides (inert, aria-hidden) and, once a
+  // move settles, the position folds back to the twin in the middle set,
+  // so it runs endlessly both ways with no visible reset. APG carousel
+  // semantics: role=region + aria-roledescription="carousel" on the root
+  // (name it with aria-label), role=group + aria-roledescription="slide"
+  // + "n of N" on each item, a polite status that follows the position
+  // (.lb-carousel__status — visually hidden unless you author one).
+  // ←/→ step while focus is inside. Reduced motion: steps jump. Emits
+  // lb-carousel-change {index, count} (bubbles); instance next(), prev(),
+  // goTo(i), refresh().
+
+  class Carousel {
+    constructor(el) {
+      this.el = el;
+      this.vp = el.querySelector('.lb-carousel__viewport');
+      this.track = el.querySelector('.lb-carousel__track');
+      if (!this.vp || !this.track) return;
+      this.loop = el.hasAttribute('data-lb-carousel-loop');
+      this.prevBtn = el.querySelector('[data-lb-carousel-prev]');
+      this.nextBtn = el.querySelector('[data-lb-carousel-next]');
+      this.items = Array.from(this.track.children);
+      this.N = this.items.length;
+      this.index = 0;
+      this._k = 0;
+      this._clones = [];
+
+      if (!el.hasAttribute('role')) el.setAttribute('role', 'region');
+      el.setAttribute('aria-roledescription', 'carousel');
+      this.items.forEach((it, i) => {
+        it.setAttribute('role', 'group');
+        it.setAttribute('aria-roledescription', 'slide');
+        if (!it.hasAttribute('aria-label') && !it.hasAttribute('aria-labelledby')) it.setAttribute('aria-label', `${i + 1} of ${this.N}`);
+      });
+      this.status = el.querySelector('.lb-carousel__status');
+      if (!this.status) {
+        this.status = document.createElement('span');
+        this.status.className = 'lb-carousel__status lb-visually-hidden';
+        el.appendChild(this.status);
+      }
+      this.status.setAttribute('aria-live', 'polite');
+
+      if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prev());
+      if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.next());
+      el.addEventListener('keydown', (e) => {
+        if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+        if (e.key === 'ArrowRight') { e.preventDefault(); this.next(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); this.prev(); }
+      });
+      this.track.addEventListener('dragstart', (e) => e.preventDefault());
+      let t;
+      this.vp.addEventListener('scroll', () => { clearTimeout(t); t = setTimeout(() => this._settle(), 120); }, { passive: true });
+      if (typeof ResizeObserver !== 'undefined') {
+        let w = 0;
+        new ResizeObserver(() => {
+          if (this.vp.clientWidth === w) return;
+          w = this.vp.clientWidth;
+          this.refresh();
+        }).observe(this.vp);
+      }
+      this.refresh();
+    }
+
+    _reduced() { return matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+    // Offset of physical child k inside the scroller.
+    _x(k) {
+      const c = this.track.children[k];
+      return c ? c.getBoundingClientRect().left - this.track.getBoundingClientRect().left : 0;
+    }
+
+    _nearest() {
+      let best = 0, bd = Infinity;
+      const x = this.vp.scrollLeft;
+      for (let k = 0; k < this.track.children.length; k++) {
+        const d = Math.abs(this._x(k) - x);
+        if (d < bd) { bd = d; best = k; }
+      }
+      return best;
+    }
+
+    // Static when everything fits; otherwise (re)build the loop clones.
+    refresh() {
+      this._clones.forEach((c) => c.remove());
+      this._clones = [];
+      const fits = this.N < 2 || this.track.scrollWidth <= this.vp.clientWidth + 1;
+      this.el.classList.toggle('lb-carousel--static', fits);
+      if (!fits && this.loop) {
+        const mk = (n) => {
+          const c = n.cloneNode(true);
+          c.setAttribute('aria-hidden', 'true');
+          c.inert = true;
+          c.removeAttribute('id');
+          c.querySelectorAll('[id]').forEach((x) => x.removeAttribute('id'));
+          c.setAttribute('data-lb-carousel-clone', '');
+          this._clones.push(c);
+          return c;
+        };
+        const before = document.createDocumentFragment(), after = document.createDocumentFragment();
+        this.items.forEach((n) => before.appendChild(mk(n)));
+        this.items.forEach((n) => after.appendChild(mk(n)));
+        this.track.insertBefore(before, this.track.firstChild);
+        this.track.appendChild(after);
+      }
+      const base = fits ? 0 : (this.loop ? this.N : 0);
+      this._k = base + this.index;
+      this.vp.scrollLeft = this._x(this._k);
+      this._update(false);
+    }
+
+    goTo(i, smooth = true) {
+      if (this.el.classList.contains('lb-carousel--static')) return;
+      const base = this.loop ? this.N : 0;
+      let k = this.loop ? this._k + (i - this.index) : Math.max(0, Math.min(this.N - 1, i));
+      if (!this.loop) k = base + k;
+      this._k = k;
+      this.vp.scrollTo({ left: this._x(k), behavior: smooth && !this._reduced() ? 'smooth' : 'auto' });
+      this.index = ((k - base) % this.N + this.N) % this.N;
+      this._update(true);
+    }
+    next() { this.goTo(this.index + 1); }
+    prev() { this.goTo(this.index - 1); }
+
+    // After any scroll (button, swipe, trackpad) settles: read the item at
+    // the start edge; in loop mode fold back into the middle set.
+    _settle() {
+      if (this.el.classList.contains('lb-carousel--static')) return;
+      let k = this._nearest();
+      if (this.loop) {
+        const folded = this.N + ((k - this.N) % this.N + this.N) % this.N;
+        if (folded !== k) { k = folded; this.vp.scrollLeft = this._x(k); }
+      }
+      this._k = k;
+      const base = this.loop ? this.N : 0;
+      const idx = ((k - base) % this.N + this.N) % this.N;
+      const changed = idx !== this.index;
+      this.index = idx;
+      this._update(changed);
+    }
+
+    _update(announce) {
+      // Without loop the row's end can come before the last item reaches
+      // the start edge: Next disables once the row is scrolled to its end.
+      const atStart = !this.loop && this.index === 0;
+      const atEnd = !this.loop && (this.index >= this.N - 1 || this._x(this.index) >= this.vp.scrollWidth - this.vp.clientWidth - 2);
+      if (this.prevBtn) this.prevBtn.disabled = atStart;
+      if (this.nextBtn) this.nextBtn.disabled = atEnd;
+      const text = `${this.index + 1} of ${this.N}`;
+      if (this.status.textContent !== text) this.status.textContent = text;
+      if (announce) this.el.dispatchEvent(new CustomEvent('lb-carousel-change', { bubbles: true, detail: { index: this.index, count: this.N } }));
+    }
+  }
+
   // ─── SHOW MORE ─────────────────────────────────────────────
   // Collapse a grid to N rows and reveal the rest on demand.
   //
@@ -8995,6 +9165,11 @@ const LB = (() => {
       if (!el._lbShowMore) el._lbShowMore = new ShowMore(el);
     });
 
+    // Carousels
+    root.querySelectorAll('[data-lb-carousel]').forEach((el) => {
+      if (!el._lbCarousel) el._lbCarousel = new Carousel(el);
+    });
+
     // Menus
     root.querySelectorAll('[data-lb-menu]').forEach((el) => {
       if (!el._lbMenu) el._lbMenu = new Menu(el);
@@ -9265,6 +9440,7 @@ const LB = (() => {
     Select,
     Form,
     ShowMore,
+    Carousel,
     ClearableInput,
     PasswordInput,
     PhoneInput,

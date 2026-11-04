@@ -11,7 +11,7 @@
       "name": "Components",
       "items": [
         "accordion", "avatar", "badge", "banner", "breadcrumb", "button",
-        "calendar", "card", "chat", "checkbox", "chip", "code-block", "color-picker", "command-palette", "counter", "datepicker", "divider",
+        "calendar", "card", "carousel", "chat", "checkbox", "chip", "code-block", "color-picker", "command-palette", "counter", "datepicker", "divider",
         "dropdown", "empty-state", "file-uploader", "flag", "footer", "forms", "header", "input", "kanban", "lightbox", "link", "list", "media-player", "menu", "modal", "navigation",
         "pagination", "popover", "progress", "radio", "rating", "resizable", "scroll-area", "segmented", "select", "sheet", "show-more",
         "skeleton", "slider", "spinner", "stepper", "switch", "table", "tabs",
@@ -137,6 +137,11 @@
       "name": "Card",
       "description": "Surface container for grouped content. Default is bordered with 24px padding. Variants: `--elevated` (shadow), `--interactive` (hover lift + brand border + focus ring), `--stat` (dashboard metric tile with big number + label + delta). Sizes: `--sm` / default / `--lg`. Slots: `__header` (title + actions), `__body`, `__section` (divided subsection), `__footer`, `__media`, `__nav-icon` (trailing chevron / arrow for navigation cards). Media positions: top / left (horizontal) / background (full-bleed overlay, text pinned to white regardless of theme). States: `--selected`, `--disabled`.",
       "usage": "Interactive cards: render as `<button class=\"lb-card lb-card--interactive\">` or `<a class=\"lb-card lb-card--interactive\">` so the whole surface is one click target — don't nest buttons. Picker grids: add `--selected` + `aria-pressed=\"true\"`. Stat tiles: replace __body with `.lb-card__stat-label` + `.lb-card__stat-value` + optional `.lb-card__stat-delta--up/--down`. Navigation cards: append `<span class=\"lb-card__nav-icon\" data-lb-icon=\"chevron-right\">` (use `arrow-up-right` for external links). Disabled: native `disabled` on `<button>` cards, or `aria-disabled=\"true\"` + `tabindex=\"-1\"` on plain `<div>`. Lift animation honors `prefers-reduced-motion`. Media aspect ratio: top-stacked media (`lb-card__media--top`) defaults to 16:9 so it never collapses; override with a ratio preset mirroring the Figma `card/media` variants — `lb-card__media--16x9` / `--4x3` / `--1x1` / `--3x4`. Ratio is inert for `lb-card--media-left` (fixed column) and `lb-card--media-bg` (absolute full-bleed), which size from layout. Previous / next pair: Next = `--media-left` + `.lb-card__nav-icon`; Previous = its mirror, `.lb-card--media-right` + `.lb-card__nav-icon--start` (leading chevron, nudges left); wrap the pair in a labelled `<nav>`, Previous first."
+    },
+    "carousel": {
+      "name": "Carousel",
+      "description": "A row that pages one item per click (`LB.Carousel`, core runtime) on native scroll-snap, so touch swipes and trackpads simply scroll it. Optional endless loop (`data-lb-carousel-loop`: the item set is cloned inert + aria-hidden on both sides and the position folds back to the middle set once a move settles). A row that fits stays still (`--static`, controls hidden). `--cards` makes a card row where the next card peeks in. APG carousel semantics: region + aria-roledescription=\"carousel\", \"n of N\" slide groups, a polite position status; ←/→ step while focus is inside; without loop the arrows disable at the ends; reduced motion jumps instead of gliding.",
+      "usage": "`<section class=\"lb-carousel\" data-lb-carousel aria-label=\"…\">` holding `.lb-carousel__viewport > .lb-carousel__track > items` and `.lb-carousel__controls` with `[data-lb-carousel-prev]` / `[data-lb-carousel-next]` icon buttons (`lb-icon-btn lb-icon-btn--secondary lb-icon-btn--medium`) and an optional visible `.lb-carousel__status`. `data-lb-carousel-loop` for the endless row, `.lb-carousel--cards` for a peeking card row; `--lb-carousel-item` / `--lb-carousel-gap` size it. Instance `el._lbCarousel`: `next()`, `prev()`, `goTo(i)`, `refresh()`; emits `lb-carousel-change` `{ index, count }`."
     },
     "chat": {
       "name": "Chat",

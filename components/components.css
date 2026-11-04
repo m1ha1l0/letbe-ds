@@ -59,6 +59,23 @@
 [data-lb-show-more] > [hidden] { display: none !important; }
 
 /* ═══════════════════════════════════════════════════════════
+   CAROUSEL — LB.Carousel ([data-lb-carousel], core runtime)
+   A scroll-snap row paged one item per click; native scrolling covers
+   touch and trackpads. Item width: --lb-carousel-item (default the full
+   row; --cards: min(85%, 20rem) so the next card peeks in), gap:
+   --lb-carousel-gap. A row that fits gets --static and drops its
+   controls. Visible-when-overflowing scrollbar, per the DS policy.
+   ═══════════════════════════════════════════════════════════ */
+.lb-carousel { display: flex; flex-direction: column; gap: var(--lb-size-3x); min-width: 0; }
+.lb-carousel__viewport { overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; }
+.lb-carousel__track { display: flex; gap: var(--lb-carousel-gap, var(--lb-size-4x)); }
+.lb-carousel__track > * { flex: 0 0 var(--lb-carousel-item, 100%); min-width: 0; scroll-snap-align: start; }
+.lb-carousel--cards .lb-carousel__track > * { flex-basis: var(--lb-carousel-item, min(85%, 20rem)); /* design-intent: card-row width, next card peeks */ }
+.lb-carousel__controls { display: flex; align-items: center; justify-content: flex-end; gap: var(--lb-size-2x); }
+.lb-carousel__status:not(.lb-visually-hidden) { margin-inline-end: auto; font-family: var(--lb-t-caption-m-font-family); font-size: var(--lb-t-caption-m-font-size); line-height: var(--lb-t-caption-m-line-height); color: var(--lb-fg-muted); font-variant-numeric: tabular-nums; }
+.lb-carousel--static .lb-carousel__controls { display: none; }
+
+/* ═══════════════════════════════════════════════════════════
    GLOBAL SCROLLBAR
    ═══════════════════════════════════════════════════════════
    Thin, theme-token driven. Uses --lb-fg-muted for the thumb so it

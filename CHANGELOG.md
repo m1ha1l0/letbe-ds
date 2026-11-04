@@ -5,6 +5,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Carousel** (`LB.Carousel`, core runtime, new gallery page). A row
+  that pages one item per click on native scroll-snap (swipes and
+  trackpads simply scroll it), with an optional endless loop
+  (`data-lb-carousel-loop`, inert aria-hidden clones folded back to the
+  middle set) and a `--cards` row where the next card peeks in. A row
+  that fits stays still and hides its controls; without loop the arrows
+  disable at the ends. APG carousel semantics, a polite "n of N" status,
+  ←/→ while focus is inside, no glide under reduced motion. Emits
+  `lb-carousel-change`; `next()`, `prev()`, `goTo(i)`, `refresh()`.
+
 ## [1.8.0] — 2026-11-04
 
 Minor: header, media and content additions from the mihailo.net and
