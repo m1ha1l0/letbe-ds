@@ -3003,6 +3003,11 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   transform: rotate(180deg);
 }
 .lb-menu { list-style: none; margin: 0; padding: var(--lb-size-1x) 0; background-color: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); z-index: 1000; min-width: 12rem; }
+/* LB.Menu opens the panel in the top layer (Popover API) so no card,
+   scroll area or z-index can clip it. Drop the browser's popover box:
+   JS places it, colour comes from the page. --lb-menu-align: end (or
+   data-lb-menu-align="end") lines it up with the trigger's right edge. */
+.lb-menu[popover] { inset: auto; color: inherit; overflow: visible; }
 
 /* Menu header — optional account/identity block at the top of a menu
    (avatar + name + email pattern, sign-out separator below). */
@@ -3246,7 +3251,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    whole-playlist actions). meta keeps min-width:0 so the title can still
    truncate/marquee around the actions column. */
 .lb-media__now-actions { display: flex; align-items: center; gap: var(--lb-size-1x); flex: none; margin-left: auto; }
-.lb-media__now-actions .lb-menu-wrapper > ul.lb-menu { left: auto !important; right: 0 !important; }
+.lb-media__now-actions .lb-menu-wrapper { --lb-menu-align: end; }
 .lb-media__title { display: block; max-width: 100%; overflow: hidden; }
 .lb-media__title-text { font-family: var(--lb-t-label-l-font-family); font-size: var(--lb-t-label-l-font-size); font-weight: var(--lb-t-label-l-font-weight); color: var(--lb-fg-default); }
 
@@ -3407,7 +3412,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media--card .lb-media__now-actions { position: absolute; top: var(--lb-size-2x); right: var(--lb-size-2x); margin: 0; z-index: 3; padding: var(--lb-size-0-5x); border-radius: var(--lb-radius-full); background: color-mix(in srgb, var(--lb-bg-overlay) 55%, transparent); }
 .lb-media--card .lb-media__now-actions .lb-icon-btn { color: var(--lb-fg-inverse-strong); background: transparent; border-color: transparent; }
 .lb-media--card .lb-media__now-actions .lb-icon-btn:hover { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 20%, transparent); }
-.lb-media--card .lb-media__now-actions .lb-menu-wrapper > ul.lb-menu { left: auto !important; right: 0 !important; }
+.lb-media--card .lb-media__now-actions .lb-menu-wrapper { --lb-menu-align: end; }
 
 /* Compact layout — apply .lb-media--compact. Play button overlays the
    cover; the transport row is a single line: current · scrubber · total.
@@ -3455,7 +3460,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 /* Top-right menu anchors from the right (LB.Menu inline-sets left:0;
    !important is the cleanest scoped override) so the panel grows
    right-to-left and stays inside the player container. */
-.lb-media__top-right .lb-menu-wrapper > ul.lb-menu { left: auto !important; right: 0 !important; }
+.lb-media__top-right .lb-menu-wrapper { --lb-menu-align: end; }
 /* Skip feedback badges shown while holding the left/right half. The
    badge fades in with the --rewinding / --ffwding class on the player
    and the accumulating "X0s" updates on each step. */
@@ -3583,7 +3588,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media__playlist > li:focus-within { z-index: 5; }
 .lb-media__track-actions .lb-menu { z-index: 10; }
 /* Per-row menu opens right-anchored so it doesn't overflow the player. */
-.lb-media__track-actions .lb-menu-wrapper > ul.lb-menu { left: auto !important; right: 0 !important; }
+.lb-media__track-actions .lb-menu-wrapper { --lb-menu-align: end; }
 /* Optional scrollable playlist — opt-in via .lb-media__playlist--scroll.
    max-height = ~4.5 rows of 40px so longer lists show the scrollbar and
    the user sees there's more to scroll. */
@@ -10352,8 +10357,8 @@ button[aria-expanded="true"] [data-lb-icon="chevron-down"] { transform: rotate(1
 .lb-board__column-header { display: flex; align-items: center; gap: var(--lb-size-2x); padding: var(--lb-size-3x) var(--lb-size-3x) var(--lb-size-2x); }
 .lb-board__column-title { font-family: var(--lb-t-heading-2xs-font-family); font-size: var(--lb-t-heading-2xs-font-size); font-weight: var(--lb-t-heading-2xs-font-weight); line-height: var(--lb-t-heading-2xs-line-height); letter-spacing: var(--lb-t-heading-2xs-letter-spacing); color: var(--lb-fg-default); }
 .lb-board__column-header .lb-menu-wrapper { margin-left: auto; }
-.lb-board__column-header .lb-menu-wrapper > ul.lb-menu,
-.lb-board__card .lb-menu-wrapper > ul.lb-menu { left: auto !important; right: 0 !important; }
+.lb-board__column-header .lb-menu-wrapper,
+.lb-board__card .lb-menu-wrapper { --lb-menu-align: end; }
 .lb-board__column-body { display: flex; flex-direction: column; gap: var(--lb-size-2x); padding: var(--lb-size-1x) var(--lb-size-3x); overflow-y: auto; min-height: var(--lb-size-16x); flex: 1; }
 .lb-board__column-footer { padding: var(--lb-size-2x) var(--lb-size-3x) var(--lb-size-3x); }
 .lb-board__column-footer .lb-btn { width: 100%; justify-content: flex-start; }

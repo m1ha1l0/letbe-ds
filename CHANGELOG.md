@@ -26,6 +26,27 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   old binding would have gone invisible with the transparent ghost.
 - Removed the media player's local "transparent ghost" override; the
   tokens cover it now.
+- **Menu is never clipped** (fix, value-deck board-menu-clip). `LB.Menu`
+  opened the panel `position: absolute` under the trigger, so a card
+  (`overflow: hidden`) or a scroll area (a board lane, a table wrap) cut
+  it off and its last items couldn't be reached. The panel now opens in
+  the browser's top layer (Popover API; older browsers keep the old
+  drop), stays in place in the DOM, sits 4px below the trigger (was
+  0px, the Select list's gap), flips above when there's more room,
+  stays inside the viewport, and closes quietly when its trigger
+  scrolls out of sight.
+- **Menu alignment option**: `data-lb-menu-align="end"` on the wrapper
+  (or `--lb-menu-align: end` from CSS) lines the panel up with the
+  trigger's right edge. Replaces the five `left: auto !important;
+  right: 0 !important` overrides in the media player and the board.
+- **Menu items added after init now work** (fix). Item clicks are
+  delegated and roles are re-applied on every open, so rebuilt items
+  (the board's "Move to" list after a move, the media player's quality
+  and caption lists) select and close like authored ones. Before, after
+  the first board move every card menu lost its menu roles and stayed
+  open after choosing "Move to". Rows get `role="none"`, separators
+  `role="separator"`.
+- The Color Picker's floating panel and Menu share one placement helper.
 
 ## [1.12.0] — 2026-11-04
 

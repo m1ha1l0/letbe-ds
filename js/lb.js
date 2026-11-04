@@ -124,6 +124,56 @@ const LB = (() => {
     };
   }
 
+  // ─── FLOATING PLACEMENT ────────────────────────────────────
+  // clipRectOf(el): the part of the viewport where el's box can show —
+  // the viewport cut by every ancestor that clips its overflow (cards,
+  // scroll areas, board lanes). Used to keep tooltips inside it and to
+  // close a menu whose trigger has scrolled out of sight.
+  function clipRectOf(el) {
+    const de = document.documentElement;
+    const r = { left: 0, top: 0, right: de.clientWidth, bottom: de.clientHeight };
+    for (let p = el.parentElement; p && p !== document.body && p !== de; p = p.parentElement) {
+      const cs = getComputedStyle(p);
+      if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
+      const b = p.getBoundingClientRect();
+      r.left = Math.max(r.left, b.left);
+      r.top = Math.max(r.top, b.top);
+      r.right = Math.min(r.right, b.right);
+      r.bottom = Math.min(r.bottom, b.bottom);
+    }
+    return r;
+  }
+
+  // placeFloating(anchor, panel, opts): position a FIXED panel against
+  // the anchor's viewport rect — below by default, flipped above when
+  // there is more room there; start- or end-aligned with the anchor,
+  // then kept inside the viewport by `margin`. With `cap` (default) a
+  // panel that fits neither side is capped to the larger one and
+  // scrolls. Returns 'top' or 'bottom'. Shared by Menu and the Color
+  // Picker's floating panel.
+  function placeFloating(anchor, panel, { align = 'start', gap = 4, margin = 8, cap = true } = {}) {
+    const a = anchor.getBoundingClientRect();
+    if (cap) { panel.style.maxHeight = ''; panel.style.overflowY = ''; }
+    const p = panel.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    const vh = document.documentElement.clientHeight;
+    const below = vh - a.bottom - gap - margin;
+    const above = a.top - gap - margin;
+    const down = p.height <= below || below >= above;
+    const room = Math.max(0, down ? below : above);
+    if (cap && p.height > room) {
+      panel.style.maxHeight = `${Math.floor(room)}px`;
+      panel.style.overflowY = 'auto';
+    }
+    const h = cap ? Math.min(p.height, room) : p.height;
+    const top = down ? a.bottom + gap : Math.max(margin, a.top - gap - h);
+    let left = align === 'end' ? a.right - p.width : a.left;
+    left = Math.max(margin, Math.min(left, vw - margin - p.width));
+    panel.style.top = `${Math.round(top)}px`;
+    panel.style.left = `${Math.round(left)}px`;
+    return down ? 'bottom' : 'top';
+  }
+
   // ─── POINTER DRAG ──────────────────────────────────────────
   // Shared lifecycle helper for pointer-event drags. Replaces the
   // hand-rolled pointerdown / setPointerCapture / pointermove / pointerup
@@ -1362,33 +1412,24 @@ const LB = (() => {
       // data-lb-menu-mode="checkable|radio" upgrades rows to the stateful menu
       // item roles; aria-checked mirrors .lb-list__item--checked.
       const mode = this.wrapper.dataset.lbMenuMode;
-      const itemRole = mode === 'checkable' ? 'menuitemcheckbox'
+      this._itemRole = mode === 'checkable' ? 'menuitemcheckbox'
         : mode === 'radio' ? 'menuitemradio' : 'menuitem';
-      this._syncChecked = () => {
-        if (itemRole === 'menuitem') return;
-        this.menu.querySelectorAll('.lb-list__item').forEach((it) => {
-          it.setAttribute('aria-checked', it.classList.contains('lb-list__item--checked') ? 'true' : 'false');
-        });
-      };
-      const items = this.menu.querySelectorAll('.lb-list__item');
-      items.forEach((item) => {
-        item.setAttribute('role', itemRole);
-        if (item.classList.contains('lb-list__item--disabled')) {
-          item.setAttribute('aria-disabled', 'true');
-          item.tabIndex = -1;
-        } else {
-          item.tabIndex = -1;
-          item.addEventListener('click', () => {
-            if (this.onSelect) this.onSelect(item.dataset.lbId || item.textContent.trim());
-            this.wrapper.dispatchEvent(new CustomEvent('lb-menu-select', { detail: { item } }));
-            // Consumer handlers ran synchronously above and may have moved
-            // .lb-list__item--checked — re-mirror before closing.
-            this._syncChecked();
-            this._close();
-          });
-        }
+      this._syncItems();
+
+      // One delegated listener, so items added or rebuilt after init (the
+      // board's move items, the media player's quality and caption lists)
+      // select and close exactly like authored ones.
+      this.menu.addEventListener('click', (e) => {
+        const item = e.target.closest('.lb-list__item');
+        if (!item || !this.menu.contains(item)) return;
+        if (item.classList.contains('lb-list__item--disabled') || item.getAttribute('aria-disabled') === 'true') return;
+        if (this.onSelect) this.onSelect(item.dataset.lbId || item.textContent.trim());
+        this.wrapper.dispatchEvent(new CustomEvent('lb-menu-select', { detail: { item } }));
+        // Consumer handlers ran synchronously above and may have moved
+        // .lb-list__item--checked — re-mirror before closing.
+        this._syncChecked();
+        this._close();
       });
-      this._syncChecked();
 
       this.trigger.addEventListener('click', () => this._toggle());
       this.menu.addEventListener('keydown', (e) => this._onKeydown(e));
@@ -1397,7 +1438,68 @@ const LB = (() => {
         if (this._open) this._close();
       });
 
+      // Top layer where the browser has the Popover API: the open menu
+      // escapes every overflow, scroll and z-index context (cards, board
+      // lanes, table wraps) yet stays in place in the DOM, so delegated
+      // listeners and descendant selectors keep working. Older browsers
+      // keep the absolute drop below the trigger.
+      this._topLayer = typeof this.menu.showPopover === 'function';
+      if (this._topLayer) this.menu.setAttribute('popover', 'manual');
+      this._onReposition = (e) => {
+        if (e && e.target instanceof Node && this.menu.contains(e.target)) return;
+        if (this._raf) return;
+        this._raf = requestAnimationFrame(() => {
+          this._raf = 0;
+          if (!this._open) return;
+          // Trigger scrolled out of sight (page or its own scroll area):
+          // close quietly rather than float over nothing.
+          const t = this.trigger.getBoundingClientRect();
+          const c = clipRectOf(this.trigger);
+          if (t.bottom <= c.top || t.top >= c.bottom || t.right <= c.left || t.left >= c.right) {
+            this._close(false);
+            return;
+          }
+          this._place();
+        });
+      };
+
       this.menu.style.display = 'none';
+    }
+
+    // Roles for every item and row, re-applied on each open so markup
+    // added after init is announced like the rest.
+    _syncItems() {
+      this.menu.querySelectorAll(':scope > li').forEach((li) => {
+        if (li.hasAttribute('role')) return;
+        if (li.classList.contains('lb-list__separator')) li.setAttribute('role', 'separator');
+        else if (li.querySelector('.lb-list__item')) li.setAttribute('role', 'none');
+      });
+      this.menu.querySelectorAll('.lb-list__item').forEach((item) => {
+        item.setAttribute('role', this._itemRole);
+        item.tabIndex = -1;
+        if (item.classList.contains('lb-list__item--disabled')) item.setAttribute('aria-disabled', 'true');
+      });
+      this._syncChecked();
+    }
+
+    _syncChecked() {
+      if (this._itemRole === 'menuitem') return;
+      this.menu.querySelectorAll('.lb-list__item').forEach((it) => {
+        it.setAttribute('aria-checked', it.classList.contains('lb-list__item--checked') ? 'true' : 'false');
+      });
+    }
+
+    // data-lb-menu-align="end" on the wrapper (or --lb-menu-align: end
+    // from CSS, for contexts like a card's trailing kebab) lines the
+    // menu's right edge up with the trigger's.
+    _align() {
+      return this.wrapper.dataset.lbMenuAlign
+        || getComputedStyle(this.wrapper).getPropertyValue('--lb-menu-align').trim()
+        || 'start';
+    }
+
+    _place() {
+      placeFloating(this.trigger, this.menu, { align: this._align() });
     }
 
     _toggle() {
@@ -1406,20 +1508,37 @@ const LB = (() => {
 
     _openMenu() {
       this._open = true;
+      this._syncItems();
       this.menu.style.display = '';
-      this.menu.style.position = 'absolute';
-      this.menu.style.top = '100%';
-      this.menu.style.left = '0';
+      if (this._topLayer) {
+        this.menu.style.position = 'fixed';
+        if (!this.menu.matches(':popover-open')) this.menu.showPopover();
+        this._place();
+        window.addEventListener('scroll', this._onReposition, true);
+        window.addEventListener('resize', this._onReposition);
+      } else {
+        const end = this._align() === 'end';
+        this.menu.style.position = 'absolute';
+        this.menu.style.top = '100%';
+        this.menu.style.left = end ? 'auto' : '0';
+        this.menu.style.right = end ? '0' : 'auto';
+      }
       this.trigger.setAttribute('aria-expanded', 'true');
       const first = this.menu.querySelector('.lb-list__item:not(.lb-list__item--disabled)');
       if (first) first.focus();
     }
 
-    _close() {
+    _close(refocus = true) {
+      if (!this._open) return;
       this._open = false;
+      if (this._topLayer) {
+        window.removeEventListener('scroll', this._onReposition, true);
+        window.removeEventListener('resize', this._onReposition);
+        if (this.menu.matches(':popover-open')) this.menu.hidePopover();
+      }
       this.menu.style.display = 'none';
       this.trigger.setAttribute('aria-expanded', 'false');
-      this.trigger.focus();
+      if (refocus) this.trigger.focus();
     }
 
     _onKeydown(e) {
@@ -1435,6 +1554,8 @@ const LB = (() => {
 
     destroy() {
       if (this._removeClickOutside) this._removeClickOutside();
+      window.removeEventListener('scroll', this._onReposition, true);
+      window.removeEventListener('resize', this._onReposition);
     }
   }
 
@@ -4158,31 +4279,9 @@ const LB = (() => {
       window.removeEventListener('resize', this._onReposition);
     }
     _positionFloater() {
-      // Anchor to the trigger's viewport rect. Try below first; flip
-      // to above if not enough room. Prefer left-aligned with trigger;
-      // shift right if the popover would overflow the viewport.
-      const triggerRect = this._trigger.getBoundingClientRect();
-      const popoverRect = this._floater.getBoundingClientRect();
-      const margin = 8;
-      const vpW = window.innerWidth;
-      const vpH = window.innerHeight;
-      const popH = popoverRect.height || 360;  // estimate before first paint
-      const popW = popoverRect.width  || 288;
-
-      // Vertical: prefer below, flip if overflow.
-      const spaceBelow = vpH - triggerRect.bottom - margin;
-      const spaceAbove = triggerRect.top - margin;
-      const top = (spaceBelow >= popH || spaceBelow >= spaceAbove)
-        ? triggerRect.bottom + margin
-        : Math.max(margin, triggerRect.top - popH - margin);
-
-      // Horizontal: align with trigger left, but keep popover inside vp.
-      let left = triggerRect.left;
-      if (left + popW > vpW - margin) left = Math.max(margin, vpW - popW - margin);
-      if (left < margin) left = margin;
-
-      this._floater.style.top = `${Math.round(top)}px`;
-      this._floater.style.left = `${Math.round(left)}px`;
+      // Below the trigger, flipped above when there's more room there,
+      // kept inside the viewport (shared with Menu).
+      placeFloating(this._trigger, this._floater, { gap: 8, margin: 8, cap: false });
     }
 
     // Inline variant — full picker UI directly in the host (or in the
