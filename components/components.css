@@ -76,6 +76,23 @@
 .lb-carousel--static .lb-carousel__controls { display: none; }
 
 /* ═══════════════════════════════════════════════════════════
+   REVEAL — [data-lb-reveal] (LB.Reveal, core runtime)
+   Hidden only under html.lb-reveal-on (set by lb.js, or early by a head
+   script) and only when motion is welcome; lb.js adds .lb-revealed as
+   the element scrolls into view, with --lb-reveal-delay for the stagger.
+   ═══════════════════════════════════════════════════════════ */
+/* A keyframe animation, not a transition: the element keeps its own
+   transitions (an interactive card's hover). Hiding is instant. */
+@keyframes lb-reveal-in { from { opacity: 0; translate: 0 var(--lb-size-6x); } }
+@media (prefers-reduced-motion: no-preference) {
+  .lb-reveal-on [data-lb-reveal]:not(.lb-revealed) { opacity: 0; }
+  .lb-reveal-on [data-lb-reveal].lb-revealed { animation: lb-reveal-in var(--lb-animation-dur-slow) var(--lb-animation-ease-in) var(--lb-reveal-delay, 0ms) backwards; }
+}
+@media print {
+  [data-lb-reveal] { opacity: 1 !important; translate: none !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
    GLOBAL SCROLLBAR
    ═══════════════════════════════════════════════════════════
    Thin, theme-token driven. Uses --lb-fg-muted for the thumb so it

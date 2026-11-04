@@ -5,6 +5,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Scroll reveal** (`data-lb-reveal`, core runtime): a block rises a
+  little and fades in the first time it scrolls into view; blocks that
+  arrive together are staggered. Hidden only when motion is welcome and
+  lb.js (or your head script) has set `html.lb-reveal-on`; opacity and
+  `translate` only, as a keyframe animation so the element keeps its own
+  transitions; focus shows a block at once; print shows everything.
+  `data-lb-count-up` counts a number up on view (the final value is what
+  assistive tech reads). `LB.Reveal.show(el, instant)`. Carousel loop
+  jumps show their twins without a second reveal.
 - **Carousel** (`LB.Carousel`, core runtime, new gallery page). A row
   that pages one item per click on native scroll-snap (swipes and
   trackpads simply scroll it), with an optional endless loop

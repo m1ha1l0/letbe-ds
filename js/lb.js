@@ -6339,7 +6339,16 @@ const LB = (() => {
       let k = this._nearest();
       if (this.loop) {
         const folded = this.N + ((k - this.N) % this.N + this.N) % this.N;
-        if (folded !== k) { k = folded; this.vp.scrollLeft = this._x(k); }
+        if (folded !== k) {
+          k = folded;
+          this.vp.scrollLeft = this._x(k);
+          // The twins it lands on are the ones already on screen: no reveal.
+          const r = this.vp.getBoundingClientRect();
+          this.track.querySelectorAll('[data-lb-reveal]:not(.lb-revealed)').forEach((el) => {
+            const b = el.getBoundingClientRect();
+            if (b.right > r.left && b.left < r.right) Reveal.show(el, 0, true);
+          });
+        }
       }
       this._k = k;
       const base = this.loop ? this.N : 0;
@@ -6361,6 +6370,94 @@ const LB = (() => {
       if (announce) this.el.dispatchEvent(new CustomEvent('lb-carousel-change', { bubbles: true, detail: { index: this.index, count: this.N } }));
     }
   }
+
+  // ─── REVEAL ────────────────────────────────────────────────
+  // Scroll reveal: an element with data-lb-reveal rises a little and
+  // fades in the first time it scrolls into view; blocks that arrive
+  // together come in one after another (a short stagger, at most 6
+  // steps). Accessible by construction:
+  //   - nothing is hidden unless motion is welcome and IntersectionObserver
+  //     exists: lb.js then sets html.lb-reveal-on, and only that class
+  //     hides [data-lb-reveal] (set it in a head script yourself to avoid
+  //     a first-paint flash — see the docs);
+  //   - only opacity and translate move, no layout shift;
+  //   - hidden content stays in the page for screen readers and find in
+  //     page; focus that lands inside a block shows it at once; print
+  //     shows everything.
+  // data-lb-count-up on an element counts every number in its text up
+  // from 0 when it comes into view (the final value is what assistive
+  // tech reads). LB.Reveal.show(el, instant) reveals by hand.
+  const Reveal = (() => {
+    const can = typeof window !== 'undefined' && 'IntersectionObserver' in window;
+    const motion = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let io = null, countIo = null;
+    const stepMs = () => {
+      const v = getComputedStyle(document.documentElement).getPropertyValue('--lb-animation-dur-fast').trim();
+      return (v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000) || 100;
+    };
+    function show(el, i = 0, instant = false) {
+      if (el.classList.contains('lb-revealed')) return;
+      if (io) io.unobserve(el);
+      if (instant) {
+        el.style.animation = 'none';
+        el.classList.add('lb-revealed');
+        return;
+      }
+      el.style.setProperty('--lb-reveal-delay', Math.min(i, 6) * stepMs() + 'ms');
+      el.classList.add('lb-revealed');
+    }
+    function countUp(el) {
+      if (el._lbCounted) return;
+      el._lbCounted = true;
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      let n;
+      while ((n = walker.nextNode())) if (/\d/.test(n.nodeValue)) nodes.push({ node: n, end: n.nodeValue, parts: n.nodeValue.split(/(\d+)/) });
+      if (!nodes.length || !motion()) return;
+      const sr = document.createElement('span');
+      sr.className = 'lb-visually-hidden';
+      sr.textContent = el.textContent.trim().replace(/\s+/g, ' ');
+      el.parentNode.insertBefore(sr, el);
+      el.setAttribute('aria-hidden', 'true');
+      const dur = 1100; // design-intent: a count reads as counting, not as a flicker
+      const at = (e) => nodes.forEach((x) => { x.node.nodeValue = x.parts.map((p, i) => (i % 2 ? String(Math.round(parseInt(p, 10) * e)) : p)).join(''); });
+      let t0 = null;
+      const frame = (t) => {
+        if (t0 === null) t0 = t;
+        const p = Math.min(1, (t - t0) / dur);
+        if (p < 1) { at(1 - Math.pow(1 - p, 3)); requestAnimationFrame(frame); }
+        else nodes.forEach((x) => { x.node.nodeValue = x.end; });
+      };
+      at(0);
+      requestAnimationFrame(frame);
+    }
+    function init(root) {
+      if (!can) return;
+      const els = root.querySelectorAll('[data-lb-reveal]');
+      const counts = root.querySelectorAll('[data-lb-count-up]');
+      if (!els.length && !counts.length) return;
+      if (els.length && motion()) {
+        if (!io) {
+          document.documentElement.classList.add('lb-reveal-on');
+          io = new IntersectionObserver((entries) => {
+            const arriving = entries.filter((en) => en.isIntersecting).map((en) => en.target);
+            arriving.sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+            arriving.forEach((el, i) => show(el, i));
+          }, { threshold: 0 });
+          document.addEventListener('focusin', (e) => {
+            let el = e.target.closest && e.target.closest('[data-lb-reveal]:not(.lb-revealed)');
+            while (el) { show(el, 0, true); el = el.parentElement && el.parentElement.closest('[data-lb-reveal]:not(.lb-revealed)'); }
+          });
+        }
+        els.forEach((el) => { if (!el._lbReveal && !el.classList.contains('lb-revealed')) { el._lbReveal = true; io.observe(el); } });
+      }
+      if (counts.length) {
+        if (!countIo) countIo = new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) { countIo.unobserve(en.target); countUp(en.target); } }), { threshold: 0.4 });
+        counts.forEach((el) => { if (!el._lbCountWatch) { el._lbCountWatch = true; countIo.observe(el); } });
+      }
+    }
+    return { init, show };
+  })();
 
   // ─── SHOW MORE ─────────────────────────────────────────────
   // Collapse a grid to N rows and reveal the rest on demand.
@@ -9170,6 +9267,9 @@ const LB = (() => {
       if (!el._lbCarousel) el._lbCarousel = new Carousel(el);
     });
 
+    // Scroll reveal + count-up (after carousels, so loop clones are seen)
+    Reveal.init(root);
+
     // Menus
     root.querySelectorAll('[data-lb-menu]').forEach((el) => {
       if (!el._lbMenu) el._lbMenu = new Menu(el);
@@ -9441,6 +9541,7 @@ const LB = (() => {
     Form,
     ShowMore,
     Carousel,
+    Reveal,
     ClearableInput,
     PasswordInput,
     PhoneInput,
