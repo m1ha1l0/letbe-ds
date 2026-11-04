@@ -122,7 +122,7 @@
 
     <!-- ────────────────── Phone number ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);" id="phone">Phone number</h2>
-    <p class="gallery-section__desc">Compound field: country-code dropdown + tel input. Use <code class="lb-code">.lb-phone</code> with <code class="lb-code">data-lb-phone</code>; states (<code class="lb-code">--error</code>, <code class="lb-code">--disabled</code>) live on the wrap, not the input.</p>
+    <p class="gallery-section__desc">Compound field: country-code dropdown + tel input. Use <code class="lb-code">.lb-phone</code> with <code class="lb-code">data-lb-phone</code>; states (<code class="lb-code">--error</code>, <code class="lb-code">--disabled</code>) live on the wrap, not the input. Form-native like Select: <code class="lb-code">data-lb-name</code> renders a hidden input that submits the full number in E.164 (<code class="lb-code">+46701234567</code>, empty while no number is typed), <code class="lb-code">data-lb-required</code> is announced, <code class="lb-code">data-lb-country="se"</code> picks the starting country, <code class="lb-code">setError(msg)</code> / <code class="lb-code">clearError()</code> drive the error skin and message (typing clears it), and a form reset returns to the starting country. <code class="lb-code">getValue()</code> and <code class="lb-code">lb-phone-change</code> carry <code class="lb-code">e164</code> beside <code class="lb-code">fullNumber</code>.</p>
     <div class="gallery-row" style="max-width: 360px; flex-direction: column; align-items: stretch;">
       <div class="lb-field">
         <label class="lb-label" for="phone-default">Phone</label>

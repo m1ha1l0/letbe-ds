@@ -19,6 +19,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   carry `"flag": "se"` (ISO code, DS flag set) or `"icon": "name"`; it
   shows before the label in the popup row, on the Select trigger and in
   the Multi-Select pill (`.lb-select__icon`, `.lb-chip__icon`).
+- **Phone is form-native.** `data-lb-name` renders a hidden input that
+  submits the full number in E.164 (`+46701234567`, empty while no
+  number is typed); `data-lb-required` is announced; `data-lb-country`
+  sets the starting country; `setError(msg)` / `clearError()` drive the
+  error skin and message (typing clears it, LB.Form uses the same
+  element); a form reset returns to the starting country. `getValue()`
+  and `lb-phone-change` gain `e164`.
 - **Public `open()`, `close()` and `isOpen()`** on Select and
   Multi-Select instances (was only the private `_show()`).
 

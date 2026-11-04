@@ -6158,6 +6158,7 @@ const LB = (() => {
     }
 
     _setPhoneError(ph, message) {
+      if (ph._lbPhone) { ph._lbPhone.setError(message); return; }
       ph.classList.add('lb-phone--error');
       const input = ph.querySelector('.lb-phone__input');
       if (input) input.setAttribute('aria-invalid', 'true');
@@ -6167,6 +6168,7 @@ const LB = (() => {
 
     _clearPhoneError(ph) {
       if (!ph) return;
+      if (ph._lbPhone) { ph._lbPhone.clearError(); return; }
       ph.classList.remove('lb-phone--error');
       const input = ph.querySelector('.lb-phone__input');
       if (input) input.removeAttribute('aria-invalid');
@@ -6937,11 +6939,40 @@ const LB = (() => {
       const browserLang = navigator.language || 'en-US';
       const localeParts = browserLang.split('-');
       const localeCountry = (localeParts[1] || localeParts[0]).toLowerCase();
-      const defaultIso = opts.defaultCountry || localeCountry;
+      const defaultIso = (opts.defaultCountry || el.dataset.lbCountry || localeCountry).toLowerCase();
       this.selected = this.countries.find(c => c.iso === defaultIso) || this.countries.find(c => c.iso === 'us');
+      this._initialCountry = this.selected;
+      // Form integration, same surface as Select: a name renders a hidden
+      // input carrying the full number in E.164 (+ and digits, '' while
+      // the national part is empty), required is announced on the input.
+      this.name = opts.name || el.dataset.lbName || '';
+      this.required = el.hasAttribute('data-lb-required');
 
       this._build();
       this._bind();
+      this._initForm();
+    }
+
+    _initForm() {
+      if (this.name) {
+        this._hidden = document.createElement('input');
+        this._hidden.type = 'hidden';
+        this._hidden.name = this.name;
+        this.el.appendChild(this._hidden);
+        this._sync();
+      }
+      if (this.required) this.input.setAttribute('aria-required', 'true');
+      this._form = this.el.closest('form');
+      if (this._form) {
+        // After the native reset has emptied the input: back to the first
+        // country, no error, mirror re-synced.
+        this._onFormReset = () => setTimeout(() => { this._applyCountry(this._initialCountry); this.clearError(); this._sync(); }, 0);
+        this._form.addEventListener('reset', this._onFormReset);
+      }
+    }
+
+    _sync() {
+      if (this._hidden) this._hidden.value = this.getValue().e164;
     }
 
     _build() {
@@ -7116,6 +7147,7 @@ const LB = (() => {
         if (this.input.value.length > 15) {
           this.input.value = this.input.value.slice(0, 15);
         }
+        if (this.el.classList.contains('lb-phone--error')) this.clearError();
         this._emitChange();
       });
 
@@ -7161,43 +7193,83 @@ const LB = (() => {
       this.chevron.classList.remove('lb-phone__chevron--open');
     }
 
-    _select(country) {
+    _applyCountry(country) {
       this.selected = country;
       this.flagImg.src = flagUrl(country.iso);
       this.codeSpan.textContent = country.code;
       this.trigger.setAttribute('aria-label', `Select country, currently ${country.name} ${country.code}`);
+    }
+
+    _select(country) {
+      this._applyCountry(country);
       this._close();
       this.input.focus();
       this._emitChange();
     }
 
     _emitChange() {
-      const value = this.selected.code + this.input.value;
+      this._sync();
+      const v = this.getValue();
       this.el.dispatchEvent(new CustomEvent('lb-phone-change', {
         bubbles: true,
-        detail: {
-          country: this.selected,
-          number: this.input.value,
-          fullNumber: value,
-        }
+        detail: { country: v.country, number: v.number, fullNumber: v.fullNumber, e164: v.e164 },
       }));
     }
 
+    // e164: '+' and digits only ('' while no national number is typed) —
+    // the value the hidden input submits.
     getValue() {
+      const national = this.input.value;
       return {
         country: this.selected,
-        number: this.input.value,
-        fullNumber: this.selected.code + this.input.value,
+        number: national,
+        fullNumber: this.selected.code + national,
+        e164: national ? '+' + (this.selected.code + national).replace(/\D/g, '') : '',
       };
     }
 
     setCountry(iso) {
-      const c = this.countries.find(x => x.iso === iso);
+      const c = this.countries.find(x => x.iso === String(iso).toLowerCase());
       if (c) this._select(c);
+    }
+
+    // Error state on the existing skin (.lb-phone--error + aria-invalid on
+    // the number), with a .lb-field__error message in the surrounding
+    // .lb-field — the same element LB.Form uses, so either can set it.
+    // Typing clears it.
+    setError(message) {
+      this.el.classList.add('lb-phone--error');
+      this.input.setAttribute('aria-invalid', 'true');
+      if (!message) return;
+      const host = this.el.closest('.lb-field') || this.el.parentElement;
+      let err = host.querySelector(':scope > .lb-field__error[data-lb-form-error]');
+      if (!err) {
+        err = document.createElement('span');
+        err.className = 'lb-field__error';
+        err.setAttribute('data-lb-form-error', '');
+        err.id = uid('phone-err');
+        host.appendChild(err);
+      }
+      err.textContent = message;
+      initFieldHintIcons(host);
+      initIcons(host);
+      this.input.setAttribute('aria-describedby', err.id);
+    }
+
+    clearError() {
+      this.el.classList.remove('lb-phone--error');
+      this.input.removeAttribute('aria-invalid');
+      const host = this.el.closest('.lb-field') || this.el.parentElement;
+      const err = host && host.querySelector(':scope > .lb-field__error[data-lb-form-error]');
+      if (err) {
+        if (this.input.getAttribute('aria-describedby') === err.id) this.input.removeAttribute('aria-describedby');
+        err.remove();
+      }
     }
 
     destroy() {
       document.removeEventListener('mousedown', this._outsideHandler);
+      if (this._form && this._onFormReset) this._form.removeEventListener('reset', this._onFormReset);
     }
   }
 
