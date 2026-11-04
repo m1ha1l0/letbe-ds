@@ -43,6 +43,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   `touch-action: pan-y pinch-zoom`, ignoring edge gestures, second
   fingers and a zoomed page. Linked images prefetch on hover, touch or
   focus. Reduced motion: all instant, swipe still steps.
+- **Video in the lightbox.** A video link (`.mp4`, `.webm`, `.ogv`, `.mov`,
+  `.m4v`, or `data-lb-type="video"`) opens in the same viewer as a muted,
+  looping `<video controls playsinline>` sized like an image, playing
+  while shown (not under reduced motion), paused on step and close. The
+  thumbnail is the poster unless `data-lb-poster` is set; mixed image and
+  video groups navigate as one; swipes leave the video's control bar alone.
 - **Fix:** pages with lightbox links no longer log a false "controller is
   not loaded" warning when `lb-lightbox.js` is loaded.
 

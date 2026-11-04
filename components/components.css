@@ -2649,7 +2649,9 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-lightbox.lb-modal-backdrop { backdrop-filter: blur(var(--lb-size-3x)); -webkit-backdrop-filter: blur(var(--lb-size-3x)); }
 .lb-lightbox__dialog { width: auto; min-width: min(90vw, 28rem); /* design-intent: caption/footer chrome floor */ max-width: min(96vw, 90rem); /* design-intent: viewer cap on huge screens */ max-height: calc(100vh - var(--lb-size-8x)); max-height: calc(100dvh - var(--lb-size-8x)); }
 .lb-lightbox__body { flex: 1; min-height: 0; overflow: hidden; display: grid; place-items: center; padding: var(--lb-size-4x); background: var(--lb-bg-default); touch-action: pan-y pinch-zoom; /* sideways moves reach the swipe; scroll + pinch stay the browser's */ }
-.lb-lightbox__img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; transition: opacity var(--lb-animation-dur-normal) var(--lb-animation-ease-ui); }
+.lb-lightbox__img,
+.lb-lightbox__video { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; transition: opacity var(--lb-animation-dur-normal) var(--lb-animation-ease-ui); }
+.lb-lightbox__img[hidden], .lb-lightbox__video[hidden] { display: none; }
 /* Motion states set by lb-lightbox.js (all instant under reduced motion):
    --loading   the frame waits unseen for the first photo (its entry
                animation is held, so it plays once the photo is in);
@@ -2659,16 +2661,16 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
                fades in and settles from just under full size;
    --dragging  the image follows the finger, no transition. */
 .lb-lightbox--loading > .lb-modal { opacity: 0; animation: none; }
-.lb-lightbox--revealing .lb-lightbox__img,
-.lb-lightbox--switching .lb-lightbox__img,
+.lb-lightbox--revealing :is(.lb-lightbox__img, .lb-lightbox__video),
+.lb-lightbox--switching :is(.lb-lightbox__img, .lb-lightbox__video),
 .lb-lightbox--switching .lb-lightbox__titles,
 .lb-lightbox--switching .lb-lightbox__count { opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-lightbox__img { transition: opacity var(--lb-animation-dur-normal) var(--lb-animation-ease-ui), width var(--lb-animation-dur-slow) var(--lb-animation-ease-ui), height var(--lb-animation-dur-slow) var(--lb-animation-ease-ui), scale var(--lb-animation-dur-slow) var(--lb-animation-ease-ui), translate var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+  .lb-lightbox__img, .lb-lightbox__video { transition: opacity var(--lb-animation-dur-normal) var(--lb-animation-ease-ui), width var(--lb-animation-dur-slow) var(--lb-animation-ease-ui), height var(--lb-animation-dur-slow) var(--lb-animation-ease-ui), scale var(--lb-animation-dur-slow) var(--lb-animation-ease-ui), translate var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
   .lb-lightbox__titles, .lb-lightbox__count { transition: opacity var(--lb-animation-dur-normal) var(--lb-animation-ease-ui); }
-  .lb-lightbox--revealing .lb-lightbox__img { transition: none; }
-  .lb-lightbox--switching .lb-lightbox__img { scale: 0.985; /* design-intent: settle-in start */ }
-  .lb-lightbox--dragging .lb-lightbox__img { transition: none; }
+  .lb-lightbox--revealing :is(.lb-lightbox__img, .lb-lightbox__video) { transition: none; }
+  .lb-lightbox--switching :is(.lb-lightbox__img, .lb-lightbox__video) { scale: 0.985; /* design-intent: settle-in start */ }
+  .lb-lightbox--dragging :is(.lb-lightbox__img, .lb-lightbox__video) { transition: none; }
 }
 .lb-lightbox__titles { display: flex; flex-direction: column; align-items: flex-start; gap: var(--lb-size-0-5x); min-width: 0; }
 .lb-lightbox .lb-modal__title { overflow-wrap: anywhere; }

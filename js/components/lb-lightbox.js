@@ -2,7 +2,11 @@
  * LB.Lightbox — image viewer built on LB.Modal (opt-in module)
  * ─────────────────────────────────────────────────────────────
  * Load js/lb.js first, then this file. Any <a href="image" data-lb-lightbox>
- * opens in a modal image viewer instead of navigating. Everything is the
+ * opens in a modal image viewer instead of navigating. A video link
+ * (mp4, webm, ogv, mov, m4v — or any href with data-lb-type="video")
+ * opens in the same viewer as a muted, looping <video controls
+ * playsinline>, sized like an image, playing while it is shown (not
+ * under reduced motion) and paused on step and close. Everything is the
  * canonical lb-modal anatomy — backdrop, dialog, header, body, footer —
  * with lightbox chrome on top; LB.Modal owns open/close, focus trap,
  * scroll lock, Esc and backdrop-click.
@@ -47,6 +51,9 @@
 
   const SEL = 'a[data-lb-lightbox]';
   const IMG_RE = /\.(avif|webp|jpe?g|png|gif|svg)(\?.*)?$/i;
+  const VIDEO_RE = /\.(mp4|webm|ogv|mov|m4v)(\?.*)?$/i;
+  const isVideo = (a) => a.getAttribute('data-lb-type') === 'video' || VIDEO_RE.test(a.getAttribute('href') || '');
+  const isMedia = (a) => isVideo(a) || IMG_RE.test(a.getAttribute('href') || '');
 
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   const rem = () => parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
@@ -78,7 +85,7 @@
               '</div>' +
               '<button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-modal__close" type="button" aria-label="Close"><span data-lb-icon="x"></span></button>' +
             '</div>' +
-            '<div class="lb-modal__body lb-lightbox__body"><img class="lb-lightbox__img" alt=""></div>' +
+            '<div class="lb-modal__body lb-lightbox__body"><img class="lb-lightbox__img" alt=""><video class="lb-lightbox__video" muted loop playsinline controls preload="metadata" hidden></video></div>' +
             '<div class="lb-modal__footer lb-lightbox__footer">' +
               '<span class="lb-lightbox__count" aria-live="polite"></span>' +
               '<span class="lb-lightbox__nav">' +
@@ -93,6 +100,8 @@
       if (LB.initIcons) LB.initIcons(this.el);
 
       this._img = this.el.querySelector('.lb-lightbox__img');
+      this._video = this.el.querySelector('.lb-lightbox__video');
+      this._media = this._img; // the element on show: image or video
       this._title = this.el.querySelector('#lb-lightbox-title');
       this._sub = this.el.querySelector('.lb-lightbox__sub');
       this._count = this.el.querySelector('.lb-lightbox__count');
@@ -103,10 +112,11 @@
 
       // open-state tracked via Modal's own events — never its inline styles
       this.el.addEventListener('lb-modal-open', () => { this._open = true; });
-      this.el.addEventListener('lb-modal-close', () => { this._open = false; });
+      this.el.addEventListener('lb-modal-close', () => { this._open = false; this._video.pause(); });
 
       this._onKey = (e) => {
         if (!this._open) return;
+        if (document.activeElement === this._video) return; // arrows seek the video
         if (e.key === 'ArrowRight') this.show(this._index + 1);
         if (e.key === 'ArrowLeft') this.show(this._index - 1);
       };
@@ -141,10 +151,13 @@
         const scope = link.closest('[data-lb-gallery]') || document;
         links = Array.from(scope.querySelectorAll(SEL)).filter((a) => !a.getAttribute('data-lb-lightbox'));
       }
-      return Array.from(links).filter((a) => IMG_RE.test(a.getAttribute('href') || '')).map((a) => {
+      return Array.from(links).filter(isMedia).map((a) => {
         const c = this._caption(a);
         const im = a.querySelector('img');
-        return { href: a.getAttribute('href'), alt: (im && im.alt) || c.head, head: c.head, sub: c.sub };
+        return {
+          href: a.getAttribute('href'), alt: (im && im.alt) || c.head, head: c.head, sub: c.sub,
+          video: isVideo(a), poster: a.getAttribute('data-lb-poster') || (im && (im.currentSrc || im.src)) || '',
+        };
       });
     }
 
@@ -161,12 +174,22 @@
       return { w: Math.round(natW * s), h: Math.round(natH * s) };
     }
 
-    _load(src) {
+    _load(it) {
       return new Promise((resolve) => {
+        if (it.video) {
+          // Only the metadata: the frame needs the video's own size.
+          const v = document.createElement('video');
+          v.preload = 'metadata';
+          v.muted = true;
+          v.onloadedmetadata = () => resolve({ w: v.videoWidth || 1600, h: v.videoHeight || 900 });
+          v.onerror = () => resolve({ w: 1600, h: 900 });
+          v.src = it.href;
+          return;
+        }
         const p = new Image();
         p.onload = () => resolve({ w: p.naturalWidth, h: p.naturalHeight });
         p.onerror = () => resolve({ w: 1600, h: 1000 }); // broken image: a sane frame, alt text shows
-        p.src = src;
+        p.src = it.href;
       });
     }
 
@@ -178,13 +201,15 @@
       const zoomed = () => window.visualViewport && window.visualViewport.scale > 1.01;
       const reset = () => {
         this.el.classList.remove('lb-lightbox--dragging');
-        this._img.style.translate = '';
+        this._media.style.translate = '';
         this._swipe = null;
       };
       stage.addEventListener('pointerdown', (e) => {
         if (e.pointerType === 'mouse' || this._items.length < 2) return;
         if (this._swipe) { reset(); return; } // a second finger: not a swipe
         if (!e.isPrimary || zoomed() || e.clientX < EDGE || e.clientX > window.innerWidth - EDGE) return;
+        // A video's control bar (seek, volume) keeps its own drags.
+        if (this._media === this._video && e.clientY > this._video.getBoundingClientRect().bottom - 56) return;
         this._swipe = { id: e.pointerId, x: e.clientX, y: e.clientY, t: e.timeStamp, dx: 0, axis: null };
       });
       stage.addEventListener('pointermove', (e) => {
@@ -197,7 +222,7 @@
           if (sw.axis === 'y') { reset(); return; }
           if (!reduced()) this.el.classList.add('lb-lightbox--dragging');
         }
-        if (sw.axis === 'x' && !reduced()) this._img.style.translate = sw.dx + 'px 0';
+        if (sw.axis === 'x' && !reduced()) this._media.style.translate = sw.dx + 'px 0';
       });
       const end = (e) => {
         const sw = this._swipe;
@@ -206,7 +231,7 @@
         const step = e.type === 'pointerup' && sw.axis === 'x' && (Math.abs(sw.dx) >= MIN || (Math.abs(sw.dx) > 20 && v > FLICK));
         this.el.classList.remove('lb-lightbox--dragging'); // snap back animates
         if (step) this.show(this._index + (sw.dx < 0 ? 1 : -1));
-        else this._img.style.translate = '';
+        else this._media.style.translate = '';
         this._swipe = null;
       };
       stage.addEventListener('pointerup', end);
@@ -214,11 +239,27 @@
     }
 
     _place(it, size) {
-      this._img.style.translate = '';
-      this._img.style.width = size.w + 'px';
-      this._img.style.height = size.h + 'px';
-      this._img.src = it.href;
-      this._img.alt = it.alt;
+      const m = it.video ? this._video : this._img;
+      const other = it.video ? this._img : this._video;
+      other.hidden = true;
+      other.style.translate = '';
+      if (other === this._video && this._video.getAttribute('src')) { this._video.pause(); this._video.removeAttribute('src'); this._video.load(); }
+      m.hidden = false;
+      m.style.translate = '';
+      m.style.width = size.w + 'px';
+      m.style.height = size.h + 'px';
+      if (it.video) {
+        if (this._video.getAttribute('src') !== it.href) {
+          this._video.poster = it.poster;
+          this._video.src = it.href;
+        }
+        this._video.setAttribute('aria-label', it.alt || it.head || '');
+        if (!reduced()) { const pr = this._video.play(); if (pr && pr.catch) pr.catch(() => {}); }
+      } else {
+        this._img.src = it.href;
+        this._img.alt = it.alt;
+      }
+      this._media = m;
       this._title.textContent = it.head;
       this._sub.textContent = it.sub;
       this._sub.hidden = !it.sub;
@@ -228,10 +269,10 @@
     // Placement without the size glide (first image of an opening, refit
     // on resize): the transition is off for this one frame.
     _placeInstant(it, size) {
-      this._img.style.transition = 'none';
+      this._img.style.transition = this._video.style.transition = 'none';
       this._place(it, size);
-      void this._img.offsetWidth;
-      this._img.style.transition = '';
+      void this._media.offsetWidth;
+      this._img.style.transition = this._video.style.transition = '';
       this.el.classList.remove('lb-lightbox--switching');
     }
 
@@ -243,7 +284,8 @@
       this._index = (i + this._items.length) % this._items.length;
       const it = this._items[this._index];
       const ticket = ++this._switching;
-      const loading = this._load(it.href);
+      if (!instant) this._video.pause();
+      const loading = this._load(it);
       if (onPlaced) {
         let placed = false;
         const guard = setTimeout(() => {
@@ -278,11 +320,11 @@
           }, tokenMs('--lb-animation-dur-normal'));
         });
       }
-      // warm the neighbours
+      // warm the neighbours (images only — videos load when shown)
       if (this._items.length > 1) {
         [1, -1].forEach((d) => {
           const n = this._items[(this._index + d + this._items.length) % this._items.length];
-          const p = new Image(); p.src = n.href;
+          if (!n.video) { const p = new Image(); p.src = n.href; }
         });
       }
     }
@@ -301,7 +343,7 @@
         if (!motion) return;
         this.el.classList.remove('lb-lightbox--loading');
         this.el.classList.add('lb-lightbox--revealing');
-        void this._img.offsetWidth;
+        void this._media.offsetWidth;
         setTimeout(() => this.el.classList.remove('lb-lightbox--revealing'), tokenMs('--lb-animation-dur-gentle'));
       });
       LB.Modal.open(this.el);
@@ -337,7 +379,7 @@
 
   document.addEventListener('click', (e) => {
     const link = e.target.closest && e.target.closest(SEL);
-    if (!link || !IMG_RE.test(link.getAttribute('href') || '')) return;
+    if (!link || !isMedia(link)) return;
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
     instance().open(link);
