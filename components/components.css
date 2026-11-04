@@ -8525,11 +8525,14 @@ img.lb-list__icon--round { object-fit: cover; }
 .lb-scroll-locked,
 .lb-scroll-locked--body > body { overflow: hidden; }
 
+/* --lb-header-bg (unset by default, like --lb-header-max) swaps the bar's
+   fill — e.g. color-mix(in srgb, var(--lb-surface-bg-default) 90%,
+   transparent) lets a page background show through a little. */
 .lb-header {
   position: relative;
   z-index: 900;
   width: 100%;
-  background: var(--lb-surface-bg-default);
+  background: var(--lb-header-bg, var(--lb-surface-bg-default));
   border-bottom: var(--lb-border-width-thin) solid var(--lb-surface-border-default);
   font-family: var(--lb-t-action-m-font-family);
 }
@@ -8739,7 +8742,7 @@ img.lb-list__icon--round { object-fit: cover; }
   border-bottom-color: transparent;
 }
 .lb-header--transparent.lb-header--scrolled {
-  background: var(--lb-surface-bg-default);
+  background: var(--lb-header-bg, var(--lb-surface-bg-default));
   border-bottom-color: var(--lb-surface-border-default);
 }
 /* Opt-in translucency (glass): ONLY safe with the scrim; research flagged
