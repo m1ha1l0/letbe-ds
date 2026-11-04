@@ -8517,11 +8517,13 @@ img.lb-list__icon--round { object-fit: cover; }
    ═══════════════════════════════════════════════════════════ */
 
 /* Scroll lock — LB.lockScroll() sets this on <html> while any overlay
-   (modal, sheet, command palette, drawer) is open. Both elements: a
-   body-only lock fails when html has an overflow of its own, an
-   html-only lock misses sites that scroll the body. */
+   (modal, sheet, command palette, drawer) is open; html's overflow is
+   the viewport's, so the lock holds even when html has an overflow of
+   its own. --body is added only when the body is the page's scroller:
+   a hidden body overflow anywhere else makes body a scroll container
+   and sticky headers jump off screen. */
 .lb-scroll-locked,
-.lb-scroll-locked > body { overflow: hidden; }
+.lb-scroll-locked--body > body { overflow: hidden; }
 
 .lb-header {
   position: relative;

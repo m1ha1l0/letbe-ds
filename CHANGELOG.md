@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Fix: sticky headers stay put while an overlay is open.** The 1.5.0
+  scroll lock also hid `<body>` overflow, which turns the body into a
+  scroll container and threw a sticky header off screen behind a modal or
+  drawer. The lock now hides only `<html>` (the viewport) and adds the
+  body only on sites where the body itself is the scroller.
 - **Brand icons are all filled logos** (visual change). `instagram`,
   `facebook`, `youtube` and `github` now ship the filled Simple Icons
   glyphs, `linkedin` and `twitter` the filled Bootstrap Icons ones (Simple

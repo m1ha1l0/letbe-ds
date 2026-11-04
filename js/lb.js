@@ -64,19 +64,28 @@ const LB = (() => {
   // ─── SCROLL LOCK ───────────────────────────────────────────
   // One page lock shared by every overlay (Modal, Sheet, Command palette,
   // header + shell drawers). It sets .lb-scroll-locked on <html>, which
-  // hides overflow on html AND body: a body-only lock silently fails as
-  // soon as a site gives html any overflow (e.g. overflow-x: clip), and
-  // an html-only lock misses sites that scroll the body. Owners are kept
-  // in a Set, so stacked overlays keep the page locked until the last
-  // one closes, and a repeated lock or unlock from one owner is a no-op.
+  // hides the viewport's overflow: a body-only lock silently fails as
+  // soon as a site gives html any overflow (e.g. overflow-x: clip). Body
+  // is locked too ONLY on sites where the body itself is the scroller
+  // (--body) — hiding body overflow elsewhere would make it a scroll
+  // container and throw every sticky header off screen behind the
+  // overlay. Owners are kept in a Set, so stacked overlays keep the page
+  // locked until the last one closes, and a repeated lock or unlock from
+  // one owner is a no-op.
   const _scrollLockOwners = new Set();
   function lockScroll(owner) {
+    const html = document.documentElement;
+    if (!_scrollLockOwners.size && document.body) {
+      const b = getComputedStyle(document.body).overflowY;
+      const bodyScrolls = (b === 'auto' || b === 'scroll') && document.body.scrollHeight > document.body.clientHeight;
+      html.classList.toggle('lb-scroll-locked--body', bodyScrolls);
+    }
     _scrollLockOwners.add(owner);
-    document.documentElement.classList.add('lb-scroll-locked');
+    html.classList.add('lb-scroll-locked');
   }
   function unlockScroll(owner) {
     _scrollLockOwners.delete(owner);
-    if (!_scrollLockOwners.size) document.documentElement.classList.remove('lb-scroll-locked');
+    if (!_scrollLockOwners.size) document.documentElement.classList.remove('lb-scroll-locked', 'lb-scroll-locked--body');
   }
 
   // ─── EXIT MOTION ───────────────────────────────────────────
