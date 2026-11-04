@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.14.1] — 2026-11-04
+
+Patch: Sheet focus trap and three Color Picker fixes. No API, token or
+markup changes.
+
 - **Sheet keeps focus inside while open** (fix). The regular `LB.Sheet`
   (not peek) locked scroll and focused its close button but never
   trapped focus, so Tab walked out of the `aria-modal` sheet to the page
