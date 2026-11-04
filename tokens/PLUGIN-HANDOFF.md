@@ -1243,7 +1243,9 @@ existing tokens. Library work (one component per round, as usual):
 - **New components**: Carousel (viewport + track + secondary icon-button
   controls, optional status), Description List (stacked / inline /
   grid, `--large` heading-m values, `--ruled`), Icon List (icon bullet
-  rows, body-m / body-l / heading-xl, status inks).
+  rows, body-m / body-l / heading-xl, status inks), and Kbd (v1.12.0:
+  mono code-s keycap on bg/strong, radius/interactive — the command
+  palette footer keycaps already use the same recipe).
 
 Code-only (behaviour, never mirrored in the library): overlay
 entry/exit motion and `LB.playExit`, the shared scroll lock, the
