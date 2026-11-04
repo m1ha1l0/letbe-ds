@@ -15,6 +15,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   GI, VA and XK no longer render blank in Flag, Bar List or a country
   list. Same circle-flags source and shape; `scripts/fetch-flags.js`
   now vendors the full ISO list.
+- **Icons and flags on Select and Multi-Select options.** An option may
+  carry `"flag": "se"` (ISO code, DS flag set) or `"icon": "name"`; it
+  shows before the label in the popup row, on the Select trigger and in
+  the Multi-Select pill (`.lb-select__icon`, `.lb-chip__icon`).
+- **Public `open()`, `close()` and `isOpen()`** on Select and
+  Multi-Select instances (was only the private `_show()`).
 
 ## [1.6.0] — 2026-11-04
 

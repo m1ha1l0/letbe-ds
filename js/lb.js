@@ -982,6 +982,26 @@ const LB = (() => {
     }
   }
 
+  // Option lead (Select, Multi-Select): an option may carry `icon` (a
+  // data-lb-icon name) or `flag` (an ISO code, drawn with the DS flag
+  // set); it renders before the label in the popup row, the trigger and
+  // the pill. Decorative — the label stays the accessible text.
+  function optionLead(opt, className) {
+    if (!opt || !(opt.flag || opt.icon)) return null;
+    let el;
+    if (opt.flag) {
+      el = document.createElement('img');
+      el.src = flagUrl(String(opt.flag).toLowerCase());
+      el.alt = '';
+    } else {
+      el = document.createElement('span');
+      el.setAttribute('data-lb-icon', opt.icon);
+    }
+    el.className = className;
+    el.setAttribute('aria-hidden', 'true');
+    return el;
+  }
+
   // ─── SELECT (Custom styled) ─────────────────────────────────
 
   class Select {
@@ -1015,10 +1035,8 @@ const LB = (() => {
         this.trigger = document.createElement('button');
         this.trigger.type = 'button';
         this.trigger.className = `lb-select lb-select--${this.size}`;
-        const label = this._options.find(o => o.value === this._value)?.label || this.placeholder;
-        this.trigger.innerHTML = `<span class="lb-select__text${!this._value ? ' lb-select__text--placeholder' : ''}">${label}</span><span class="lb-select-wrap__chevron">${SVG_CHEVRON}</span>`;
-        // Full label survives CSS truncation as a native tooltip.
-        this.trigger.title = label;
+        this.trigger.innerHTML = `<span class="lb-select__text"></span><span class="lb-select-wrap__chevron">${SVG_CHEVRON}</span>`;
+        this._paintTrigger(this._options.find(o => o.value === this._value));
         // Replace native select if present
         const nativeSelect = this.field.querySelector('select.lb-select');
         if (nativeSelect) nativeSelect.replaceWith(this.trigger);
@@ -1083,6 +1101,28 @@ const LB = (() => {
       this._options = options;
     }
 
+    // Trigger text (+ the option's icon or flag), placeholder state and
+    // the native tooltip that keeps the full label past the ellipsis.
+    _paintTrigger(opt) {
+      const textEl = this.trigger.querySelector('.lb-select__text');
+      if (textEl) {
+        textEl.textContent = opt ? opt.label : this.placeholder;
+        textEl.classList.toggle('lb-select__text--placeholder', !opt);
+      }
+      this.trigger.querySelector('.lb-select__icon')?.remove();
+      const lead = optionLead(opt, 'lb-select__icon');
+      if (lead && textEl) {
+        textEl.before(lead);
+        if (opt.icon) initIcons(this.trigger);
+      }
+      this.trigger.title = opt ? opt.label : this.placeholder;
+    }
+
+    // Public open/close (the list renders on open, is removed on close).
+    open() { if (!this._open) this._show(); }
+    close() { if (this._open) this._close(); }
+    isOpen() { return this._open; }
+
     _toggle() { this._open ? this._close() : this._show(); }
 
     _show() {
@@ -1106,12 +1146,7 @@ const LB = (() => {
 
     _select(option) {
       this._value = option.value;
-      const textEl = this.trigger.querySelector('.lb-select__text');
-      if (textEl) {
-        textEl.textContent = option.label;
-        textEl.classList.remove('lb-select__text--placeholder');
-      }
-      this.trigger.title = option.label;
+      this._paintTrigger(option);
       if (this._hidden) this._hidden.value = this._value;
       this.clearError();
       this._close();
@@ -1140,6 +1175,8 @@ const LB = (() => {
         li.id = uid('sel-opt');
         li.setAttribute('role', 'option');
         li.setAttribute('aria-selected', String(opt.value === this._value));
+        const lead = optionLead(opt, 'lb-list__icon');
+        if (lead) li.appendChild(lead);
         const label = document.createElement('span');
         label.className = 'lb-list__label';
         label.textContent = opt.label;
@@ -1158,6 +1195,7 @@ const LB = (() => {
       const wrap = this.trigger.closest('.lb-select-wrap') || this.trigger.parentElement;
       wrap.style.position = 'relative';
       wrap.appendChild(this._list);
+      initIcons(this._list);
 
       // Scroll active into view
       if (this._activeIndex >= 0) {
@@ -1233,12 +1271,7 @@ const LB = (() => {
       // a falsy value explicitly clears back to the placeholder
       if (value && !opt) return;
       this._value = opt ? opt.value : '';
-      const textEl = this.trigger.querySelector('.lb-select__text');
-      if (textEl) {
-        textEl.textContent = opt ? opt.label : this.placeholder;
-        textEl.classList.toggle('lb-select__text--placeholder', !opt);
-      }
-      this.trigger.title = opt ? opt.label : this.placeholder;
+      this._paintTrigger(opt);
       if (this._hidden) this._hidden.value = this._value;
     }
 
@@ -7378,6 +7411,11 @@ const LB = (() => {
       if (this._list) this._buildList();
     }
 
+    // Public open/close, same as Select.
+    open() { if (!this._open) this._show(); }
+    close() { if (this._open) this._close(); }
+    isOpen() { return this._open; }
+
     _toggle() { this._open ? this._close() : this._show(); }
 
     _show() {
@@ -7442,7 +7480,10 @@ const LB = (() => {
         label.className = 'lb-list__label';
         label.textContent = opt.label;
 
-        li.append(cb, label);
+        li.append(cb);
+        const lead = optionLead(opt, 'lb-list__icon');
+        if (lead) li.append(lead);
+        li.append(label);
         itemsRoot.appendChild(li);
       });
 
@@ -7495,6 +7536,8 @@ const LB = (() => {
         const chip = document.createElement('span');
         chip.className = 'lb-chip lb-chip--selected';
 
+        const lead = optionLead(opt, 'lb-chip__icon');
+        if (lead) chip.appendChild(lead);
         chip.appendChild(document.createTextNode(opt.label));
 
         const remove = document.createElement('button');
@@ -7514,6 +7557,7 @@ const LB = (() => {
       // when the other should own the row.
       this.pillsEl.hidden = selectedOpts.length === 0;
       this.placeholderEl.hidden = selectedOpts.length > 0;
+      if (this.pillsEl.querySelector('[data-lb-icon]')) initIcons(this.pillsEl);
     }
 
     _removeValue(value) {

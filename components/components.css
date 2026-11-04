@@ -736,6 +736,9 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-chip:has(> .lb-chip__remove) { padding-right: var(--lb-size-2x); }
 .lb-chip__check { display: inline-flex; align-items: center; line-height: 1; color: inherit; }
 .lb-chip__check svg { width: 1rem; height: 1rem; }
+/* Leading icon or flag (Multi-Select pills carry their option's lead). */
+.lb-chip__icon { display: inline-flex; flex-shrink: 0; width: var(--lb-size-4x); height: var(--lb-size-4x); }
+.lb-chip__icon svg { width: 100%; height: 100%; }
 .lb-chip--disabled { background-color: var(--lb-bg-disabled); border-color: var(--lb-border-disabled); color: var(--lb-fg-muted); cursor: not-allowed; pointer-events: none; }
 .lb-chip__remove { background: none; border: none; padding: 0; cursor: pointer; color: inherit; display: inline-flex; align-items: center; line-height: 1; }
 .lb-chip__remove:hover { opacity: 1; }
@@ -2369,6 +2372,10 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-select__text { flex: 1; text-align: left; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lb-select__text--placeholder { color: var(--lb-field-fg-placeholder); }
 button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); text-align: left; }
+/* Option lead on the trigger (an option's `icon` or `flag`). */
+.lb-select__icon { display: inline-flex; flex-shrink: 0; width: var(--lb-size-5x); height: var(--lb-size-5x); }
+.lb-select--small .lb-select__icon { width: var(--lb-size-4x); height: var(--lb-size-4x); }
+.lb-select__icon svg { width: 100%; height: 100%; }
 .lb-dropdown-list__option--selected { font-weight: var(--lb-font-weight-semibold); color: var(--lb-fg-accent); }
 
 /* ═══════════════════════════════════════════════════════════

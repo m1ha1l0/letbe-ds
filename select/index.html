@@ -43,6 +43,15 @@
         <div class="lb-select-wrap"></div>
       </div>
     </div>
+
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Icons and flags on options</h2>
+    <p class="gallery-section__desc">An option can carry <code class="lb-code">"flag": "se"</code> (an ISO code, drawn from the DS flag set) or <code class="lb-code">"icon": "briefcase"</code> (a <code class="lb-code">data-lb-icon</code> name). It shows before the label in the list row and on the trigger; MultiSelect also puts it in the pill. Decorative: the label stays the accessible text. Both pickers also have a public <code class="lb-code">open()</code>, <code class="lb-code">close()</code> and <code class="lb-code">isOpen()</code>.</p>
+    <div class="gallery-row" style="max-width: 360px;">
+      <div class="lb-select-field" data-lb-select data-lb-value="se" data-lb-options='[{"value":"se","label":"Sweden","flag":"se"},{"value":"fo","label":"Faroe Islands","flag":"fo"},{"value":"gl","label":"Greenland","flag":"gl"},{"value":"remote","label":"Remote","icon":"globe"}]' style="width: 100%;">
+        <label class="lb-label">Country</label>
+        <div class="lb-select-wrap"></div>
+      </div>
+    </div>
   </section>
 
   <!-- ══════════════════════════════════════════════════════════════════════
@@ -68,6 +77,15 @@
         <span class="lb-field__hint">Pick one or more.</span>
       </div>
       <p class="gallery-section__desc" style="font-size: var(--lb-t-body-s-font-size); margin: 0;">Values: <span id="demo-default-feedback" style="font-family: var(--lb-font-family-3); color: var(--lb-fg-accent);">(none)</span></p>
+    </div>
+
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">With flags</h2>
+    <p class="gallery-section__desc">The same <code class="lb-code">flag</code> / <code class="lb-code">icon</code> option fields: rows and pills show them.</p>
+    <div style="max-width: 420px;">
+      <div class="lb-multi-select-field" data-lb-multi-select data-lb-value="fo,ax" data-lb-placeholder="Select countries" data-lb-options='[{"value":"fo","label":"Faroe Islands","flag":"fo"},{"value":"ax","label":"Åland","flag":"ax"},{"value":"gl","label":"Greenland","flag":"gl"},{"value":"is","label":"Iceland","flag":"is"},{"value":"no","label":"Norway","flag":"no"}]'>
+        <label class="lb-label">Countries</label>
+        <div class="lb-multi-select-wrap"></div>
+      </div>
     </div>
 
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">With filter + sort-selected</h2>
