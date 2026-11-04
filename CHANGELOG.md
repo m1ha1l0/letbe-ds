@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.8.0] — 2026-11-04
+
+Minor: header, media and content additions from the mihailo.net and
+mihailo.ink findings. No new tokens.
+
 - **Header fill hook** `--lb-header-bg` (unset by default, like
   `--lb-header-max`): set it on `.lb-header` to change the bar's fill at
   rest and scrolled, e.g. a `color-mix()` with transparent for a bar a
