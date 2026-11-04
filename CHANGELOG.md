@@ -22,6 +22,10 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   walks back through what was played; `[data-lb-media-loop-toggle]` flips
   repeat-all. Both use `aria-pressed` with the Playbar's accent styling;
   `setShuffle()` / `getShuffle()` on the instance.
+- **Table `<caption>` and text tables.** A `<caption>` inside `.lb-table`
+  is styled (start-aligned above the table, caption-m in the default
+  ink, lined up with the first column); `.lb-table--text` top-aligns
+  every cell for reading tables with multi-line cells.
 - **Avatar `--xlarge`** (64px, `--lb-size-16x`, heading-m initials) for a
   profile header or a portrait beside a large heading.
 - **`lb-media--no-volume`** drops mute and the volume slider (touch

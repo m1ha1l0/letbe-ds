@@ -4451,6 +4451,13 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-table__stack   { display: flex; flex-direction: column; gap: var(--lb-size-0-5x); min-width: 0; }
 .lb-table__inline  { display: inline-flex; align-items: center; gap: var(--lb-size-2x); min-width: 0; }
 .lb-table__caption { font-size: var(--lb-t-caption-m-font-size); line-height: var(--lb-t-caption-m-line-height); color: var(--lb-fg-muted); }
+/* The table's own <caption> (not .lb-table__caption, the muted sub-line
+   inside a cell): start-aligned above the table, default ink, the
+   cells' inline padding so it lines up with the first column. */
+.lb-table > caption { caption-side: top; text-align: start; padding: var(--lb-size-3x) var(--lb-size-4x); font-family: var(--lb-t-caption-m-font-family); font-size: var(--lb-t-caption-m-font-size); font-weight: var(--lb-t-caption-m-font-weight); line-height: var(--lb-t-caption-m-line-height); letter-spacing: var(--lb-t-caption-m-letter-spacing); color: var(--lb-fg-default); }
+/* Text tables (--text): reading tables with multi-line cells — every
+   cell top-aligned, so rows read from their first line. */
+.lb-table--text .lb-table__cell { vertical-align: top; }
 .lb-table__truncate { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Empty state row — resets table cell chrome so the shared .lb-empty-state

@@ -443,6 +443,33 @@
       </table>
     </div>
 
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Caption and text tables</h2>
+    <p class="gallery-section__desc">A real <code class="lb-code">&lt;caption&gt;</code> inside <code class="lb-code">.lb-table</code> names the table: start-aligned above it, default ink, lined up with the first column (<code class="lb-code">.lb-table__caption</code> is something else, the muted sub-line inside a cell). Add <code class="lb-code">.lb-table--text</code> to a reading table with multi-line cells so every cell is top-aligned.</p>
+    <div class="lb-table-wrap">
+      <table class="lb-table lb-table--text">
+        <caption>Off the shelf or built in-house</caption>
+        <thead>
+          <tr>
+            <th class="lb-table__cell" scope="col">Question</th>
+            <th class="lb-table__cell" scope="col">Off the shelf</th>
+            <th class="lb-table__cell" scope="col">Built in-house</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="lb-table__cell">Time to first use</td>
+            <td class="lb-table__cell">Days. Configure, import the data, train the team.</td>
+            <td class="lb-table__cell">Weeks to months, depending on how many flows the first release covers and how much of the data needs cleaning first.</td>
+          </tr>
+          <tr>
+            <td class="lb-table__cell">Fit to the process</td>
+            <td class="lb-table__cell">The team adapts to the tool.</td>
+            <td class="lb-table__cell">The tool follows the process.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <!-- ────────────────── Cell content patterns ────────────────── -->
     <h2 class="gallery-section__title">Cell content — slots</h2>
     <p class="gallery-section__desc">Cells accept any component. Below: avatar + text stack, icon + text, badge, chip, switch, input, link. Wrap grouped content with <code class="lb-code">.lb-table__stack</code> (vertical) or <code class="lb-code">.lb-table__inline</code> (horizontal) helpers. Secondary text uses <code class="lb-code">.lb-table__caption</code>.</p>
