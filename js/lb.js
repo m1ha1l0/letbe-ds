@@ -295,7 +295,10 @@ const LB = (() => {
       update(clientX, clientY) {
         delta = 0;
         if (scroller) {
-          const r = scroller.getBoundingClientRect();
+          // The page scroller's edges are the viewport's, not its box's.
+          const r = scroller === document.scrollingElement
+            ? { left: 0, top: 0, right: window.innerWidth, bottom: window.innerHeight }
+            : scroller.getBoundingClientRect();
           const pos = axis === 'x' ? clientX : clientY;
           const lo = axis === 'x' ? r.left : r.top;
           const hi = axis === 'x' ? r.right : r.bottom;

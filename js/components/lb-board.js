@@ -33,9 +33,16 @@
       };
       this.el.addEventListener('click', this._onClick);
       // Capture runs before LB.Menu opens the panel from the trigger.
+      // Rebuilding the move group here also picks up a lane rename or a
+      // switch to/from .lb-board--stacked (the arrows' direction).
       this._onKebabOpen = (e) => {
         const trigger = e.target.closest && e.target.closest('.lb-board__card-kebab .lb-menu__trigger');
-        if (trigger && this.el.contains(trigger)) this._syncSeparator(trigger.parentElement.querySelector('ul.lb-menu'));
+        if (!trigger || !this.el.contains(trigger)) return;
+        const card = trigger.closest('[data-lb-board-card]');
+        const col = card && card.closest('[data-lb-board-column]');
+        if (card && col && trigger.getAttribute('aria-expanded') !== 'true') {
+          this._ensureKebab(card, this.columns().map((c) => this.columnName(c)), this.columnName(col));
+        }
       };
       this.el.addEventListener('click', this._onKebabOpen, true);
       this._enableDrag();
@@ -109,10 +116,21 @@
             const sibs = this.cards(col).filter((c) => c !== card);
             const cur = this.cards(col).indexOf(card);
             const next = cur + dir;
-            if (next < 0 || next > sibs.length) return;
-            const body = this.columnBody(col);
-            if (next >= sibs.length) body.appendChild(card);
-            else body.insertBefore(card, sibs[next]);
+            if (next < 0 || next > sibs.length) {
+              // Stacked lanes sit one under the other: past the first or
+              // last card, ↑↓ carry the card into the lane above or below.
+              if (!this.el.classList.contains('lb-board--stacked')) return;
+              const cols = this.columns();
+              const target = cols[cols.indexOf(col) + dir];
+              if (!target) return;
+              const tb = this.columnBody(target);
+              if (dir > 0) tb.insertBefore(card, this.cards(target)[0] || null);
+              else tb.appendChild(card);
+            } else {
+              const body = this.columnBody(col);
+              if (next >= sibs.length) body.appendChild(card);
+              else body.insertBefore(card, sibs[next]);
+            }
           }
           this.refresh();
           card.focus();
@@ -132,6 +150,13 @@
        WCAG 2.5.7 role); long-press touch drag is a future slice. */
     _enableDrag() {
       const LBg = window.LB;
+      const scrollParentY = (el) => {
+        for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+          const oy = getComputedStyle(p).overflowY;
+          if ((oy === 'auto' || oy === 'scroll') && p.scrollHeight > p.clientHeight) return p;
+        }
+        return document.scrollingElement;
+      };
       if (!LBg || !LBg.pointerDrag || !LBg.edgeAutoScroll) return;
 
       const columnAt = (x, y) => this.columns().find((c) => {
@@ -173,6 +198,10 @@
           const reEval = () => { if (ctx.card) evaluateDrop(ctx.lastX, ctx.lastY, ctx.card); };
           ctx.railAuto = LBg.edgeAutoScroll({ scroller: this.el, axis: 'x', onTick: reEval });
           ctx.bodyAuto = LBg.edgeAutoScroll({ onTick: reEval });
+          // Stacked lanes grow instead of scrolling: the panel or page
+          // around the board is what scrolls near the top/bottom edge.
+          ctx.stacked = this.el.classList.contains('lb-board--stacked');
+          if (ctx.stacked) ctx.bodyAuto.setScroller(scrollParentY(this.el));
         },
         onMove: (e, ctx) => {
           if (!ctx.card) return;
@@ -180,7 +209,7 @@
           ctx.lastY = e.clientY;
           const col = evaluateDrop(e.clientX, e.clientY, ctx.card);
           ctx.railAuto.update(e.clientX, e.clientY);
-          if (col) ctx.bodyAuto.setScroller(this.columnBody(col));
+          if (col && !ctx.stacked) ctx.bodyAuto.setScroller(this.columnBody(col));
           ctx.bodyAuto.update(e.clientX, e.clientY);
         },
         onEnd: (e, ctx) => {

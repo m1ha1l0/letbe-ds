@@ -117,6 +117,50 @@
       </div>
     </div>
 
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Stacked — <code class="lb-code">.lb-board--stacked</code></h2>
+    <p class="gallery-section__desc">Lanes in a column at full width, for a side panel or a phone. Lanes grow with their cards instead of scrolling on their own, so the panel or page around the board scrolls, and drag auto-scroll follows it. The move arrows point up and down, and with the keyboard <kbd>↑</kbd> <kbd>↓</kbd> carry a grabbed card past the end of its lane into the next one. The first card's menu also shows a page item: <strong>Rename</strong> sits in the card markup, and the board keeps it after a separator below its own "Move to" group.</p>
+    <div class="gallery-row" style="display: block; max-width: 22rem;">
+    <div class="lb-board lb-board--stacked" data-lb-board>
+      <div class="lb-board__column" data-lb-board-column="To do">
+        <div class="lb-board__column-header">
+          <span class="lb-board__column-title">To do</span>
+          <span class="lb-badge lb-badge--default lb-badge--small" data-lb-board-count>0</span>
+        </div>
+        <div class="lb-board__column-body">
+          <div class="lb-card lb-card--sm lb-card--interactive lb-board__card" data-lb-board-card tabindex="0">
+            <div class="lb-card__body">
+              <div class="lb-board__card-row"><span class="lb-board__card-title">Write the onboarding copy</span><div class="lb-menu-wrapper lb-board__card-kebab" data-lb-menu><button type="button" class="lb-menu__trigger lb-icon-btn lb-icon-btn--ghost lb-icon-btn--small" aria-label="Card actions"><span class="lb-icon-btn__icon" aria-hidden="true" data-lb-icon="more-vertical"></span></button><ul class="lb-menu lb-list"><li><button type="button" class="lb-list__item"><span class="lb-list__icon" aria-hidden="true" data-lb-icon="pencil"></span><span class="lb-list__label">Rename</span></button></li></ul></div></div>
+              <div class="lb-board__card-meta"><span class="lb-badge lb-badge--default lb-badge--small">content</span></div>
+            </div>
+            <div class="lb-card__footer lb-card__footer--spread"><span class="lb-avatar lb-avatar--small" role="img" aria-label="Mia Ross" data-lb-initials="MR"></span><span class="lb-board__card-due">Oct 3</span></div>
+          </div>
+          <div class="lb-card lb-card--sm lb-card--interactive lb-board__card" data-lb-board-card tabindex="0">
+            <div class="lb-card__body">
+              <div class="lb-board__card-row"><span class="lb-board__card-title">Review the pricing table</span></div>
+              <div class="lb-board__card-meta"><span class="lb-badge lb-badge--default lb-badge--small">review</span></div>
+            </div>
+            <div class="lb-card__footer lb-card__footer--spread"><span class="lb-avatar lb-avatar--small" role="img" aria-label="Jon Lee" data-lb-initials="JL"></span><span class="lb-board__card-due">Oct 5</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="lb-board__column" data-lb-board-column="Done">
+        <div class="lb-board__column-header">
+          <span class="lb-board__column-title">Done</span>
+          <span class="lb-badge lb-badge--default lb-badge--small" data-lb-board-count>0</span>
+        </div>
+        <div class="lb-board__column-body">
+          <div class="lb-card lb-card--sm lb-card--interactive lb-board__card" data-lb-board-card tabindex="0">
+            <div class="lb-card__body">
+              <div class="lb-board__card-row"><span class="lb-board__card-title">Set up the project board</span></div>
+              <div class="lb-board__card-meta"><span class="lb-badge lb-badge--default lb-badge--small">setup</span></div>
+            </div>
+            <div class="lb-card__footer lb-card__footer--spread"><span class="lb-avatar lb-avatar--small" role="img" aria-label="Sam Kim" data-lb-initials="SK"></span><span class="lb-board__card-due">Sep 28</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Card anatomy — the property vocabulary</h2>
     <p class="gallery-section__desc">A board card is <strong>a title plus properties that render only when set</strong>. Every element below composes from existing pieces — cover (<code class="lb-code">.lb-card__media</code> + ratio variants), plain mono ID, priority badge, checklist progress (<code class="lb-code">.lb-progress-inline</code>), quiet icon+count stats, <code class="lb-code">.lb-avatar-group</code>, and <strong>due-date states</strong> (the one universally-shipped signal: <code class="lb-code">--overdue</code> danger · <code class="lb-code">--soon</code> warning · <code class="lb-code">--done</code> success — never red on completed cards — once work is done, a past due date is history, not a failure). The "In progress" column above also demos the <strong>advisory WIP limit</strong> (<code class="lb-code">data-lb-board-wip</code> — it communicates, never blocks; move a card in to see 3/2 flip to warning). Deliberate skips: watchers/votes, epic lozenges, inline editing, class-of-service card colors (labels carry that here), aging/time-in-status (needs data the DS doesn't own).</p>
     <div style="display: flex; flex-wrap: wrap; gap: var(--lb-size-4x); align-items: flex-start;">

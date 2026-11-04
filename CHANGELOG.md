@@ -78,6 +78,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 - **Tooltips keep to one line** (fix, visual): the bubble sits in a
   trigger-sized wrap, so it wrapped word by word ("Tooltip / on / top").
   It now takes `width: max-content` up to the existing 15rem cap.
+- **Stacked board** (new, value-deck board-stacked): `.lb-board--stacked`
+  puts the lanes in a column at full width, for side panels and phones.
+  Lanes grow instead of scrolling; drag auto-scroll follows the nearest
+  scrolling parent (`LB.edgeAutoScroll` now treats the page scroller's
+  edges as the viewport's); keyboard ↑↓ carry a grabbed card into the
+  lane above or below; move arrows point up/down. The move group is
+  rebuilt as a card menu opens, so switching the class at runtime needs
+  no `refresh()`.
+- Board lanes without a footer get a bottom inset (was 4px).
 
 ## [1.12.0] — 2026-11-04
 

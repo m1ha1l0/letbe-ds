@@ -10370,6 +10370,15 @@ button[aria-expanded="true"] [data-lb-icon="chevron-down"] { transform: rotate(1
 .lb-board__column-body { display: flex; flex-direction: column; gap: var(--lb-size-2x); padding: var(--lb-size-1x) var(--lb-size-3x); overflow-y: auto; min-height: var(--lb-size-16x); flex: 1; }
 .lb-board__column-footer { padding: var(--lb-size-2x) var(--lb-size-3x) var(--lb-size-3x); }
 .lb-board__column-footer .lb-btn { width: 100%; justify-content: flex-start; }
+/* Stacked: lanes in a column at full width, for side panels and phones.
+   Lanes grow with their cards instead of scrolling on their own, so the
+   panel or page around the board scrolls (drag auto-scroll follows it);
+   ↑↓ carry a grabbed card across lanes; move arrows point up/down. */
+.lb-board--stacked { flex-direction: column; align-items: stretch; overflow-x: visible; padding-bottom: 0; }
+.lb-board--stacked .lb-board__column { flex: none; max-height: none; }
+.lb-board--stacked .lb-board__column-body { overflow-y: visible; }
+/* A lane without a footer still gets its bottom inset (same as the sides). */
+.lb-board__column-body:last-child { padding-bottom: var(--lb-size-3x); }
 
 /* Card recipe — fixed slots: body = title row (+ hover/focus-reveal
    kebab, media-card precedent) then labels; people + time live in the
