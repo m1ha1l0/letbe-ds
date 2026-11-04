@@ -689,3 +689,33 @@ body.gallery-ready { visibility: visible; }
         flex-wrap: wrap;
       }
     }
+
+    /* Keyboard layer (gallery-layout.js wireShortcuts). The sidebar search
+       shows the ⌘K / Ctrl K keycap while it is empty and unfocused, on
+       devices with a fine pointer only. */
+    .gallery-sidebar__search .lb-input-wrap { position: relative; }
+    .gallery-sidebar__kbd {
+      position: absolute;
+      inset-inline-end: var(--lb-size-2x);
+      top: 50%;
+      translate: 0 -50%;
+      display: inline-flex;
+      pointer-events: none;
+    }
+    /* Room for the keycap so the placeholder never runs under it. */
+    .gallery-sidebar__search input:has(~ .gallery-sidebar__kbd) { padding-inline-end: var(--lb-size-16x); }
+    .gallery-sidebar__search input:focus ~ .gallery-sidebar__kbd,
+    .gallery-sidebar__search input:not(:placeholder-shown) ~ .gallery-sidebar__kbd { display: none; }
+    @media (pointer: coarse), (max-width: 768px) {
+      .gallery-sidebar__kbd { display: none; }
+      .gallery-sidebar__search input:has(~ .gallery-sidebar__kbd) { padding-inline-end: var(--lb-size-3x); }
+    }
+
+    /* Shortcuts dialog: the switch and its note under the list. */
+    .gallery-shortcuts__switch { margin-top: var(--lb-size-6x); }
+    .gallery-shortcuts__note {
+      margin: var(--lb-size-2x) 0 0;
+      font-size: var(--lb-t-body-s-font-size);
+      line-height: var(--lb-t-body-s-line-height);
+      color: var(--lb-fg-muted);
+    }

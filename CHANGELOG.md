@@ -5,6 +5,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Gallery keyboard layer (letbe.design).** ⌘K / Ctrl+K opens a command
+  palette built on `LB.CommandPalette`: recent pages, actions (theme
+  editor, dark or light, copy a theme link, export / copy / import theme
+  tokens, GitHub, shortcuts), the current page's sections and every page.
+  Single keys outside text fields: `/` search, `E` theme editor, `D` dark
+  or light, `[` `]` previous / next page, `?` the shortcuts dialog (with a
+  switch to turn single keys off, WCAG 2.1.4). Esc closes the theme
+  editor (`LetbeThemeEditor.isOpen()` added). Hints: a ⌘K keycap in the
+  sidebar search, `E` in the Theme Editor button's tooltip,
+  `aria-keyshortcuts` on the controls; nothing shows on touch screens.
 - **Kbd** (new, pure CSS): `<kbd class="lb-kbd">` — a mono keycap on
   the strong neutral fill for shortcut hints. The command palette footer
   now shares its recipe (no visual change).

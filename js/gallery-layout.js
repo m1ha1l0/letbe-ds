@@ -49,6 +49,13 @@
 
   const basePath = (p) => (BASE ? BASE + '/' : '') + p;
 
+  // Gallery actions shared by the header controls, the theme editor's
+  // buttons and the keyboard layer (filled in by wireHeader).
+  const actions = {};
+  // Shortcut labels follow the platform: ⌘ on Apple devices, Ctrl elsewhere.
+  const IS_APPLE = /Mac|iPhone|iPad|iPod/i.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '');
+  const MOD = IS_APPLE ? '⌘' : 'Ctrl';
+
   // ─── Fetch the meta ──
   async function loadMeta() {
     const res = await fetch(basePath('components/meta.json'), { cache: 'no-store' });
@@ -115,19 +122,22 @@
 
       <!-- Desktop: switch with label. Mobile: icon-only via CSS. -->
       <label class="lb-switch-wrap gallery-header__theme-toggle">
-        <input type="checkbox" class="lb-switch" role="switch" id="theme-toggle">
+        <input type="checkbox" class="lb-switch" role="switch" id="theme-toggle" aria-keyshortcuts="d">
         <span class="lb-switch__label">Dark</span>
       </label>
       <!-- Mobile-only: same theme toggle as an icon button. JS keeps
            the two in sync via the same #theme-toggle change handler. -->
-      <button type="button" class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium gallery-header__theme-icon-btn" id="theme-icon-btn" aria-label="Toggle dark mode">
+      <button type="button" class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium gallery-header__theme-icon-btn" id="theme-icon-btn" aria-label="Toggle dark mode" aria-keyshortcuts="d">
         <span class="lb-icon-btn__icon" data-lb-icon="moon"></span>
       </button>
 
-      <button type="button" class="lb-btn lb-btn--primary lb-btn--small gallery-header__edit-theme" id="theme-edit-btn" title="Open theme editor" aria-label="Open theme editor">
-        <span class="lb-btn__icon" aria-hidden="true" data-lb-icon="pencil"></span>
-        <span class="gallery-header__edit-theme-label">Theme Editor</span>
-      </button>
+      <span class="lb-tooltip-wrap" data-lb-tooltip>
+        <button type="button" class="lb-btn lb-btn--primary lb-btn--small gallery-header__edit-theme" id="theme-edit-btn" aria-label="Open theme editor" aria-keyshortcuts="e">
+          <span class="lb-btn__icon" aria-hidden="true" data-lb-icon="pencil"></span>
+          <span class="gallery-header__edit-theme-label">Theme Editor</span>
+        </button>
+        <span class="lb-tooltip lb-tooltip--bottom">Theme editor<span class="lb-tooltip__kbd">E</span></span>
+      </span>
     `;
     document.body.insertBefore(hdr, document.body.firstChild);
   }
@@ -169,7 +179,8 @@
       <div class="gallery-sidebar__search" data-lb-clearable>
         <div class="lb-input-wrap">
           <span class="lb-input-wrap__icon lb-input-wrap__icon--start" aria-hidden="true" data-lb-icon="search"></span>
-          <input id="gallery-sidebar-search" class="lb-input lb-input--small lb-input--has-start" type="search" placeholder="Search letbe-ds" aria-label="Search letbe-ds component list" autocomplete="off">
+          <input id="gallery-sidebar-search" class="lb-input lb-input--small lb-input--has-start" type="search" placeholder="Search" aria-label="Search letbe-ds component list" aria-keyshortcuts="/" autocomplete="off">
+          <span class="gallery-sidebar__kbd" aria-hidden="true"><kbd class="lb-kbd">${MOD}</kbd><kbd class="lb-kbd">K</kbd></span>
         </div>
       </div>
     `;
@@ -275,6 +286,7 @@
     // Initialize from current attribute (set by the preamble in <head>)
     const initialDark = document.documentElement.getAttribute('data-theme') === 'dark';
     setDarkMode(initialDark);
+    actions.toggleDark = () => setDarkMode(document.documentElement.getAttribute('data-theme') !== 'dark');
 
     if (themeToggle) {
       themeToggle.addEventListener('change', () => setDarkMode(themeToggle.checked));
@@ -288,11 +300,9 @@
 
     // Theme edit
     const editBtn = document.getElementById('theme-edit-btn');
-    if (editBtn) {
-      editBtn.addEventListener('click', () => {
-        if (window.LetbeThemeEditor) window.LetbeThemeEditor.toggle();
-      });
-    }
+    actions.toggleEditor = () => { if (window.LetbeThemeEditor) window.LetbeThemeEditor.toggle(); };
+    actions.openEditor = () => { if (window.LetbeThemeEditor) window.LetbeThemeEditor.open(); };
+    if (editBtn) editBtn.addEventListener('click', actions.toggleEditor);
 
     // Import / Export — buttons live INSIDE the theme editor panel
     // (above the accordions). The panel is built lazily on first
@@ -301,102 +311,92 @@
     // lives in the page header so its DOM is always present.
     const fileInput = document.getElementById('token-file-input');
 
-    document.addEventListener('click', (e) => {
-      const importBtn = e.target.closest('#token-import-btn');
-      if (importBtn && fileInput) {
-        fileInput.click();
-        return;
+    // The editor's Export / Copy / Share buttons and the command palette
+    // run the same functions.
+    actions.importTokens = () => { if (fileInput) fileInput.click(); };
+    actions.exportTokens = async () => {
+      try {
+        const { json, applied, skipped } = await window.LetbeTokenExporter.buildExport();
+        const timestamp = new Date().toISOString().split('T')[0];
+        const filename = `letbe-tokens-${timestamp}.json`;
+        window.LetbeTokenExporter.downloadJson(json, filename);
+        let msg = `Exported ${filename}`;
+        if (applied.length > 0) msg += ` with ${applied.length} live override${applied.length === 1 ? '' : 's'}`;
+        if (skipped.length > 0) msg += ` (${skipped.length} non-mappable skipped)`;
+        getToast().show({ variant: 'success', title: 'Tokens exported', message: msg });
+        if (skipped.length > 0) console.warn('Exported — non-mappable overrides skipped:', skipped);
+      } catch (err) {
+        getToast().show({ variant: 'danger', title: 'Export failed', message: err.message });
+        console.error(err);
       }
-      const exportBtn = e.target.closest('#token-export-btn');
-      if (exportBtn) {
-        (async () => {
-          try {
-            const { json, applied, skipped } = await window.LetbeTokenExporter.buildExport();
-            const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `letbe-tokens-${timestamp}.json`;
-            window.LetbeTokenExporter.downloadJson(json, filename);
-            let msg = `Exported ${filename}`;
-            if (applied.length > 0) msg += ` with ${applied.length} live override${applied.length === 1 ? '' : 's'}`;
-            if (skipped.length > 0) msg += ` (${skipped.length} non-mappable skipped)`;
-            getToast().show({ variant: 'success', title: 'Tokens exported', message: msg });
-            if (skipped.length > 0) console.warn('Exported — non-mappable overrides skipped:', skipped);
-          } catch (err) {
-            getToast().show({ variant: 'danger', title: 'Export failed', message: err.message });
-            console.error(err);
-          }
-        })();
-        return;
-      }
+    };
 
-      // ── Copy / Paste — the clipboard round-trip (no file dance) ──
-      const applyPastedTheme = (text, quiet) => {
-        try {
-          const json = JSON.parse(text);
-          if (!json || typeof json !== 'object' || Array.isArray(json)) throw new Error('Not a token JSON object.');
-          if (!window.LetbeThemeEditor.isReady()) throw new Error('Editor still loading — try again in a second.');
-          window.LetbeThemeEditor.importJson(json);
-          getToast().show({ variant: 'success', title: 'Theme applied', message: 'Pasted JSON is the new baseline — tweak or Export as usual.' });
-          return true;
-        } catch (err) {
-          if (!quiet) getToast().show({ variant: 'danger', title: 'Paste failed', message: err.message });
-          return false;
+    // ── Copy / Paste — the clipboard round-trip (no file dance) ──
+    const applyPastedTheme = (text, quiet) => {
+      try {
+        const json = JSON.parse(text);
+        if (!json || typeof json !== 'object' || Array.isArray(json)) throw new Error('Not a token JSON object.');
+        if (!window.LetbeThemeEditor.isReady()) throw new Error('Editor still loading — try again in a second.');
+        window.LetbeThemeEditor.importJson(json);
+        getToast().show({ variant: 'success', title: 'Theme applied', message: 'Pasted JSON is the new baseline — tweak or Export as usual.' });
+        return true;
+      } catch (err) {
+        if (!quiet) getToast().show({ variant: 'danger', title: 'Paste failed', message: err.message });
+        return false;
+      }
+    };
+
+    actions.copyTheme = async () => {
+      try {
+        const { json } = await window.LetbeTokenExporter.buildExport();
+        const text = JSON.stringify(json, null, 2);
+        let ok = false;
+        try { await navigator.clipboard.writeText(text); ok = true; } catch (_) { /* fall through */ }
+        if (!ok) {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          ok = document.execCommand('copy');
+          ta.remove();
         }
-      };
-
-      const copyBtn = e.target.closest('#token-copy-btn');
-      if (copyBtn) {
-        (async () => {
-          try {
-            const { json } = await window.LetbeTokenExporter.buildExport();
-            const text = JSON.stringify(json, null, 2);
-            let ok = false;
-            try { await navigator.clipboard.writeText(text); ok = true; } catch (_) { /* fall through */ }
-            if (!ok) {
-              const ta = document.createElement('textarea');
-              ta.value = text;
-              ta.style.position = 'fixed';
-              ta.style.opacity = '0';
-              document.body.appendChild(ta);
-              ta.select();
-              ok = document.execCommand('copy');
-              ta.remove();
-            }
-            if (!ok) throw new Error('Clipboard is unavailable in this browser context.');
-            getToast().show({ variant: 'success', title: 'Theme copied', message: `${Math.max(1, Math.round(text.length / 1024))} KB of JSON on the clipboard.` });
-          } catch (err) {
-            getToast().show({ variant: 'danger', title: 'Copy failed', message: err.message });
-          }
-        })();
-        return;
+        if (!ok) throw new Error('Clipboard is unavailable in this browser context.');
+        getToast().show({ variant: 'success', title: 'Theme copied', message: `${Math.max(1, Math.round(text.length / 1024))} KB of JSON on the clipboard.` });
+      } catch (err) {
+        getToast().show({ variant: 'danger', title: 'Copy failed', message: err.message });
       }
-
-      const shareBtn = e.target.closest('#token-share-btn');
-      if (shareBtn) {
-        (async () => {
-          try {
-            const { url, bytes, isDefault } = window.LetbeThemeEditor.buildShareLink();
-            let ok = false;
-            try { await navigator.clipboard.writeText(url); ok = true; } catch (_) { /* fallback */ }
-            if (!ok) {
-              const ta = document.createElement('textarea');
-              ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
-              document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
-            }
-            if (!ok) throw new Error('Clipboard is unavailable in this browser context.');
-            getToast().show({
-              variant: 'neutral',
-              title: isDefault ? 'Link copied — default theme' : 'Theme link copied',
-              message: isDefault
-                ? 'You have no changes yet; this link opens the factory theme. Tweak something and share again.'
-                : `Send it to anyone — the link opens the gallery with your theme applied (${Math.max(1, Math.round(bytes / 1024))} KB, nothing stored on a server).`,
-              action: { label: 'Open', onClick: () => window.open(url, '_blank', 'noopener') },
-            });
-          } catch (err) {
-            getToast().show({ variant: 'danger', title: 'Share failed', message: err.message });
-          }
-        })();
-        return;
+    };
+    actions.shareTheme = async () => {
+      try {
+        const { url, bytes, isDefault } = window.LetbeThemeEditor.buildShareLink();
+        let ok = false;
+        try { await navigator.clipboard.writeText(url); ok = true; } catch (_) { /* fallback */ }
+        if (!ok) {
+          const ta = document.createElement('textarea');
+          ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
+        }
+        if (!ok) throw new Error('Clipboard is unavailable in this browser context.');
+        getToast().show({
+          variant: 'neutral',
+          title: isDefault ? 'Link copied — default theme' : 'Theme link copied',
+          message: isDefault
+            ? 'You have no changes yet; this link opens the factory theme. Tweak something and share again.'
+            : `Send it to anyone — the link opens the gallery with your theme applied (${Math.max(1, Math.round(bytes / 1024))} KB, nothing stored on a server).`,
+          action: { label: 'Open', onClick: () => window.open(url, '_blank', 'noopener') },
+        });
+      } catch (err) {
+        getToast().show({ variant: 'danger', title: 'Share failed', message: err.message });
       }
+    };
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('#token-import-btn')) { actions.importTokens(); return; }
+      if (e.target.closest('#token-export-btn')) { actions.exportTokens(); return; }
+      if (e.target.closest('#token-copy-btn')) { actions.copyTheme(); return; }
+      if (e.target.closest('#token-share-btn')) { actions.shareTheme(); return; }
 
       const pasteBtn = e.target.closest('#token-paste-btn');
       if (pasteBtn) {
@@ -523,6 +523,185 @@
         }
       });
     }
+  }
+
+  // ─── Keyboard layer (desktop) ──
+  // ⌘K / Ctrl+K opens a command palette built on the DS's own
+  // LB.CommandPalette: recent pages, actions, the current page's
+  // sections and every gallery page. Single keys — / search, E theme
+  // editor, D dark mode, [ ] previous / next page, ? shortcuts — fire
+  // only outside text fields and can be switched off in the shortcuts
+  // dialog (WCAG 2.1.4, character-key shortcuts); everything they do is
+  // also in the palette. Esc closes the theme editor. On the Command
+  // Palette page the demo keeps ⌘K, so the gallery palette stays out.
+  const SINGLE_KEYS_KEY = 'letbe-ds-single-key-shortcuts';
+  const RECENT_KEY = 'letbe-ds-recent-pages';
+  const singleKeysOn = () => { try { return localStorage.getItem(SINGLE_KEYS_KEY) !== '0'; } catch { return true; } };
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const keys = (...k) => k.map((x) => `<kbd class="lb-kbd">${esc(x)}</kbd>`).join('');
+
+  function wireShortcuts(data) {
+    const order = data.groups.flatMap((g) => g.items).filter((id) => data.items[id]);
+    const goTo = (id) => { window.location.href = basePath(id + '/'); };
+
+    // Recent pages (this one first, up to 5)
+    let recent = [];
+    try { recent = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]').filter((id) => data.items[id]); } catch {}
+    if (PAGE_ID && data.items[PAGE_ID]) {
+      try { localStorage.setItem(RECENT_KEY, JSON.stringify([PAGE_ID, ...recent.filter((id) => id !== PAGE_ID)].slice(0, 5))); } catch {}
+    }
+
+    // ── Shortcuts dialog (?) — Modal + the settings shortcut list + a switch
+    const shortcuts = [
+      ['Search and commands', keys(MOD, 'K')],
+      ['Focus the sidebar search', keys('/') + ' or ' + keys(MOD, '/')],
+      ['Open or close the theme editor', keys('E')],
+      ['Dark or light', keys('D')],
+      ['Previous or next page', keys('[') + ' ' + keys(']')],
+      ['Show these shortcuts', keys('?')],
+      ['Close the editor or a dialog', keys('Esc')],
+    ];
+    const help = document.createElement('div');
+    help.className = 'lb-modal-backdrop';
+    help.id = 'gallery-shortcuts';
+    help.setAttribute('data-lb-modal', '');
+    help.setAttribute('role', 'dialog');
+    help.setAttribute('aria-modal', 'true');
+    help.setAttribute('aria-labelledby', 'gallery-shortcuts-title');
+    help.style.display = 'none';
+    help.innerHTML = `
+      <div class="lb-modal lb-modal--medium">
+        <div class="lb-modal__header">
+          <div class="lb-modal__header-title"><h3 class="lb-modal__title" id="gallery-shortcuts-title">Keyboard shortcuts</h3></div>
+          <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-modal__close" type="button" aria-label="Close"><span data-lb-icon="x"></span></button>
+        </div>
+        <div class="lb-modal__body">
+          <dl class="lb-settings-kbd-list">${shortcuts.map(([label, k]) => `<dt>${esc(label)}</dt><dd>${k}</dd>`).join('')}</dl>
+          <label class="lb-switch-wrap gallery-shortcuts__switch">
+            <input type="checkbox" class="lb-switch" role="switch" id="gallery-single-keys"${singleKeysOn() ? ' checked' : ''}>
+            <span class="lb-switch__label">Single-key shortcuts</span>
+          </label>
+          <p class="gallery-shortcuts__note">Turn them off if they get in the way of a screen reader or speech input. ${keys(MOD, 'K')} and ${keys(MOD, '/')} keep working.</p>
+        </div>
+      </div>`;
+    document.body.appendChild(help);
+    help.querySelector('#gallery-single-keys').addEventListener('change', (e) => {
+      try { localStorage.setItem(SINGLE_KEYS_KEY, e.target.checked ? '1' : '0'); } catch {}
+    });
+    const openHelp = () => LB.Modal.open(help);
+
+    // ── Command palette (⌘K)
+    if (PAGE_ID !== 'command-palette') {
+      const headings = Array.from(document.querySelectorAll('.gallery-main h2.gallery-section__title'));
+      const item = (value, icon, label, hint) =>
+        `<li class="lb-list__item" data-lb-value="${esc(value)}"><span class="lb-list__icon" aria-hidden="true" data-lb-icon="${icon}"></span><span class="lb-list__label">${esc(label)}</span>${hint ? `<span class="lb-list__hint">${hint}</span>` : ''}</li>`;
+      const group = (label, items) => items.length ? `<li class="lb-cmdk__group-label" role="separator" aria-hidden="true">${esc(label)}</li>${items.join('')}` : '';
+      const pageItem = (id) => item('page:' + id, 'file-text', data.items[id].name);
+      const sections = [
+        group('Recent', recent.filter((id) => id !== PAGE_ID).map(pageItem)),
+        group('Actions', [
+          item('act:editor', 'palette', 'Open the theme editor', keys('E')),
+          item('act:dark', 'moon', 'Switch dark or light', keys('D')),
+          item('act:share', 'link', 'Copy a link to this theme'),
+          item('act:export', 'download', 'Export theme tokens (JSON)'),
+          item('act:copy', 'copy', 'Copy theme JSON'),
+          item('act:import', 'upload', 'Import theme tokens'),
+          item('act:github', 'github', 'View the source on GitHub'),
+          item('act:help', 'keyboard', 'Keyboard shortcuts', keys('?')),
+        ]),
+        group('On this page', headings.map((h, i) => item('section:' + i, 'hash', h.textContent.trim()))),
+        ...data.groups.map((g) => group(g.name, g.items.filter((id) => data.items[id]).map(pageItem))),
+      ];
+      const cmdk = document.createElement('div');
+      cmdk.className = 'lb-cmdk-backdrop';
+      cmdk.id = 'gallery-cmdk';
+      cmdk.setAttribute('data-lb-cmdk', '');
+      cmdk.hidden = true;
+      cmdk.innerHTML = `
+        <div class="lb-cmdk" role="dialog" aria-modal="true" aria-label="Search and commands">
+          <div class="lb-cmdk__search-wrap">
+            <div class="lb-input-wrap" style="flex: 1;">
+              <span class="lb-input-wrap__icon lb-input-wrap__icon--start" aria-hidden="true" data-lb-icon="search"></span>
+              <input class="lb-input lb-input--medium lb-input--has-start lb-cmdk__search" type="search" placeholder="Search pages and commands" autocomplete="off" style="border: none; background: transparent; padding-right: var(--lb-size-3x);">
+            </div>
+            <kbd class="lb-cmdk__escape-hint" aria-hidden="true">Esc</kbd>
+          </div>
+          <div class="lb-cmdk__results">
+            <ul class="lb-list" data-lb-list data-lb-list-mode="single" aria-label="Pages and commands">${sections.join('')}</ul>
+          </div>
+          <div class="lb-cmdk__footer">
+            <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+            <span><kbd>↵</kbd> to open</span>
+            <span><kbd>Esc</kbd> to close</span>
+          </div>
+        </div>`;
+      document.body.appendChild(cmdk);
+      cmdk.addEventListener('lb-cmdk-select', (e) => {
+        const v = String((e.detail && e.detail.value) || '');
+        if (v.startsWith('page:')) { goTo(v.slice(5)); return; }
+        if (v.startsWith('section:')) {
+          const h = headings[+v.slice(8)];
+          if (h) {
+            if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1');
+            h.scrollIntoView({ block: 'start' });
+            h.focus({ preventScroll: true });
+          }
+          return;
+        }
+        const act = {
+          'act:editor': actions.openEditor,
+          'act:dark': actions.toggleDark,
+          'act:share': actions.shareTheme,
+          'act:export': actions.exportTokens,
+          'act:copy': actions.copyTheme,
+          'act:import': actions.importTokens,
+          'act:github': () => window.open('https://github.com/m1ha1l0/letbe-ds', '_blank', 'noopener'),
+          // After the palette has handed focus back, so the dialog's
+          // own focus return lands on the page, not the palette.
+          'act:help': () => setTimeout(openHelp, 0),
+        }[v];
+        if (act) act();
+      });
+    }
+
+    // ── Single keys + Esc
+    const editable = (t) => t && t.closest && t.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]');
+    const inOverlay = (t) => t && t.closest && t.closest('[data-lb-modal], .lb-cmdk-backdrop');
+    document.addEventListener('keydown', (e) => {
+      if (e.defaultPrevented || e.isComposing) return;
+      const editor = window.LetbeThemeEditor;
+
+      if (e.key === 'Escape') {
+        // Close the theme editor — unless a dialog, palette or an open
+        // picker inside the editor owns this Esc.
+        if (!editor || !editor.isOpen || !editor.isOpen() || inOverlay(e.target)) return;
+        const panel = document.querySelector('.theme-editor--open');
+        if (panel && panel.querySelector('[aria-haspopup][aria-expanded="true"], [role="combobox"][aria-expanded="true"]')) return;
+        const focusInside = panel && panel.contains(document.activeElement);
+        editor.close();
+        if (focusInside) { const btn = document.getElementById('theme-edit-btn'); if (btn) btn.focus(); }
+        return;
+      }
+
+      if (!singleKeysOn() || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (editable(e.target) || inOverlay(e.target)) return;
+      const i = order.indexOf(PAGE_ID);
+      switch (e.key) {
+        case '/': {
+          const search = document.getElementById('gallery-sidebar-search');
+          if (!search || !search.offsetParent) return;
+          e.preventDefault();
+          search.focus();
+          search.select();
+          return;
+        }
+        case 'e': case 'E': e.preventDefault(); actions.toggleEditor(); return;
+        case 'd': case 'D': e.preventDefault(); actions.toggleDark(); return;
+        case '[': if (i > 0) { e.preventDefault(); goTo(order[i - 1]); } return;
+        case ']': if (i < order.length - 1) { e.preventDefault(); goTo(order[i + 1]); } return;
+        case '?': e.preventDefault(); openHelp(); return;
+      }
+    });
   }
 
   // ─── Code-snippet display ──
@@ -776,6 +955,7 @@
       buildSidebar(data);
       wireSidebar();
       wireHeader();
+      wireShortcuts(data);
       // Hydrate [data-lb-icon] elements in the injected header + sidebar,
       // and re-run full init for any other DS components living inside them
       // (safe to call twice — each element stores its instance).

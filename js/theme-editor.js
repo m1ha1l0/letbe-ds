@@ -2859,6 +2859,7 @@ ${HELP_CONTENT}
     toggle,
     open:  () => { const p = ensurePanel(); p.classList.add('theme-editor--open'); _syncOpenState(p); },
     close: () => { if (!_panel) return; _panel.classList.remove('theme-editor--open'); _syncOpenState(_panel); },
+    isOpen: () => !!(_panel && _panel.classList.contains('theme-editor--open')),
     importJson,
     buildExportJson,
     buildShareLink,
