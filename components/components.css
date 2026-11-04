@@ -828,9 +828,12 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 
 /* Option-embedded checkbox visuals (List multi mode) are presentational —
    the option carries aria-selected; the input is disabled so it is not a
-   second control, and this reset keeps it from LOOKING disabled. */
+   second control, and this reset keeps it from LOOKING disabled. The
+   glyph takes the enabled checkbox's ink back (the box is the primary
+   fill), never the row's text colour, which equals that fill in themes
+   whose primary action is the default ink. */
 .lb-list__item .lb-checkbox--presentational:disabled { cursor: inherit; }
-.lb-list__item .lb-checkbox--presentational:disabled ~ .lb-checkbox__glyph[data-lb-icon] { color: currentColor; }
+.lb-list__item .lb-checkbox--presentational:disabled ~ .lb-checkbox__glyph[data-lb-icon] { color: var(--lb-action-fg-primary-default); }
 /* Reduced motion: the ring keeps turning — a frozen spinner reads as a
    hung control — but slows well below the rate that provokes discomfort. */
 @media (prefers-reduced-motion: reduce) {

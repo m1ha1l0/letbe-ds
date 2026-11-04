@@ -3,6 +3,19 @@
 All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.org/)
 — see "What counts as breaking" in the README before relying on an update.
 
+## [Unreleased]
+
+- **Fix: ticks visible in list checkboxes.** A selected Multi-Select row
+  painted its tick in the row's text colour, which equals the primary
+  fill in themes whose primary action is the default ink; the tick now
+  takes the checkbox's own ink (`--lb-action-fg-primary-default`).
+- **Fix: `lb-multi-select-change` bubbles**, like `lb-select-change` and
+  `lb-chip-toggle`, so one container listener hears every field.
+- **Fix: LB.Form focuses the first error in page order**, not in check
+  order (inputs, then phone, then pickers).
+- **Fix: the selected tab scrolls into a sideways-scrolled tab list**
+  (phones, arrow keys, deep links). Only the list scrolls, never the page.
+
 ## [1.4.0] — 2026-09-15
 
 Minor: two new pieces both mihailo consumers had to build at site

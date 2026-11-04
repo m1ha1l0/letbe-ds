@@ -324,8 +324,21 @@ const LB = (() => {
           this.panels[i].hidden = !active;
         }
       });
+      this._reveal(this.tabs[index]);
       if (this.onChange) this.onChange(this.tabs[index]?.id);
       this.el.dispatchEvent(new CustomEvent('lb-tab-change', { detail: { index, id: this.tabs[index]?.id } }));
+    }
+
+    // Bring the selected tab into a sideways-scrolled tab list (phones,
+    // arrow keys, deep links). Scrolls the list only — scrollIntoView would
+    // also scroll the page, and select() runs at init.
+    _reveal(tab) {
+      const list = this.tabList;
+      if (!tab || !list || list.scrollWidth <= list.clientWidth) return;
+      const l = list.getBoundingClientRect();
+      const t = tab.getBoundingClientRect();
+      if (t.left < l.left) list.scrollLeft += t.left - l.left;
+      else if (t.right > l.right) list.scrollLeft += t.right - l.right;
     }
 
     _onKeydown(e) {
@@ -5927,6 +5940,9 @@ const LB = (() => {
       });
 
       if (invalid.length) {
+        // Land on the first miss in reading order, not in check order
+        // (inputs, then phone, then pickers).
+        invalid.sort((x, y) => (x === y ? 0 : x.compareDocumentPosition(y) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
         const first = invalid[0];
         if (first.focus) first.focus({ preventScroll: true });
         if (first.scrollIntoView) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -7348,6 +7364,7 @@ const LB = (() => {
         this._values = new Set(selected.map((s) => s.value));
         this._renderPills();
         this.field.dispatchEvent(new CustomEvent('lb-multi-select-change', {
+          bubbles: true,
           detail: { values: [...this._values], toggled: value, item },
         }));
       });
@@ -7404,6 +7421,7 @@ const LB = (() => {
         }
       }
       this.field.dispatchEvent(new CustomEvent('lb-multi-select-change', {
+        bubbles: true,
         detail: { values: [...this._values], toggled: value },
       }));
     }
