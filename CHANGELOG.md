@@ -5,6 +5,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.12.0] — 2026-11-04
+
+Minor: the Kbd keycap component, and a keyboard layer on the gallery
+(⌘K command palette, single-key shortcuts with an off switch, Esc to
+close the theme editor). No new tokens.
+
 - **Gallery keyboard layer (letbe.design).** ⌘K / Ctrl+K opens a command
   palette built on `LB.CommandPalette`: recent pages, actions (theme
   editor, dark or light, copy a theme link, export / copy / import theme
