@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.11.0] — 2026-11-04
+
+Minor: completes the expressive motion tier with an exit curve and a
+stagger step (1 L1 + 2 L2 tokens, owner-approved). Motion change: the
+full-screen menu and modal close on the expressive exit; cascades step
+by 50ms. Plugin registration pending (PLUGIN-HANDOFF 37).
+
 - **Expressive tier completed** (new tokens, owner-approved). L1
   `--lb-ease-emphasized-accelerate` (0.3, 0, 0.8, 0.15) and L2
   `--lb-animation-ease-expressive-out`, the exit that pairs with
