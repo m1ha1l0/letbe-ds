@@ -32,7 +32,7 @@ Motion change: buttons now give a little under the pointer (off under
 reduced motion). No new tokens.
 
 - **Icon List** (new, pure CSS): a short content list where each line
-  starts with an icon (principles, plan features, pros and cons). The
+  starts with an icon (plan features, product features, pros and cons). The
   icon sits on the first line at the text's size and takes the text ink
   or a status ink (`__icon--success|warning|danger|muted`); sizes follow
   the type scale (default body-m, `--large` body-l, `--xlarge`

@@ -1159,7 +1159,7 @@ corner bound to the radius/interactive variable. Same session can
 delete the `.deprecated/*` old stepper masters the registry still
 carries. Plugin: nothing.
 
-### 37. Expressive motion tier — 3 new L1 + 3 new L2 tokens ⬜ PLUGIN (2026-11-04, owner-approved: "do it last")
+### 37. Expressive motion tier — 3 new L1 + 3 new L2 tokens ⬜ PLUGIN: re-import + 1 bug fix (2026-11-04, owner-approved: "do it last")
 
 From mihailo.net finding 24 (site motion.css carried its own expressive
 eases and 640/820 ms durations). Added to `tokens/source-tokens.json`,
@@ -1179,12 +1179,27 @@ allowed"; 700 is expressive only, never UI feedback). Bound in
 components.css by: the full-screen phone menu (fade + link stagger),
 the full-screen modal entry, scroll reveal, card media zoom.
 
-Plugin: register the 6 variables wherever the existing motion
-primitives/aliases are registered (same collection and naming as
-`duration.*`, `ease.*`, `animation.*`); the L2 entries are aliases to
-the L1 ones. If the plugin does not carry motion tokens at all, mark
-this 🟢 "no plugin action" and close it. Library: nothing (Figma
-prototypes don't bind motion variables).
+Plugin (checked read-only against letbe-tokens-figma main.js,
+2026-11-04):
+- **The 3 L1 tokens need no code change.** The plugin writes every
+  primitive into letbe/Core (`flattenTokens(primitives)`), so the next
+  import/push creates `duration/700`, `ease/emphasized` and
+  `ease/emphasized-decelerate` on its own.
+- **The 3 L2 tokens are not registered, and that is consistent:**
+  `semantic.animation` is not in `$schema.non_themed_groups`, so none of
+  the 11 existing `animation/*` aliases are in Figma either. Figma can't
+  bind motion to variables, so leave it unless the owner wants them
+  listed (then add `animation` to `non_themed_groups` in
+  source-tokens.json, a letbe-ds change, and re-import).
+- **Pre-existing plugin bug found while checking:** `tokenToFigmaValue`
+  converts `cubicBezier` only from an ARRAY (`[x1, y1, x2, y2]`), but
+  source-tokens.json stores every ease as a STRING
+  (`"cubic-bezier(0.2, 0, 0, 1)"`), so the fallback `[0, 0, 1, 1]`
+  writes every `ease/*` variable as linear. Fix in a plugin session:
+  keep a string value that already starts with `cubic-bezier(` as is
+  (or parse it). Affects the 5 existing eases and the 2 new ones.
+
+Library: nothing (Figma prototypes don't bind motion variables).
 
 ### 38. v1.5.0–v1.9.0 components and variants — library relay 🔵 LIBRARY (2026-11-04) — no plugin action, no new tokens
 

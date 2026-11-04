@@ -185,7 +185,7 @@
     },
     "description-list": {
       "name": "Description List",
-      "description": "Label and value rows on a native `<dl>` — case-study facts, spec sheets, profile details. Terms in the label role (muted), values in body ink. Layouts: stacked (default), `--inline` (term column beside the values, stacks on phones), `--grid` (div-grouped pairs side by side in auto-fit columns); `--large` sets values in heading-m, `--ruled` adds a rule above and below. Pure CSS, no roles added (screen readers read term/description pairs natively).",
+      "description": "Label and value rows on a native `<dl>` — order summaries, spec sheets, account details. Terms in the label role (muted), values in body ink. Layouts: stacked (default), `--inline` (term column beside the values, stacks on phones), `--grid` (div-grouped pairs side by side in auto-fit columns); `--large` sets values in heading-m, `--ruled` adds a rule above and below. Pure CSS, no roles added (screen readers read term/description pairs natively).",
       "usage": "`<dl class=\"lb-description-list\">` with `<dt class=\"lb-description-list__term\">` and one or more `<dd class=\"lb-description-list__details\">`; for `--grid` wrap each pair in a `<div>`. Custom properties: `--lb-description-list-term` (inline term column width), `--lb-description-list-min` (grid column floor)."
     },
     "divider": {
@@ -248,7 +248,7 @@
     },
     "icon-list": {
       "name": "Icon List",
-      "description": "A short content list where each line starts with an icon — principles, plan features, pros and cons. Not `.lb-list` (the interactive menu list). The icon sits on the item's first line at the text's own size (1lh box) and takes the text ink unless `__icon--success|warning|danger|muted` colours it. Sizes follow the type scale: default body-m, `--large` body-l, `--xlarge` heading-xl. Pure CSS; native `<ul>` semantics, decorative icons.",
+      "description": "A short content list where each line starts with an icon — plan features, product features, pros and cons. Not `.lb-list` (the interactive menu list). The icon sits on the item's first line at the text's own size (1lh box) and takes the text ink unless `__icon--success|warning|danger|muted` colours it. Sizes follow the type scale: default body-m, `--large` body-l, `--xlarge` heading-xl. Pure CSS; native `<ul>` semantics, decorative icons.",
       "usage": "`<ul class=\"lb-icon-list\">` of `<li class=\"lb-icon-list__item\"><span class=\"lb-icon-list__icon\" data-lb-icon=\"check\" aria-hidden=\"true\"></span><span>Text</span></li>`. When an icon carries meaning (pro/con), say it in the text or a `.lb-visually-hidden` word."
     },
     "input": {
