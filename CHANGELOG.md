@@ -5,6 +5,17 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.6.0] — 2026-11-04
+
+Minor: overlays and motion, from the mihailo.net and mihailo.ink
+findings. Modal, Sheet and the header drawer animate in and out on
+existing motion tokens, with the leaving classes as hooks; a full-screen
+modal and a full-screen phone menu; the lightbox gains open/close motion,
+a size glide between images, swipe and video. Motion change: dialogs now
+stay on screen for their exit (about 150ms) after `close()`; listen for
+`lb-modal-close` / `lb-sheet-close` instead of reading styles right after
+the call. No new tokens.
+
 - **Overlays animate in and out** (motion change). Modal: the backdrop
   fades and the dialog rises in on every open; `close()` adds
   `.lb-modal-backdrop--leaving`, waits for its exit (fade plus a short
