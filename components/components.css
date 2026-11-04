@@ -10371,9 +10371,14 @@ button[aria-expanded="true"] [data-lb-icon="chevron-down"] { transform: rotate(1
 .lb-board__card .lb-card__body { display: block; }
 .lb-board__card-row { display: flex; align-items: flex-start; gap: var(--lb-size-2x); }
 .lb-board__card-title { flex: 1; font-size: var(--lb-t-body-s-font-size); line-height: var(--lb-t-body-s-line-height); font-weight: var(--lb-font-weight-medium); color: var(--lb-fg-default); }
-.lb-board__card-kebab { opacity: 0; transition: opacity var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
-.lb-board__card:hover .lb-board__card-kebab,
-.lb-board__card:focus-within .lb-board__card-kebab { opacity: 1; }
+/* The kebab is the non-drag move path (WCAG 2.5.7): hover-reveal only
+   where a mouse can hover; touch screens always show it. */
+.lb-board__card-kebab { transition: opacity var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+@media (hover: hover) and (pointer: fine) {
+  .lb-board__card-kebab { opacity: 0; }
+  .lb-board__card:hover .lb-board__card-kebab,
+  .lb-board__card:focus-within .lb-board__card-kebab { opacity: 1; }
+}
 .lb-board__card-meta { display: flex; flex-wrap: wrap; gap: var(--lb-size-1x); margin-top: var(--lb-size-2x); }
 .lb-board__card-due { font-size: var(--lb-t-caption-s-font-size); color: var(--lb-fg-muted); white-space: nowrap; }
 /* Board cards run the footer more compact than the --sm default

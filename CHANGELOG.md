@@ -47,6 +47,25 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   open after choosing "Move to". Rows get `role="none"`, separators
   `role="separator"`.
 - The Color Picker's floating panel and Menu share one placement helper.
+- **Board: move icons** (fix, value-deck board-move-icon). The "Move to"
+  items asked for `corner-down-right`, which the icon set doesn't ship
+  (a 404 on every card menu). They now show where the card goes:
+  `arrow-left` / `arrow-right` by column order, `arrow-up` /
+  `arrow-down` on a stacked board.
+- **Board: page items in the card menu** (new behaviour, value-deck
+  board-menu-extend). The board rebuilt the whole card menu on every
+  refresh, wiping anything a page added. It now owns only its "Move to"
+  group (`data-lb-board-own`); items a page puts in the same menu, in
+  the card markup or appended later, stay after a separator and fire
+  `lb-menu-select` on the kebab wrapper.
+- **Board: no drag from form fields** (fix, value-deck board-field-drag).
+  A pointer down in a `textarea`, `select`, `label` or editable text on
+  a card no longer starts a drag (was only `button, a, input`).
+- **Board: card menu visible on touch** (fix, value-deck
+  board-kebab-touch). The kebab, the non-drag move path, was hidden
+  until hover on every device. It now hides only where a mouse can
+  hover (`(hover: hover) and (pointer: fine)`); touch screens always
+  show it.
 
 ## [1.12.0] — 2026-11-04
 

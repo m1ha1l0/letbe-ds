@@ -32,6 +32,12 @@
         if (card && target) this.moveCard(card, target);
       };
       this.el.addEventListener('click', this._onClick);
+      // Capture runs before LB.Menu opens the panel from the trigger.
+      this._onKebabOpen = (e) => {
+        const trigger = e.target.closest && e.target.closest('.lb-board__card-kebab .lb-menu__trigger');
+        if (trigger && this.el.contains(trigger)) this._syncSeparator(trigger.parentElement.querySelector('ul.lb-menu'));
+      };
+      this.el.addEventListener('click', this._onKebabOpen, true);
       this._enableDrag();
 
       // Keyboard grab-and-move (dnd-kit convention: Space/Enter picks
@@ -154,7 +160,9 @@
       LBg.pointerDrag(this.el, {
         onStart: (e, ctx) => {
           if (e.pointerType === 'touch') return false;
-          if (e.target.closest('button, a, input, .lb-menu-wrapper')) return false;
+          // Controls and editable text on a card keep their own pointer
+          // behaviour (caret, selection, open) instead of starting a drag.
+          if (e.target.closest('button, a, input, textarea, select, label, [contenteditable]:not([contenteditable="false"]), .lb-menu-wrapper')) return false;
           const card = e.target.closest('[data-lb-board-card]');
           if (!card || !this.el.contains(card)) return false;
           ctx.card = card;
@@ -264,6 +272,12 @@
       });
     }
 
+    /* The card menu: the board owns only its "Move to" group (marked
+       data-lb-board-own) and rebuilds it on every refresh. Items a page
+       puts in the same menu, in markup or later, are kept after a
+       separator; LB.Menu delegates item clicks, so they select and
+       close like the move items (listen for lb-menu-select). Arrows say
+       where the card goes: left/right, or up/down on a stacked board. */
     _ensureKebab(card, names, currentName) {
       let wrap = card.querySelector('.lb-board__card-kebab');
       if (!wrap) {
@@ -278,16 +292,39 @@
         row.appendChild(wrap);
       }
       const menu = wrap.querySelector('ul.lb-menu');
-      menu.innerHTML = names
+      menu.querySelectorAll(':scope > [data-lb-board-own]').forEach((li) => li.remove());
+      const stacked = this.el.classList.contains('lb-board--stacked');
+      const from = names.indexOf(currentName);
+      const moves = names
         .filter((n) => n !== currentName)
-        .map((n) =>
-          '<li><button type="button" class="lb-list__item" data-lb-board-move-to="' + n + '">'
-          + '<span class="lb-list__icon" aria-hidden="true" data-lb-icon="corner-down-right"></span>'
-          + '<span class="lb-list__label">Move to ' + n + '</span></button></li>'
-        ).join('');
+        .map((n) => {
+          const back = names.indexOf(n) < from;
+          const icon = stacked ? (back ? 'arrow-up' : 'arrow-down') : (back ? 'arrow-left' : 'arrow-right');
+          return '<li data-lb-board-own><button type="button" class="lb-list__item" data-lb-board-move-to="' + n + '">'
+            + '<span class="lb-list__icon" aria-hidden="true" data-lb-icon="' + icon + '"></span>'
+            + '<span class="lb-list__label">Move to ' + n + '</span></button></li>';
+        }).join('');
+      menu.insertAdjacentHTML('afterbegin', moves);
+      this._syncSeparator(menu);
       if (window.LB) {
         if (window.LB.init) window.LB.init(wrap.parentElement || wrap);
         if (window.LB.initIcons) window.LB.initIcons(wrap);
+      }
+    }
+
+    // One separator between the move group and the page's own items,
+    // only while there are page items. Re-checked as the menu opens, so
+    // items a page appends after a refresh get it too.
+    _syncSeparator(menu) {
+      const sep = menu.querySelector(':scope > .lb-list__separator[data-lb-board-own]');
+      const hasPageItems = Array.from(menu.children).some((li) => !li.hasAttribute('data-lb-board-own'));
+      if (hasPageItems && !sep) {
+        const lastMove = Array.from(menu.querySelectorAll(':scope > [data-lb-board-own]')).pop();
+        const html = '<li class="lb-list__separator" role="separator" data-lb-board-own></li>';
+        if (lastMove) lastMove.insertAdjacentHTML('afterend', html);
+        else menu.insertAdjacentHTML('afterbegin', html);
+      } else if (!hasPageItems && sep) {
+        sep.remove();
       }
     }
 
@@ -308,6 +345,7 @@
 
     destroy() {
       this.el.removeEventListener('click', this._onClick);
+      this.el.removeEventListener('click', this._onKebabOpen, true);
       this.el.removeEventListener('keydown', this._onKeydown);
       if (this._announcer) this._announcer.remove();
       if (this.el._lbBoard === this) delete this.el._lbBoard;
