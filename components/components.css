@@ -2579,6 +2579,22 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-modal--small  { max-width: 24rem; /* design-intent: modal small max-width */ }
 .lb-modal--medium { max-width: 36rem; /* design-intent: modal medium max-width */ }
 .lb-modal--large  { max-width: 52rem; /* design-intent: modal large max-width */ }
+/* Full screen — the dialog becomes the page: no card chrome, the page
+   surface, every screen size. Its header row is the site header's row
+   (same --lb-header-pad-y/-x and --lb-header-max as .lb-header__inner),
+   so the title sits on the brand and the 40px close lands exactly on the
+   header's 40px menu toggle. Body and footer follow the same column. */
+.lb-modal-backdrop:has(> .lb-modal--fullscreen) { padding: 0; }
+.lb-modal--fullscreen { max-width: none; height: 100vh; height: 100dvh; max-height: none; border: 0; border-radius: 0; box-shadow: none; background: var(--lb-surface-bg-default); }
+.lb-modal--fullscreen > .lb-modal__header { padding: var(--lb-header-pad-y, var(--lb-size-3x)) max(var(--lb-header-pad-x, var(--lb-size-6x)), (100% - var(--lb-header-max, 75rem)) / 2 + var(--lb-header-pad-x, var(--lb-size-6x))); border-bottom-color: var(--lb-surface-border-default); }
+.lb-modal--fullscreen > .lb-modal__body,
+.lb-modal--fullscreen > .lb-modal__footer { padding-inline: max(var(--lb-header-pad-x, var(--lb-size-6x)), (100% - var(--lb-header-max, 75rem)) / 2 + var(--lb-header-pad-x, var(--lb-size-6x))); }
+.lb-modal--fullscreen > .lb-modal__footer { border-top-color: var(--lb-surface-border-default); }
+@media (max-width: 768px) {
+  .lb-modal--fullscreen > .lb-modal__header { padding-inline: var(--lb-header-pad-x, var(--lb-size-4x)); }
+  .lb-modal--fullscreen > .lb-modal__body,
+  .lb-modal--fullscreen > .lb-modal__footer { padding-inline: var(--lb-header-pad-x, var(--lb-size-4x)); }
+}
 .lb-modal__header { display: flex; align-items: center; justify-content: space-between; padding: var(--lb-size-4x) var(--lb-size-6x); border-bottom: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); gap: var(--lb-size-3x); }
 .lb-modal__header-title { display: flex; align-items: center; gap: var(--lb-size-2x); flex: 1; min-width: 0; }
 .lb-modal__title { font-family: var(--lb-t-heading-m-font-family); font-size: var(--lb-t-heading-m-font-size); font-weight: var(--lb-t-heading-m-font-weight); line-height: var(--lb-t-heading-m-line-height); letter-spacing: var(--lb-t-heading-m-letter-spacing); color: var(--lb-fg-default); margin: 0; }

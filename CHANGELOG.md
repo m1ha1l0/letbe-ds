@@ -16,6 +16,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   exit, closes stay instant (Sheet's entry slide now honours it too).
   `isOpen()` on Modal and Sheet; re-opening mid-exit cancels the exit.
   `LB.alert` dialogs leave the DOM on every close path (Esc included).
+- **Full-screen modal** (`.lb-modal--fullscreen`): the dialog takes the
+  whole screen on every size, with no card chrome on the page surface.
+  Its header row is the site header's row (it reads `--lb-header-pad-y`,
+  `--lb-header-pad-x`, `--lb-header-max`), so the title sits on the brand
+  and the close on the menu toggle.
+- **Declarative modal opener**: `data-lb-modal-open="#id"` on any link or
+  button opens that modal, no page script; it gets
+  `aria-haspopup="dialog"`, focus returns to it on close, and modifier
+  clicks on links still open a new tab.
 
 ## [1.5.0] — 2026-11-04
 

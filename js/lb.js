@@ -491,6 +491,25 @@ const LB = (() => {
     }
   }
 
+  // Declarative opener: any element with data-lb-modal-open="#id" (or
+  // any selector) opens that modal on click — no page script. Modifier
+  // clicks on a link fall through to the browser (open in a new tab).
+  if (typeof document !== 'undefined') {
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest && e.target.closest('[data-lb-modal-open]');
+      if (!trigger) return;
+      if (trigger.tagName === 'A' && (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0)) return;
+      let target = null;
+      try { target = document.querySelector(trigger.getAttribute('data-lb-modal-open')); } catch (err) { /* bad selector */ }
+      if (!target || !target.matches('[data-lb-modal], .lb-modal-backdrop')) return;
+      e.preventDefault();
+      // Safari doesn't focus a clicked button: focus the trigger first so
+      // the modal returns focus to it on close.
+      if (document.activeElement !== trigger && trigger.focus) trigger.focus({ preventScroll: true });
+      Modal.open(target);
+    });
+  }
+
   // ─── ALERT DIALOG — convenience API ────────────────────────
   // Programmatic short-form for destructive confirmations. Builds an
   // alertdialog-structured modal DOM, opens it, and cleans up after
@@ -8820,6 +8839,9 @@ const LB = (() => {
     // Modals
     root.querySelectorAll('[data-lb-modal]').forEach((el) => {
       if (!el._lbModal) el._lbModal = new Modal(el);
+    });
+    root.querySelectorAll('[data-lb-modal-open]').forEach((el) => {
+      if (!el.hasAttribute('aria-haspopup')) el.setAttribute('aria-haspopup', 'dialog');
     });
 
     // Sheets

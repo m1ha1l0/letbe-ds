@@ -45,6 +45,35 @@
       </div>
     </div>
 
+    <!-- ────────────────── Full screen ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Full screen</h2>
+    <p class="gallery-section__desc">Add <code class="lb-code">.lb-modal--fullscreen</code> to the dialog for a form or flow that should take the whole screen on every size: no card chrome, the page surface, and a header row that is the site header's row (it reads <code class="lb-code">--lb-header-pad-y</code>, <code class="lb-code">--lb-header-pad-x</code> and <code class="lb-code">--lb-header-max</code>), so the close lands on the header's menu toggle. Open it from any link or button with <code class="lb-code">data-lb-modal-open="#id"</code> — no page script.</p>
+    <div class="gallery-row">
+      <button class="lb-btn lb-btn--primary lb-btn--medium" type="button" data-lb-modal-open="#demo-fullscreen">Get in touch</button>
+    </div>
+
+    <div class="lb-modal-backdrop" id="demo-fullscreen" data-lb-modal style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-title-fs">
+      <div class="lb-modal lb-modal--fullscreen">
+        <div class="lb-modal__header">
+          <div class="lb-modal__header-title"><h3 class="lb-modal__title" id="modal-title-fs">Get in touch</h3></div>
+          <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-modal__close" type="button" aria-label="Close"><span data-lb-icon="x"></span></button>
+        </div>
+        <div class="lb-modal__body">
+          <form style="display: flex; flex-direction: column; gap: var(--lb-size-4x); max-width: 32rem;" onsubmit="event.preventDefault(); document.getElementById('demo-fullscreen')._lbModal.close();">
+            <div class="lb-field">
+              <label class="lb-label" for="fs-name">Name</label>
+              <input class="lb-input lb-input--medium" id="fs-name" type="text" autocomplete="name">
+            </div>
+            <div class="lb-field">
+              <label class="lb-label" for="fs-message">Message</label>
+              <textarea class="lb-input lb-input--multiline" id="fs-message" rows="5"></textarea>
+            </div>
+            <div><button class="lb-btn lb-btn--primary lb-btn--medium" type="submit">Send</button></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- ────────────────── Alert dialog — programmatic ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Alert dialog — programmatic <code class="lb-code">LB.alert()</code></h2>
     <p class="gallery-section__desc"><strong>Alert dialog</strong> is the focused confirmation variant — for destructive or irreversible actions (delete, discard, revoke, force-logout). Smaller and more pointed than a general-purpose Modal: one question, two buttons, no X to close by mistake. ARIA role <code class="lb-code">alertdialog</code> (not <code class="lb-code">dialog</code>) so screen readers announce it as a blocking alert. Backdrop click does not dismiss while the dialog carries <code class="lb-code">.lb-modal--alert</code> — users must pick.</p>
