@@ -696,11 +696,68 @@ const LB = (() => {
       this.root.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') this.close();
       });
+      this.peek = !!this.sheet && this.sheet.classList.contains('lb-sheet--peek');
+      if (this.peek) this._initPeek();
+    }
+
+    // Peek (.lb-sheet--peek on a bottom sheet): the sheet never leaves.
+    // Collapsed, only its .lb-sheet__bar shows, docked at the bottom, and
+    // the page stays fully usable — no scrim, no focus trap, no scroll
+    // lock, the body is inert. open() expands it as a modal (scrim, focus
+    // kept inside, page locked, Esc or the scrim collapses); close()
+    // slides it back down to the bar and puts focus on the bar.
+    _initPeek() {
+      this.bar = this.sheet.querySelector('.lb-sheet__bar');
+      this.body = this.sheet.querySelector('.lb-sheet__body');
+      this.root.classList.add('lb-sheet-root--peek');
+      this.root.style.display = '';
+      if (this.body) this.body.inert = true;
+      if (!this.bar) return;
+      this.bar.setAttribute('aria-expanded', 'false');
+      if (this.body) this.bar.setAttribute('aria-controls', this.body.id || (this.body.id = uid('sheet-body')));
+      this.bar.addEventListener('click', () => (this._isOpen ? this.close() : this.open()));
+      // The collapsed sheet shows exactly its bar, whatever the bar holds.
+      const measure = () => this.root.style.setProperty('--lb-sheet-bar-h', `${this.bar.offsetHeight}px`);
+      measure();
+      if (window.ResizeObserver) new ResizeObserver(measure).observe(this.bar);
+    }
+
+    _expand() {
+      if (this._isOpen) return;
+      this._isOpen = true;
+      // Open at the full height, the top corners go square (Material's
+      // full-screen sheet); a shorter --lb-sheet-peek-height keeps them.
+      this.root.classList.toggle('lb-sheet-root--full', this.sheet.offsetHeight >= this.root.clientHeight - 1);
+      this.root.classList.add('lb-sheet-root--expanded');
+      this.sheet.setAttribute('role', 'dialog');
+      this.sheet.setAttribute('aria-modal', 'true');
+      if (this.body) this.body.inert = false;
+      if (this.bar) this.bar.setAttribute('aria-expanded', 'true');
+      lockScroll(this);
+      this._releaseTrap = trapFocus(this.sheet);
+      this.root.dispatchEvent(new CustomEvent('lb-sheet-open'));
+    }
+
+    _collapse() {
+      if (!this._isOpen) return;
+      this._isOpen = false;
+      const hadFocus = this.sheet.contains(document.activeElement);
+      this.root.classList.remove('lb-sheet-root--expanded');
+      this.sheet.removeAttribute('role');
+      this.sheet.removeAttribute('aria-modal');
+      if (this.body) this.body.inert = true;
+      if (this.bar) this.bar.setAttribute('aria-expanded', 'false');
+      if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
+      unlockScroll(this);
+      if (hadFocus && this.bar) this.bar.focus();
+      if (this.onClose) this.onClose();
+      this.root.dispatchEvent(new CustomEvent('lb-sheet-close'));
     }
 
     // Same two-step close as Modal: .lb-sheet-root--leaving plays the
     // slide-out, then the root hides and lb-sheet-close fires.
     open() {
+      if (this.peek) { this._expand(); return; }
       if (this._cancelExit) { this._cancelExit(); this._cancelExit = null; this._isOpen = true; return; }
       if (this._isOpen) return;
       this._isOpen = true;
@@ -713,6 +770,7 @@ const LB = (() => {
     }
 
     close() {
+      if (this.peek) { this._collapse(); return; }
       if (!this._isOpen) return;
       this._isOpen = false;
       this._cancelExit = playExit(this.root, 'lb-sheet-root--leaving', () => {

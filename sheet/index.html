@@ -20,7 +20,7 @@
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Sheet</h1>
     <p class="gallery-section__desc">Side panel that slides in from an edge. Positions: right, left, top, bottom. Use for transient forms, filters, or detail views. Like Modal it covers the page with a full-viewport scrim and locks body scroll, closing on scrim click or <kbd>Esc</kbd> — the difference is that focus is moved and restored rather than trapped.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> the sheet root is a real dialog — <code class="lb-code">role=dialog</code> + <code class="lb-code">aria-modal</code> + <code class="lb-code">aria-labelledby</code> pointing at the panel title, the scrim marked <code class="lb-code">aria-hidden</code>, and an icon-only close <code class="lb-code">button</code> named by <code class="lb-code">aria-label</code>. Opening records the element that had focus, moves focus to that close button and locks body scroll; the close button, a scrim click, and <kbd>Esc</kbd> (while focus is inside the panel) all close and hand focus back to whatever opened the sheet. Focus is moved and restored, not trapped — <code class="lb-code">LB.Modal</code> is the component that adds a trap.</p>
-    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> Same mount contract as Modal: a <code class="lb-code">.lb-sheet-root</code> wrapper with <code class="lb-code">data-lb-sheet</code> and inline <code class="lb-code">display:none</code>, holding the <code class="lb-code">.lb-sheet-overlay</code> scrim plus a <code class="lb-code">.lb-sheet</code> panel whose edge comes from one modifier — <code class="lb-code">.lb-sheet--right</code> / <code class="lb-code">--left</code> / <code class="lb-code">--top</code> / <code class="lb-code">--bottom</code>. The attribute auto-inits on DOMContentLoaded; open and close through <code class="lb-code">el._lbSheet.open()</code> / <code class="lb-code">.close()</code>, or pass a callback with <code class="lb-code">new LB.Sheet(el, { onClose })</code>. The root dispatches <code class="lb-code">lb-sheet-open</code> and <code class="lb-code">lb-sheet-close</code> on every transition.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> Same mount contract as Modal: a <code class="lb-code">.lb-sheet-root</code> wrapper with <code class="lb-code">data-lb-sheet</code> and inline <code class="lb-code">display:none</code>, holding the <code class="lb-code">.lb-sheet-overlay</code> scrim plus a <code class="lb-code">.lb-sheet</code> panel whose edge comes from one modifier — <code class="lb-code">.lb-sheet--right</code> / <code class="lb-code">--left</code> / <code class="lb-code">--top</code> / <code class="lb-code">--bottom</code>. The attribute auto-inits on DOMContentLoaded; open and close through <code class="lb-code">el._lbSheet.open()</code> / <code class="lb-code">.close()</code>, or pass a callback with <code class="lb-code">new LB.Sheet(el, { onClose })</code>. The root dispatches <code class="lb-code">lb-sheet-open</code> and <code class="lb-code">lb-sheet-close</code> on every transition. Add <code class="lb-code">.lb-sheet--peek</code> to a bottom sheet for a sheet that stays docked as a bar (below).</p>
 
 <hr class="gallery-desc-divider">
 
@@ -43,6 +43,34 @@
         </div>
       </div>
     </div>
+
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Peek — <code class="lb-code">.lb-sheet--peek</code></h2>
+    <p class="gallery-section__desc">A non-modal bottom sheet that never leaves. Collapsed, only its bar shows, docked at the bottom, and the page stays fully usable: no scrim, no focus trap, no scroll lock, and the body is inert. The bar is a button (<code class="lb-code">aria-expanded</code>, <code class="lb-code">aria-controls</code>); press it, or call <code class="lb-code">open()</code>, and the sheet slides up as a modal dialog with its scrim, focus kept inside and the page locked. <kbd>Esc</kbd>, the scrim or the bar slides it back down to the bar and focus returns to the bar. The bar holds what the page needs at a glance (title, a count, a timer) and the collapsed height follows it. <code class="lb-code">--lb-sheet-peek-height</code> sets the open height (default: the full screen, where the top corners go square; a shorter sheet keeps them round). Leave padding at the bottom of the page so the bar never covers its last row. The root carries no <code class="lb-code">display:none</code> and no dialog role: the sheet takes the dialog role only while open. Below, the sheet is held in a phone-sized frame; try adding items while it is collapsed.</p>
+    <div class="gallery-row" style="display: block;">
+      <div class="sheet-peek-frame" style="position: relative; height: 28rem; max-width: 22rem; overflow: hidden; transform: translateZ(0); border: var(--lb-border-width-thin) solid var(--lb-border-default); border-radius: var(--lb-radius-surface); background: var(--lb-bg-default);">
+        <div style="padding: var(--lb-size-4x) var(--lb-size-4x) var(--lb-size-20x);">
+          <h3 style="margin: 0 0 var(--lb-size-3x); font-family: var(--lb-t-heading-s-font-family); font-size: var(--lb-t-heading-s-font-size); font-weight: var(--lb-t-heading-s-font-weight);">Products</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--lb-size-2x);">
+            <div style="display: flex; align-items: center; justify-content: space-between;">Desk lamp <button type="button" class="lb-btn lb-btn--secondary lb-btn--small" onclick="peekAdd('Desk lamp')">Add</button></div>
+            <div style="display: flex; align-items: center; justify-content: space-between;">Notebook <button type="button" class="lb-btn lb-btn--secondary lb-btn--small" onclick="peekAdd('Notebook')">Add</button></div>
+            <div style="display: flex; align-items: center; justify-content: space-between;">Water bottle <button type="button" class="lb-btn lb-btn--secondary lb-btn--small" onclick="peekAdd('Water bottle')">Add</button></div>
+          </div>
+        </div>
+        <div class="lb-sheet-root" id="demo-peek" data-lb-sheet>
+          <div class="lb-sheet-overlay" aria-hidden="true"></div>
+          <section class="lb-sheet lb-sheet--bottom lb-sheet--peek" aria-labelledby="peek-title">
+            <button type="button" class="lb-sheet__bar">
+              <span class="lb-sheet__title" id="peek-title">Saved items</span>
+              <span class="lb-sheet__bar-meta" id="peek-meta" data-n="1">1 item</span>
+              <span class="lb-sheet__bar-icon" aria-hidden="true" data-lb-icon="chevron-up"></span>
+            </button>
+            <div class="lb-sheet__body">
+              <ul id="peek-list" style="margin: 0; padding-left: var(--lb-size-5x);"><li>Desk lamp</li></ul>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
   </section>
 </main>
 
@@ -51,5 +79,16 @@
 <script src="../js/theme-editor.js"></script>
 <script src="../js/token-exporter.js"></script>
 <script src="../js/gallery-layout.js"></script>
+<script>
+  function peekAdd(name) {
+    var meta = document.getElementById('peek-meta');
+    var n = Number(meta.dataset.n) + 1;
+    meta.dataset.n = n;
+    meta.textContent = n + (n === 1 ? ' item' : ' items');
+    var li = document.createElement('li');
+    li.textContent = name;
+    document.getElementById('peek-list').appendChild(li);
+  }
+</script>
 </body>
 </html>

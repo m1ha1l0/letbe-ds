@@ -1336,3 +1336,12 @@ From the value-deck findings. Library work, one component per round:
 Code-only (never mirrored): top-layer menu placement and flip, delegated
 menu items, tooltip fitting, drag skipping form fields, kebab
 visibility on touch, stacked drag auto-scroll and keyboard.
+
+**Addendum (v1.14.0, same day):** **Peek sheet** — `lb-sheet--peek` on
+the bottom sheet: collapsed state = only the bar (title heading-s,
+optional muted body-s meta, chevron-up icon 20px, 16px padding) docked
+at the bottom with the modal shadow; expanded state = full-height sheet
+with square top corners, the bar on top with a hairline under it and
+the chevron turned down, scrim behind. New variant on the sheet set
+(state=[collapsed, expanded]). Behaviour (inert body, focus trap, scroll
+lock) is code-only.

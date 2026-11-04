@@ -2902,6 +2902,34 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-sheet__close:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: var(--lb-size-0-5x); }
 .lb-sheet__body { flex: 1; overflow-y: auto; padding: var(--lb-size-4x); color: var(--lb-fg-muted); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); line-height: var(--lb-t-body-m-line-height); }
 
+/* Peek — a non-modal bottom sheet that never leaves (.lb-sheet--peek on
+   a .lb-sheet--bottom). Collapsed, only .lb-sheet__bar shows, docked at
+   the bottom (its height is measured into --lb-sheet-bar-h), and the
+   page stays usable: the root lets clicks through, no scrim. Expanded
+   (.lb-sheet-root--expanded, set by LB.Sheet) it slides up to
+   --lb-sheet-peek-height (default: the full screen) as a modal with its
+   scrim; collapsing slides it back to the bar. */
+.lb-sheet-root--peek { pointer-events: none; }
+.lb-sheet-root--peek .lb-sheet--peek { pointer-events: auto; }
+.lb-sheet--peek { height: var(--lb-sheet-peek-height, 100%); box-shadow: var(--lb-shadow-modal); animation: none; transform: translateY(calc(100% - var(--lb-sheet-bar-h, var(--lb-size-16x)) - env(safe-area-inset-bottom, 0px))); transition: transform var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui), border-radius var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+.lb-sheet-root--expanded .lb-sheet--peek { transform: none; }
+.lb-sheet-root--full.lb-sheet-root--expanded .lb-sheet--peek { border-radius: 0; }
+.lb-sheet-root--peek .lb-sheet-overlay { opacity: 0; visibility: hidden; animation: none; transition: opacity var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui), visibility 0s linear var(--lb-animation-dur-gentle); }
+.lb-sheet-root--peek.lb-sheet-root--expanded .lb-sheet-overlay { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui), visibility 0s; }
+.lb-sheet__bar { display: flex; align-items: center; gap: var(--lb-size-3x); width: 100%; flex-shrink: 0; padding: var(--lb-size-4x); border: none; background: none; color: var(--lb-fg-default); font: inherit; text-align: start; cursor: pointer; }
+.lb-sheet__bar:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: calc(-1 * var(--lb-border-width-medium)); }
+.lb-sheet__bar-meta { color: var(--lb-fg-muted); font-size: var(--lb-t-body-s-font-size); line-height: var(--lb-t-body-s-line-height); }
+.lb-sheet__bar-icon { display: inline-flex; flex: none; margin-inline-start: auto; width: var(--lb-size-5x); height: var(--lb-size-5x); transition: transform var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+.lb-sheet-root--expanded .lb-sheet__bar { border-bottom: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); }
+.lb-sheet-root--expanded .lb-sheet__bar-icon { transform: rotate(180deg); }
+/* Collapsed, the body is inert (LB.Sheet) and unpainted once the sheet
+   is down — the strip under the bar (safe area) shows only the surface. */
+.lb-sheet-root--peek .lb-sheet__body { visibility: hidden; transition: visibility 0s linear var(--lb-animation-dur-gentle); }
+.lb-sheet-root--peek.lb-sheet-root--expanded .lb-sheet__body { visibility: visible; transition: visibility 0s; }
+@media (prefers-reduced-motion: reduce) {
+  .lb-sheet--peek, .lb-sheet-root--peek .lb-sheet-overlay, .lb-sheet-root--peek .lb-sheet__body, .lb-sheet__bar-icon { transition: none; }
+}
+
 /* ═══════════════════════════════════════════════════════════
    DROPDOWN (Combobox)
    ═══════════════════════════════════════════════════════════ */

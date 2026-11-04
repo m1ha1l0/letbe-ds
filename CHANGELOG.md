@@ -5,6 +5,22 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.14.0] — 2026-11-04
+
+Minor: the peek bottom sheet (value-deck sheet-peek). No new tokens.
+
+- **Peek sheet** (new): `.lb-sheet--peek` on a `.lb-sheet--bottom` makes
+  a sheet that never leaves. Collapsed, only its `.lb-sheet__bar` shows,
+  docked at the bottom (a button holding a title, an optional
+  `.lb-sheet__bar-meta` and a `.lb-sheet__bar-icon` chevron), and the
+  page stays fully usable: no scrim, no focus trap, no scroll lock, the
+  body is inert. The bar or `open()` expands it as a modal dialog (scrim,
+  focus kept inside, page locked, `role="dialog"` + `aria-modal` only
+  while open); Esc, the scrim or the bar collapses it and focus returns
+  to the bar. `--lb-sheet-peek-height` sets the open height (default:
+  the full screen, with square top corners there). Same `lb-sheet-open`
+  / `lb-sheet-close` events and `open()` / `close()` / `isOpen()`.
+
 ## [1.13.0] — 2026-11-04
 
 Minor: the value-deck findings. Ghost controls work on any surface
