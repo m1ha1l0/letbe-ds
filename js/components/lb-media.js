@@ -94,6 +94,24 @@
         ? Array.from(this.playlist.querySelectorAll('[data-lb-media-track]'))
         : [];
       this._scrubbing = false;
+      // The track the markup preselects (aria-current / --active, as the
+      // demo ships, else the one whose data-src the media already loads)
+      // is the current one from the start, so Next, Previous and
+      // auto-advance work before the first click. Seeding never touches
+      // the media element.
+      this._currentBtn = null;
+      if (this.tracks.length) {
+        const src = this.media.currentSrc || this.media.src;
+        const abs = (b) => { try { return new URL(b.getAttribute('data-src') || '', document.baseURI).href; } catch (e) { return ''; } };
+        const seed = this.tracks.find((b) => b.getAttribute('aria-current') === 'true')
+          || this.tracks.find((b) => b.classList.contains('lb-media__track--active'))
+          || (src ? this.tracks.find((b) => abs(b) === src) : null);
+        if (seed) {
+          this._currentBtn = seed;
+          seed.classList.add('lb-media__track--active');
+          seed.setAttribute('aria-current', 'true');
+        }
+      }
 
       // Repeat-all mode (Vatroslav finding V7): when the LAST track
       // ends, wrap to track 1 and keep playing instead of stopping.

@@ -3055,7 +3055,10 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 /* Narrow players (compact / mobile): the scrubber can't share the line,
    so it takes its own full-width line and everything else keeps the
    desktop shape on ONE line below it — play + times on the left, mute +
-   volume on the right (auto margin on mute), volume the smallest piece:
+   volume on the right (auto margin AFTER the duration, so the right group
+   stays right whichever of its controls a page hides — e.g. mute and
+   volume on touch screens, where iOS ignores a page's volume), volume
+   the smallest piece:
    its flex-basis IS the size-12x floor, growing into leftover line space
    up to its size-24x desktop width. The basis must be the floor, not the
    desktop width — in a wrap container, line-breaking uses the
@@ -3080,7 +3083,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 @container (max-width: 480px) {
   .lb-media__controls { flex-wrap: wrap; }
   .lb-media__scrubber { order: -1; flex: 1 1 100%; }
-  .lb-media__controls > [data-lb-media-mute] { margin-inline-start: auto; }
+  .lb-media__controls > [data-lb-media-duration] { margin-inline-end: auto; }
   .lb-media__controls > .lb-media__volume { flex: 1 1 var(--lb-size-12x); width: auto; max-width: var(--lb-size-24x); }
   .lb-media--video .lb-media__volume { display: none; }
   /* video top bar (like/dislike · utility actions) wraps too instead of

@@ -29,6 +29,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   overlay, the header and shell drawers included, now shares one lock on
   `<html>` and `<body>`, kept until the last overlay closes. Public as
   `LB.lockScroll(owner)` / `LB.unlockScroll(owner)` for your own overlays.
+- **Fix: a preselected playlist track is the current track.** The player
+  now reads the track the markup marks (`aria-current`, `--active`, or the
+  one whose `data-src` the media already loads), so Next, Previous and
+  auto-advance work before the first click.
+- **Fix: the narrow media layout keeps its right-hand controls right**
+  when a page hides mute and volume: the push now sits after the duration
+  instead of on the mute button.
 
 ## [1.4.0] — 2026-09-15
 
