@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.7.0] — 2026-11-04
+
+Minor: forms, icons and flags from the mihailo.net findings, plus a fix
+for a 1.5.0 regression (sticky headers behind an open overlay). Visual
+change: brand icons that were still outlined are now filled logos. No
+new tokens.
+
 - **Fix: sticky headers stay put while an overlay is open.** The 1.5.0
   scroll lock also hid `<body>` overflow, which turns the body into a
   scroll container and threw a sticky header off screen behind a modal or
