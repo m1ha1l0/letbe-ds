@@ -5,6 +5,9 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **6 icons for viewer and editor UIs** (new): `zoom-in`, `zoom-out`,
+  `hand`, `frame`, `layers`, `folder-open`, Lucide originals like the rest
+  of the outlined set (sketcher F3). 260 icons.
 - **Button counter dims with a disabled button** (fix). The per-type
   counter colours won on `:disabled`, so a disabled primary showed a
   white pill with a violet digit on a grey button. On a disabled (or

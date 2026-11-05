@@ -1391,3 +1391,12 @@ fill):
 
 Applies to `:disabled` and `[aria-disabled="true"]`. Library: rebind the
 counter pill and digit in the 12 disabled button variants.
+
+### 42. sketcher findings — library relay 🔵 LIBRARY (2026-11-05) — no plugin action, no new tokens
+
+From the sketcher consumer findings (a local viewer for design files).
+Library work, one component per round:
+
+- **Icons (F3):** 6 new outlined Lucide icons — `zoom-in`, `zoom-out`,
+  `hand`, `frame`, `layers`, `folder-open` (260 in the set, was 254). Add
+  them to the icon library like the rest of the outlined set.
