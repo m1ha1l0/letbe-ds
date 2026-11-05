@@ -20,7 +20,7 @@
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">File Uploader</h1>
     <p class="gallery-section__desc">Drag-drop zone + click-to-browse + uploaded-files list. The component is presentational — it holds selected <code class="lb-code">File</code> objects and renders rows with progress bars and remove controls. The consumer drives actual uploads (XHR/fetch) and calls <code class="lb-code">setProgress(id, pct)</code>, <code class="lb-code">markDone(id)</code>, <code class="lb-code">markError(id, msg)</code> to update the UI.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> the dropzone is a keyboard-operable button — the controller adds <code class="lb-code">role=button</code> and <code class="lb-code">tabindex=0</code> when the markup omits them, <kbd>Enter</kbd>/<kbd>Space</kbd> opens the file picker, and the real <code class="lb-code">&lt;input type="file"&gt;</code> stays in the DOM with its author-supplied <code class="lb-code">aria-label</code>. Every file renders as an <code class="lb-code">&lt;li&gt;</code> whose controls are named per file: a native <code class="lb-code">&lt;progress&gt;</code> labelled <em>Uploading {name}</em> and a remove button labelled <em>Remove {name}</em>; rejection reasons are written into the row as text, never signalled by colour alone. There is no live region — announcing "3 files added" after a drop is the consumer's job.</p>
-    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> <code class="lb-code">&lt;div class="lb-uploader" data-lb-uploader data-lb-accept="image/*" data-lb-max-size="5242880" data-lb-max-files="5"&gt;</code> wrapping <code class="lb-code">.lb-uploader__dropzone</code> (with hidden <code class="lb-code">.lb-uploader__input</code>) + <code class="lb-code">&lt;ul class="lb-uploader__files"&gt;</code>. Events: <code class="lb-code">lb-file-added</code>, <code class="lb-code">lb-file-removed</code>, <code class="lb-code">lb-file-error</code>. API: <code class="lb-code">el._lbUploader.getFiles() / .setProgress(id, pct) / .markDone(id) / .markError(id, msg) / .clear()</code>.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> <code class="lb-code">&lt;div class="lb-uploader" data-lb-uploader data-lb-accept="image/*" data-lb-max-size="5242880" data-lb-max-files="5"&gt;</code> wrapping <code class="lb-code">.lb-uploader__dropzone</code>, then the hidden <code class="lb-code">.lb-uploader__input</code> as its next sibling (an input inside the dropzone is moved out on init, which a framework that renders the DOM won't expect), then an optional <code class="lb-code">&lt;ul class="lb-uploader__files"&gt;</code> (leave it out to open a file without a list). The drop target is the dropzone; a drop-anywhere-in-the-window surface is app code (window drag listeners), and its overlay can reuse <code class="lb-code">.lb-uploader__dropzone--drag-active</code>. Events: <code class="lb-code">lb-file-added</code>, <code class="lb-code">lb-file-removed</code>, <code class="lb-code">lb-file-error</code>. API: <code class="lb-code">el._lbUploader.getFiles() / .setProgress(id, pct) / .markDone(id) / .markError(id, msg) / .clear()</code>.</p>
 
     <hr class="gallery-desc-divider">
 
@@ -33,8 +33,8 @@
           <span class="lb-uploader__icon" aria-hidden="true" data-lb-icon="upload"></span>
           <p class="lb-uploader__title">Drag files here, or click to browse</p>
           <p class="lb-uploader__hint">Any file type · any size</p>
-          <input class="lb-uploader__input" type="file" multiple aria-label="Choose files">
         </div>
+        <input class="lb-uploader__input" type="file" multiple aria-label="Choose files">
         <ul class="lb-uploader__files"></ul>
       </div>
     </div>
@@ -52,8 +52,8 @@
           <span class="lb-uploader__icon" aria-hidden="true" data-lb-icon="image"></span>
           <p class="lb-uploader__title">Drop images here</p>
           <p class="lb-uploader__hint">PNG, JPG, WebP · up to 2 MB each · max 3 files</p>
-          <input class="lb-uploader__input" type="file" multiple accept="image/*" aria-label="Choose images">
         </div>
+        <input class="lb-uploader__input" type="file" multiple accept="image/*" aria-label="Choose images">
         <ul class="lb-uploader__files"></ul>
       </div>
     </div>
@@ -67,8 +67,8 @@
           <span class="lb-uploader__icon" aria-hidden="true" data-lb-icon="user-circle"></span>
           <p class="lb-uploader__title">Upload profile picture</p>
           <p class="lb-uploader__hint">One image, replaces on re-pick</p>
-          <input class="lb-uploader__input" type="file" accept="image/*" aria-label="Choose profile picture">
         </div>
+        <input class="lb-uploader__input" type="file" accept="image/*" aria-label="Choose profile picture">
         <ul class="lb-uploader__files"></ul>
       </div>
     </div>
@@ -84,10 +84,27 @@
             <p class="lb-uploader__title">Attach documents</p>
             <p class="lb-uploader__hint">PDF, DOCX · up to 10 MB each</p>
           </div>
-          <input class="lb-uploader__input" type="file" multiple accept=".pdf,.docx" aria-label="Attach documents">
         </div>
+        <input class="lb-uploader__input" type="file" multiple accept=".pdf,.docx" aria-label="Attach documents">
         <ul class="lb-uploader__files"></ul>
       </div>
+    </div>
+
+    <!-- ────────────────── Open a file (no list) ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Open a file — no list</h2>
+    <p class="gallery-section__desc">Leave out <code class="lb-code">.lb-uploader__files</code> when the file is opened rather than uploaded: no rows render, and <code class="lb-code">lb-file-added</code> still hands you the <code class="lb-code">File</code>. This demo prints its name below.</p>
+    <div style="max-width: 480px;">
+      <div class="lb-uploader lb-uploader--compact" data-lb-uploader id="demo-open">
+        <div class="lb-uploader__dropzone">
+          <span class="lb-uploader__icon" aria-hidden="true" data-lb-icon="folder-open"></span>
+          <div class="lb-uploader__text">
+            <p class="lb-uploader__title">Open a file</p>
+            <p class="lb-uploader__hint">Drop it here, or click to browse</p>
+          </div>
+        </div>
+        <input class="lb-uploader__input" type="file" aria-label="Open a file">
+      </div>
+      <p class="gallery-section__desc" id="demo-open-out" aria-live="polite" style="margin-top: var(--lb-size-2x);">No file opened yet</p>
     </div>
 
     <!-- ────────────────── Disabled ────────────────── -->
@@ -137,6 +154,12 @@
       });
     }
     ['demo-default', 'demo-constrained', 'demo-single', 'demo-compact'].forEach(wireFakeUpload);
+    // "Open a file": no list, the event carries the File.
+    const open = document.getElementById('demo-open');
+    const openOut = document.getElementById('demo-open-out');
+    if (open && openOut) open.addEventListener('lb-file-added', (e) => {
+      openOut.textContent = `Opened ${e.detail.file.name}`;
+    });
   });
 </script>
 </body>

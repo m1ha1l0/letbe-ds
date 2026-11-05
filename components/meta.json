@@ -221,7 +221,7 @@
     },
     "file-uploader": {
       "name": "File Uploader",
-      "description": "Drag-drop zone + click-to-browse native input + uploaded-files list with progress bars and remove controls. Constraints: `data-lb-accept` (MIME/extension list), `data-lb-max-size` (bytes), `data-lb-max-files`. Single-file mode by default unless `data-lb-multiple` or the inner input has `multiple`. Compact variant for settings rows.",
+      "description": "Drag-drop zone + click-to-browse native input + uploaded-files list with progress bars and remove controls. Constraints: `data-lb-accept` (MIME/extension list), `data-lb-max-size` (bytes), `data-lb-max-files`. Single-file mode by default unless `data-lb-multiple` or the inner input has `multiple`. Compact variant for settings rows. The hidden input sits after the dropzone, not inside it (an inner one is moved out on init). The file list is optional: leave out `.lb-uploader__files` to open a file with no rows, `lb-file-added` still carries the File. The drop target is the dropzone; drop-anywhere-in-the-window is app code that can reuse `.lb-uploader__dropzone--drag-active` for its overlay.",
       "usage": "`<div class=\"lb-uploader\" data-lb-uploader>` wrapping `.lb-uploader__dropzone` (with hidden `.lb-uploader__input`) and `<ul class=\"lb-uploader__files\">`. Consumer drives uploads — call `el._lbUploader.setProgress(id, pct)`, `markDone(id)`, `markError(id, msg)` from your XHR/fetch progress handlers. Events: `lb-file-added`, `lb-file-removed`, `lb-file-error`."
     },
     "flag": {

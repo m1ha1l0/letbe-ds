@@ -8178,7 +8178,9 @@ const LB = (() => {
   // uploading (XHR / fetch) is the consumer's responsibility; they
   // call setProgress(file, pct) and markDone(file) / markError(file, msg)
   // to drive the UI. Events: lb-file-added, lb-file-removed,
-  // lb-file-error (invalid type / too big / count exceeded).
+  // lb-file-error (invalid type / too big / count exceeded). The
+  // .lb-uploader__files list is optional: without it (an "open a file"
+  // flow) no rows render and the events still fire.
 
   class FileUploader {
     constructor(el, options = {}) {
@@ -8198,7 +8200,7 @@ const LB = (() => {
     }
 
     _init() {
-      if (!this.dropzone || !this.input || !this.filesList) return;
+      if (!this.dropzone || !this.input) return;
 
       // Ensure input attributes match our options
       if (this.accept) this.input.setAttribute('accept', this.accept);
@@ -8357,7 +8359,7 @@ const LB = (() => {
       remove.addEventListener('click', () => this.remove(id));
 
       row.append(icon, body, progressWrap, remove);
-      this.filesList.appendChild(row);
+      if (this.filesList) this.filesList.appendChild(row);
 
       return { file, id, row, progress, metaEl, status };
     }

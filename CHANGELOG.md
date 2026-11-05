@@ -5,6 +5,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **File Uploader without a file list** (new): `.lb-uploader__files` is
+  optional. Leave it out for an "open a file" flow: no rows render and
+  `lb-file-added` still carries the `File` (it used to stop initialising).
+  New demo "Open a file — no list" (sketcher F2).
+- **File Uploader input after the dropzone** (docs): the documented
+  markup puts `.lb-uploader__input` after the dropzone, where the
+  runtime used to move it, so frameworks that render the DOM aren't
+  surprised. An input inside the dropzone is still moved out. The page
+  states the boundary: the dropzone is the drop target; dropping
+  anywhere in the window is app code.
 - **Counts on app shell items** (new): a trailing `.lb-counter` inside
   `.lb-shell__item` (`--subtle` for a neutral count) now hides on the
   collapsed icon rail and comes back while peeking, like Navigation's
