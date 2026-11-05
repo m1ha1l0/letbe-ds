@@ -1612,3 +1612,25 @@ hooks (`--lb-accordion-dur/-dur-close/-ease`). No new tokens: "off" points
 the existing L2 durations at the existing L1 `--lb-duration-0` inside the
 attribute, and the hooks are component custom properties that fall back
 to existing L2 tokens. The library models no motion, so nothing to mirror.
+
+### 46. Accordion answer spacing (v1.19.0) — library relay 🔵 LIBRARY (2026-11-05) — no plugin action, no new tokens
+
+Library work:
+
+- **Accordion:** the open panel's bottom padding drops from 32px to 20px
+  (`size-8x` → `size-5x`). Rebind the bottom padding of the panel content
+  in every expanded accordion variant to `size-5x`; top and side padding
+  stay 0. Reason: with 8px between question and answer, 32px under a
+  short answer read as an empty gap, and both consumer sites had cut it
+  to 20px.
+
+- **Media player check (bar-art):** code now keeps a player on 1 row
+  only while its progress bar keeps 160px (`--lb-media-bar-min`) and
+  stacks it into the narrow 2-row layout below that. With a mouse, the
+  gallery's `bar` player (6 controls) keeps 1 row at 528px with a
+  216px bar, but the `bar-art` player (play, 2 times, scrubber, 3 icon
+  buttons, volume) needs 568px of content box: at 528 its bar is about
+  120px, so code shows it on 2 rows there. Widen the library's
+  `bar-art` content box to 568px or more (1 row, bar 160px or more), or
+  check what its instance holds if the controls differ. `compact`
+  (528) and video (640) are unaffected.

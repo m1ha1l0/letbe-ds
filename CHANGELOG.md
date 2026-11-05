@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Accordion: 20px under an open answer, was 32px** (visual retune,
+  review before bumping). With 8px between question and answer, 32px
+  under it read as an empty gap after short answers; both consumer sites
+  had cut it to 20px. Sites that set `.lb-accordion__panel-inner
+  { padding-bottom: var(--lb-size-5x) }` can delete that rule. The close
+  motion still runs the padding to 0.
+
 - **Media player: the progress bar keeps at least 160px on one row.**
   v1.18.1 switched a player to 2 rows only when one row overflowed, so
   a full playlist player still showed a 64px to 160px bar just above
