@@ -87,6 +87,11 @@ your pages use and load them *after* `lb.js`:
 | Timeline | `js/components/lb-timeline.js` |
 | Multi-select cards/bulk toolbar (`data-lb-selection`) | `js/components/lb-selection.js` |
 
+The app shell's classes work without `lb-shell.js` (leave off
+`data-lb-shell`): a static shell on wide screens, with no collapse, resize
+or saved state. Below 769px its sidebar becomes a drawer that only the
+script opens, so a script-free shell uses `.lb-shell--mobile-bar` there.
+
 **3. Icons and flags** — `data-lb-icon` fetches individual SVGs at runtime, and
 the phone input renders country flags from `assets/flags/`. Both paths
 auto-detect from the `lb.js` script origin (CDN included, since v1.2.0 — note
