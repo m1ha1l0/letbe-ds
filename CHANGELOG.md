@@ -5,6 +5,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.18.1] — 2026-11-05
+
+Patch: the media player no longer overflows a player 481px to 615px
+wide, and the last 2 raw easing curves now read their token. No new
+tokens and no renames.
+
 - **Media player: no more overflow between 481px and 615px.** The
   2-row narrow layout started at a fixed 480px, but how wide 1 row must
   be depends on the controls a page includes and on the button size.
