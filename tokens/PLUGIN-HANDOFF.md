@@ -1287,6 +1287,11 @@ existing tokens. Library work (one component per round, as usual):
   which the library never modeled — the description says so)
 - **Media player**: shuffle and repeat toggle buttons (pressed = accent,
   same as Playbar) and `lb-media--no-volume`.
+  ✅ DONE in library 2026-11-05 (media set: `shuffle (show)` +
+  `repeat (show)` ghost S toggles after the duration in bar and bar-art
+  (card already had them), off by default; `volume (show)` on bar,
+  bar-art and video, off = --no-volume; description gives the pressed
+  recipe bg/accent-muted + fg/accent; Light + Dark verified)
 - **New components**: Carousel (viewport + track + secondary icon-button
   controls, optional status), Description List (stacked / inline /
   grid, `--large` heading-m values, `--ruled`), Icon List (icon bullet
