@@ -1234,6 +1234,13 @@ existing tokens. Library work (one component per round, as usual):
 - **`lb-header__drawer--full`** (full-screen phone menu: head on the
   bar's row, heading-l centred links, actions at the foot primary-first)
   + **`lb-header__drawer-footer`** (social row) — header drawer variant.
+  ✅ DONE in library 2026-11-05 (new `header/drawer` component on the
+  Header page, 390×844 phone: head on the bar's row (logo + wordmark,
+  ghost M close), heading-l centred header/link rows with the active
+  underline, spacers for the auto margins, actions primary-first full
+  width, footer row of ghost L social icon buttons; props logo (swap),
+  nav-4/nav-5 (show), actions (show), footer (show); Light + Dark
+  verified. The side drawer was never in the library and stays out)
 - **`lb-icon-btn--large`**: 48px box (size/12x), 32px icon (size/8x) —
   new size on the icon-button set.
   ✅ DONE in library 2026-11-05 (`size=L` × 4 types × 3 states = 12
