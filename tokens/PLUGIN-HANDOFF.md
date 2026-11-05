@@ -1223,6 +1223,8 @@ existing tokens. Library work (one component per round, as usual):
 - **Modal close** is now a 40px ghost icon button
   (`lb-icon-btn--ghost --medium` + `lb-modal__close`) on every modal and
   the lightbox — swap the close instance in the modal and lightbox sets.
+  ✅ DONE in library 2026-11-05 (all 6 modal + 2 lightbox closes on
+  icon-button ghost size=M, 40px bound size/10x, 24px icon)
 - **`lb-modal--fullscreen`**: no border/radius/shadow, page surface,
   header row on the site header's padding — new modal variant.
 - **`lb-header__drawer--full`** (full-screen phone menu: head on the
