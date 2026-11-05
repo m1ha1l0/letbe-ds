@@ -926,6 +926,20 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-link--large  { font-size: var(--lb-t-action-l-font-size); line-height: var(--lb-t-action-l-line-height); letter-spacing: var(--lb-t-action-l-letter-spacing); }
 .lb-link--subtle { color: var(--lb-fg-muted); }
 .lb-link--subtle:hover { color: var(--lb-fg-default); }
+/* Link in running text (--inline): plain inline, so a link inside a
+   sentence wraps word by word like the text around it (the inline-flex
+   base is one unbreakable box that drops whole to the next line), and it
+   takes the sentence's type, so it sits in a lead, a heading or a
+   caption. Colour and the permanent underline stay; --subtle stacks.
+   Write the icon straight after the last word (no space). The line may
+   break next to any box (an inline-block SVG included), so here the
+   slot is plain inline text: a word joiner (U+2060) that can't be
+   split from the word, padding that keeps the gap and the icon's room
+   free of the underline, and the SVG drawn in that room out of flow. */
+.lb-link--inline { display: inline; font: inherit; letter-spacing: inherit; }
+.lb-link--inline .lb-link__icon { display: inline; position: relative; width: auto; height: auto; padding-inline-start: calc(var(--lb-size-1x) + 1em); }
+.lb-link--inline .lb-link__icon::before { content: "\2060"; }
+.lb-link--inline .lb-link__icon svg { position: absolute; inset-inline-start: var(--lb-size-1x); top: 50%; width: 1em; height: 1em; margin-top: -0.5em; }
 
 /* Optional icon slot — typically trailing (external-link, arrow-right,
    download). Sizes itself to the link's text via 1em so it scales with
@@ -943,11 +957,13 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   align-self: center;
 }
 /* Direction arrows nudge the way they point while the link is hovered
-   (the card nav-icon's 2px, same family). */
+   (the card nav-icon's 2px, same family). The SVG moves, not the slot,
+   so the nudge also runs in --inline, where the slot is a plain inline
+   box that can't be translated. */
 @media (prefers-reduced-motion: no-preference) {
-  .lb-link__icon:is([data-lb-icon="arrow-up-right"], [data-lb-icon="arrow-right"]) { transition: translate var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
-  .lb-link:is(:hover, :focus-visible) .lb-link__icon[data-lb-icon="arrow-up-right"] { translate: var(--lb-size-0-5x) calc(-1 * var(--lb-size-0-5x)); }
-  .lb-link:is(:hover, :focus-visible) .lb-link__icon[data-lb-icon="arrow-right"] { translate: var(--lb-size-0-5x) 0; }
+  .lb-link__icon:is([data-lb-icon="arrow-up-right"], [data-lb-icon="arrow-right"]) svg { transition: translate var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+  .lb-link:is(:hover, :focus-visible) .lb-link__icon[data-lb-icon="arrow-up-right"] svg { translate: var(--lb-size-0-5x) calc(-1 * var(--lb-size-0-5x)); }
+  .lb-link:is(:hover, :focus-visible) .lb-link__icon[data-lb-icon="arrow-right"] svg { translate: var(--lb-size-0-5x) 0; }
 }
 .lb-link__icon svg { width: 100%; height: 100%; }
 

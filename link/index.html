@@ -20,7 +20,7 @@
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Link</h1>
     <p class="gallery-section__desc">Inline text link. Use for navigation between pages, external references, or in-paragraph actions that take the user somewhere. For actions that mutate state (submit, delete), use Button. Subtle variant for low-emphasis links. Optional <code class="lb-code">.lb-link__icon</code> slot for trailing icons that signal destination type — external-link, arrow-right (continue), download.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> <code class="lb-code">.lb-link</code> is styling only — every link is a real <code class="lb-code">&lt;a href&gt;</code> and no JS controller binds to it. The underline is permanent (<code class="lb-code">text-decoration: underline</code>, kept by <code class="lb-code">--subtle</code>, which changes colour only), so a link is never signalled by colour alone, and <code class="lb-code">:focus-visible</code> draws the shared focus outline (<code class="lb-code">--lb-border-focus</code>) offset clear of the text. The trailing icon is decoration — <code class="lb-code">aria-hidden="true"</code>, sized in <code class="lb-code">1em</code> so it tracks the size variant — which means destination meaning has to live in the link text, not the glyph.</p>
-    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> Copy the full combo — base plus size, <code class="lb-code">lb-link lb-link--medium</code>: <code class="lb-code">--small</code>/<code class="lb-code">--large</code> swap the action type ramp (the bare base falls back to the medium scale) and <code class="lb-code">--subtle</code> stacks on any size. The base is <code class="lb-code">inline-flex</code> with a built-in gap, so the trailing <code class="lb-code">.lb-link__icon</code> needs no margin — it is an empty <code class="lb-code">&lt;span data-lb-icon="…"&gt;</code> hydrated by <code class="lb-code">LB.initIcons()</code>, which <code class="lb-code">LB.init()</code> runs automatically at <code class="lb-code">DOMContentLoaded</code>: load <code class="lb-code">js/lb.js</code> when you use the icon slot, and for links injected later call <code class="lb-code">LB.initIcons(root)</code> again (idempotent — hydrated spans are skipped). No events, no per-element JS handle.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> Copy the full combo — base plus size, <code class="lb-code">lb-link lb-link--medium</code>: <code class="lb-code">--small</code>/<code class="lb-code">--large</code> swap the action type ramp (the bare base falls back to the medium scale) and <code class="lb-code">--subtle</code> stacks on any size. Inside a sentence use <code class="lb-code">lb-link lb-link--inline</code> instead of a size (see In running text below). The base is <code class="lb-code">inline-flex</code> with a built-in gap, so the trailing <code class="lb-code">.lb-link__icon</code> needs no margin — it is an empty <code class="lb-code">&lt;span data-lb-icon="…"&gt;</code> hydrated by <code class="lb-code">LB.initIcons()</code>, which <code class="lb-code">LB.init()</code> runs automatically at <code class="lb-code">DOMContentLoaded</code>: load <code class="lb-code">js/lb.js</code> when you use the icon slot, and for links injected later call <code class="lb-code">LB.initIcons(root)</code> again (idempotent — hydrated spans are skipped). No events, no per-element JS handle.</p>
 
     <hr class="gallery-desc-divider">
 
@@ -79,18 +79,17 @@
       </a>
     </div>
 
-    <div class="gallery-label" style="margin-top: var(--lb-size-6x);">In a paragraph</div>
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">In running text</h2>
+    <p class="gallery-section__desc">Inside a sentence use <code class="lb-code">lb-link lb-link--inline</code>, without a size. It wraps word by word like the text around it, so a long link never drops whole to the next line and leaves a short line behind, and it takes the sentence's own type: the same link reads right in a lead, a heading or a caption. <code class="lb-code">--subtle</code> stacks on it. Write the icon straight after the last word, with no space before the <code class="lb-code">&lt;span&gt;</code>: the icon then keeps a small gap, stays out of the underline and never wraps onto a line of its own. The sized links above are for links that stand on their own (a row of links, a "Read more" under a card).</p>
+
+    <div class="gallery-label">In a paragraph</div>
     <p class="gallery-section__desc" style="margin-bottom: 0;">
-      We use icons from
-      <a class="lb-link lb-link--medium" href="https://lucide.dev" target="_blank" rel="noopener noreferrer">Lucide
-        <span class="lb-link__icon" aria-hidden="true" data-lb-icon="external-link"></span>
-      </a>,
-      vendored locally for offline use. Read the
-      <a class="lb-link lb-link--medium" href="#">licensing notes
-        <span class="lb-link__icon" aria-hidden="true" data-lb-icon="arrow-right"></span>
-      </a>
-      to confirm attribution.
+      We use icons from <a class="lb-link lb-link--inline" href="https://lucide.dev" target="_blank" rel="noopener noreferrer">Lucide<span class="lb-link__icon" aria-hidden="true" data-lb-icon="external-link"></span></a>, vendored locally for offline use. Read the <a class="lb-link lb-link--inline" href="#">licensing notes for the vendored icon set<span class="lb-link__icon" aria-hidden="true" data-lb-icon="arrow-right"></span></a> to confirm attribution.
     </p>
+
+    <div class="gallery-label" style="margin-top: var(--lb-size-6x);">In a heading and a caption</div>
+    <h3 style="margin: 0 0 var(--lb-size-2x); font-family: var(--lb-t-heading-s-font-family); font-size: var(--lb-t-heading-s-font-size); font-weight: var(--lb-t-heading-s-font-weight); line-height: var(--lb-t-heading-s-line-height);">See the <a class="lb-link lb-link--inline" href="#">release notes<span class="lb-link__icon" aria-hidden="true" data-lb-icon="arrow-right"></span></a> before you update</h3>
+    <p style="margin: 0; font-family: var(--lb-t-caption-m-font-family); font-size: var(--lb-t-caption-m-font-size); line-height: var(--lb-t-caption-m-line-height); color: var(--lb-fg-muted);">Photo by Avery Green, from the <a class="lb-link lb-link--inline lb-link--subtle" href="#">project archive</a>.</p>
   </section>
 </main>
 

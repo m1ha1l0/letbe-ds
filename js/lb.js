@@ -6952,7 +6952,9 @@ const LB = (() => {
     try {
       const res = await fetch(`${_iconBasePath}/${name}.svg`);
       if (!res.ok) { _iconCache[name] = ''; return ''; }
-      const svg = await res.text();
+      // Trimmed: a file's trailing newline would render as a space in an
+      // inline slot (.lb-link--inline .lb-link__icon).
+      const svg = (await res.text()).trim();
       _iconCache[name] = svg;
       return svg;
     } catch {

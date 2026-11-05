@@ -5,6 +5,21 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Link in running text** (new): `lb-link lb-link--inline` is a plain
+  inline link for use inside a sentence. It wraps word by word (the sized
+  link is one unbreakable box that drops whole to the next line, leaving
+  a short line and lone punctuation behind) and takes the sentence's
+  font, size, weight and line height, so it fits a lead, a heading or a
+  caption. `--subtle` stacks. Write its icon straight after the last
+  word: the icon keeps a gap, stays out of the underline and can't wrap
+  onto a line of its own. New "In running text" section on the Link page
+  (mihailo.net finding 45).
+- **Link icon nudge** (fix): the arrow nudge moves the icon's SVG instead
+  of the slot, so it also runs in `--inline`. No visible change for sized
+  links.
+- **Icons** (fix): `LB.initIcons()` trims the loaded SVG, so a file's
+  trailing newline no longer lands in the slot as a text node.
+
 ## [1.15.0] — 2026-11-05
 
 Minor: floating toolbar, 6 icons, counts on app shell items, File
