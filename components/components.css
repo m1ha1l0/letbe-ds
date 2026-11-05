@@ -9647,6 +9647,9 @@ img.lb-list__icon--round { object-fit: cover; }
 }
 .lb-shell--collapsed[data-lb-shell-collapse="icon"] .lb-shell__item { justify-content: center; padding-left: 0; padding-right: 0; }
 .lb-shell--collapsed[data-lb-shell-collapse="icon"] .lb-shell__sub { display: none; }
+/* A trailing .lb-counter (count per item) has no room on the rail;
+   hidden like Navigation's collapsed badge, back while peeking. */
+.lb-shell--collapsed[data-lb-shell-collapse="icon"] .lb-shell__item > .lb-counter { display: none; }
 .lb-shell--collapsed[data-lb-shell-collapse="icon"] .lb-shell__sidebar-head { justify-content: center; padding-left: 0; padding-right: 0; }
 
 /* Rail-content hooks: mark sidebar content [data-lb-shell-expanded-only]
@@ -9695,6 +9698,7 @@ img.lb-list__icon--round { object-fit: cover; }
     clip: auto;
     clip-path: none;
   }
+  .lb-shell--peek.lb-shell--collapsed[data-lb-shell-collapse="icon"] .lb-shell__sidebar:where(:hover, :focus-within) .lb-shell__item > .lb-counter { display: inline-flex; }
   .lb-shell--peek.lb-shell--collapsed[data-lb-shell-collapse="icon"] .lb-shell__sidebar:where(:hover, :focus-within) .lb-shell__group-label {
     padding: var(--lb-size-1x) var(--lb-size-2x);
   }

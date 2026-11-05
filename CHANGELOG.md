@@ -5,6 +5,10 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Counts on app shell items** (new): a trailing `.lb-counter` inside
+  `.lb-shell__item` (`--subtle` for a neutral count) now hides on the
+  collapsed icon rail and comes back while peeking, like Navigation's
+  collapsed badge. No new class (sketcher F4).
 - **6 icons for viewer and editor UIs** (new): `zoom-in`, `zoom-out`,
   `hand`, `frame`, `layers`, `folder-open`, Lucide originals like the rest
   of the outlined set (sketcher F3). 260 icons.

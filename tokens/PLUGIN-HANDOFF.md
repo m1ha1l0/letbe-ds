@@ -1400,3 +1400,8 @@ Library work, one component per round:
 - **Icons (F3):** 6 new outlined Lucide icons — `zoom-in`, `zoom-out`,
   `hand`, `frame`, `layers`, `folder-open` (260 in the set, was 254). Add
   them to the icon library like the rest of the outlined set.
+- **App shell item count (F4):** an optional trailing `.lb-counter`
+  (subtle tone in the demo, "Inbox 12") at the end of a shell item row,
+  after the label. Hidden in the icon-rail state. If the library's shell
+  item has slots, add an optional counter slot (show toggle, off by
+  default) reusing the counter component.
