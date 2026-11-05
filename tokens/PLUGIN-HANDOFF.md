@@ -1273,6 +1273,11 @@ existing tokens. Library work (one component per round, as usual):
   inked like the label. Descriptions on all three say how)
 - **Table**: a styled `<caption>` (caption-m, default ink, start-aligned
   above the table) and `lb-table--text` (top-aligned cells).
+  ✅ DONE in library 2026-11-05 (table set: `caption (show)` off by
+  default + `caption` text, caption/m in fg/default with the cells' 3x/4x
+  padding; new `type` axis default/text — text variants are in-set clones
+  with every table/cell instance top-aligned (instance alignment
+  override), 73 prop refs restored per clone)
 - **Card**: `lb-card--media-right` (mirror of media-left) and
   `lb-card__nav-icon--start` (leading chevron) for a previous/next pair.
 - **Media player**: shuffle and repeat toggle buttons (pressed = accent,
