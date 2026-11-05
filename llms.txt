@@ -13,6 +13,9 @@ heavy engines (data layers, virtualizers, streaming, AI models) are
 deliberately the consumer's choice. MIT-licensed, demo media included
 (brand and third-party assets excluded — see NOTICE).
 
+Every component's markup, class combos, modifiers, events and API:
+[llms-full.txt](/llms-full.txt) (this file with the usage notes in full).
+
 ## Runtime — three files, then opt-in modules
 
 Load order: `tokens/theme.css` → `components/components.css` → `js/lb.js`.
@@ -182,5 +185,6 @@ exactly what the code does — claims are verified against the source.
 - [CHANGELOG.md](/CHANGELOG.md): versioned changes; token NAMES are API (renames = major)
 - [LICENSE](/LICENSE) + [NOTICE](/NOTICE): MIT incl. demo media; brand + third-party excluded
 - [tokens/source-tokens.json](/tokens/source-tokens.json): DTCG token source
+- [llms-full.txt](/llms-full.txt): this file with every component's usage notes in full
 - [components/meta.json](/components/meta.json): machine-readable component inventory (this file is generated from it)
 - [privacy/](/privacy/): what the site does with visitor data — no cookies, no cross-site tracking; cookieless EU-hosted page analytics (Plausible) on letbe.design only; three device-local preferences; self-hosted fonts
