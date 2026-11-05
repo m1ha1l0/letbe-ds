@@ -5454,6 +5454,20 @@ img.lb-list__icon--round { object-fit: cover; }
   justify-content: space-between;
   gap: var(--lb-size-4x);
 }
+/* Value first (--value-first): the number leads and the label reads
+   under it as a plain sentence-case line in the body type, the "big
+   number" form of a landing or portfolio page. Write the value first
+   in the markup so it is read in the order it is seen; order -1 keeps
+   label-first markup looking the same. Stacks with --compact. */
+.lb-stat--value-first .lb-stat__value { order: -1; }
+.lb-stat--value-first .lb-stat__label {
+  font-family: var(--lb-t-body-m-font-family);
+  font-size: var(--lb-t-body-m-font-size);
+  font-weight: var(--lb-t-body-m-font-weight);
+  line-height: var(--lb-t-body-m-line-height);
+  letter-spacing: var(--lb-t-body-m-letter-spacing);
+  text-transform: none;
+}
 
 /* ───────── Sparkline ─────────
    Inline mini chart — line, area, or bar. Fills its host's width and

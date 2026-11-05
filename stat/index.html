@@ -20,7 +20,7 @@
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Stat</h1>
     <p class="gallery-section__desc">Single-metric primitive. Label, value, optional delta, optional caption. Pure HTML/CSS, no JS class. Compose with <a class="lb-link" href="../card/">Card</a> for a surface, with <a class="lb-link" href="../sparkline/">Sparkline</a> for the trend strip, or with <a class="lb-link" href="../layout/">Grid</a> for a KPI row. The delta indicator is just a small <a class="lb-link" href="../badge/">Badge</a> with the right tone and a <code class="lb-code">trending-up</code> / <code class="lb-code">trending-down</code> / <code class="lb-code">minus</code> icon — reusing the system's status palette so it stays in lockstep with the theme.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> Stat ships no roles and no JS controller — label, value and caption are plain text in DOM order, so it inherits whatever heading structure the host page already has. The optional leading glyph is <code class="lb-code">aria-hidden="true"</code> and always <code class="lb-code">fg-muted</code>: the <code class="lb-code">.lb-stat__label</code> text carries the meaning. Direction never rides on color alone — each delta Badge pairs its tone with a <code class="lb-code">trending-up</code> / <code class="lb-code">trending-down</code> / <code class="lb-code">minus</code> glyph beside the value.</p>
-    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> <code class="lb-code">.lb-stat</code> wrapper holds <code class="lb-code">.lb-stat__label</code>, <code class="lb-code">.lb-stat__value</code>, optional <code class="lb-code">.lb-stat__sub</code> with a Badge and <code class="lb-code">.lb-stat__caption</code>. Modifiers: <code class="lb-code">--compact</code>, <code class="lb-code">--row</code>.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> <code class="lb-code">.lb-stat</code> wrapper holds <code class="lb-code">.lb-stat__label</code>, <code class="lb-code">.lb-stat__value</code>, optional <code class="lb-code">.lb-stat__sub</code> with a Badge and <code class="lb-code">.lb-stat__caption</code>. Modifiers: <code class="lb-code">--compact</code>, <code class="lb-code">--row</code>, <code class="lb-code">--value-first</code>.</p>
 
     <hr class="gallery-desc-divider">
 
@@ -171,6 +171,24 @@
         <div class="lb-stat__sub">
           <span class="lb-badge lb-badge--small lb-badge--danger"><span class="lb-badge__icon" data-lb-icon="trending-down"></span>5</span>
         </div>
+      </div>
+    </div>
+
+    <!-- ────────────────── Value first ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Value first — the big-number form</h2>
+    <p class="gallery-section__desc"><code class="lb-code">--value-first</code> leads with the number and sets the label under it as a plain sentence-case line in the body type, for highlights on a landing or portfolio page rather than a dashboard. Write the value first in the markup, so the stat is read in the order it is seen. Stacks with <code class="lb-code">--compact</code>.</p>
+    <div class="gallery-row" style="gap: var(--lb-size-10x);">
+      <div class="lb-stat lb-stat--value-first">
+        <div class="lb-stat__value">12</div>
+        <div class="lb-stat__label">Countries served</div>
+      </div>
+      <div class="lb-stat lb-stat--value-first">
+        <div class="lb-stat__value">98%</div>
+        <div class="lb-stat__label">Orders shipped within 24 hours</div>
+      </div>
+      <div class="lb-stat lb-stat--value-first">
+        <div class="lb-stat__value">4.8</div>
+        <div class="lb-stat__label">Average rating from 2,300 reviews</div>
       </div>
     </div>
   </section>

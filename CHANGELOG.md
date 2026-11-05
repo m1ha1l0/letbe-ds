@@ -53,6 +53,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   body turned everything inside it grey). Labels and meta stay muted by
   design: card description, stat label, footer link, breadcrumb,
   description list term (mihailo.net finding 46, in part).
+- **Stat, value first** (new): `.lb-stat--value-first` leads with the
+  number and sets the label under it as a sentence-case line in the
+  body type, the big-number form for landing and portfolio pages. Write
+  the value first in the markup; label-first markup still shows the
+  number first. Stacks with `--compact`. New section on the Stat page
+  (mihailo.net finding 50).
 
 ## [1.15.0] — 2026-11-05
 
