@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.15.0] — 2026-11-05
+
+Minor: floating toolbar, 6 icons, counts on app shell items, File
+Uploader without a list, React docs, and the disabled button counter fix
+(from the sketcher findings and the library review). No new tokens and
+no renames.
+
 - **Using letbe-ds with React** (docs): README and llms.txt say how to
   load and start lb.js in a framework that renders the DOM, which parts
   lb.js owns after init, and how to read and drive them (sketcher F6).
