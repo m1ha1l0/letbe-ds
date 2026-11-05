@@ -1374,3 +1374,20 @@ with square top corners, the bar on top with a hairline under it and
 the chevron turned down, scrim behind. New variant on the sheet set
 (state=[collapsed, expanded]). Behaviour (inert body, focus trap, scroll
 lock) is code-only.
+
+### 41. Button counter on disabled buttons — library relay 🔵 LIBRARY (2026-11-05) — no plugin action, no new tokens
+
+From the library session's review: on a disabled button the counter kept
+its variant's colours (a disabled primary showed a white pill with a
+violet digit on a grey button), because the per-type counter rules won on
+`:disabled`. The counter now follows the disabled ink with the same rule
+as every variant (pill = the button's text colour, digit = the button's
+fill):
+
+| Disabled host | Pill (background) | Digit (text) | Contrast light / dark |
+|---|---|---|---|
+| primary, secondary, accent-2, accent-3, danger | `fg/muted` | `bg/disabled` | 5.02 / 6.61 |
+| neutral, subtle, ghost | `action/fg-ghost-disabled` | `fg/inverse` | 5.49 / 8.15 |
+
+Applies to `:disabled` and `[aria-disabled="true"]`. Library: rebind the
+counter pill and digit in the 12 disabled button variants.

@@ -5,6 +5,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Button counter dims with a disabled button** (fix). The per-type
+  counter colours won on `:disabled`, so a disabled primary showed a
+  white pill with a violet digit on a grey button. On a disabled (or
+  `aria-disabled`) button the pill now takes the button's disabled ink
+  and the digit its fill: `fg-muted` on `bg-disabled` for filled types,
+  `action-fg-ghost-disabled` with `fg-inverse` for neutral, subtle and
+  ghost. No new tokens.
+
 ## [1.14.1] — 2026-11-04
 
 Patch: Sheet focus trap and three Color Picker fixes. No API, token or

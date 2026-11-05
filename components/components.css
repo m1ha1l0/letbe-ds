@@ -710,6 +710,13 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-btn--neutral   .lb-counter--on-btn,
 .lb-btn--subtle    .lb-counter--on-btn,
 .lb-btn--ghost     .lb-counter--on-btn { background: var(--lb-action-fg-ghost-default);     color: var(--lb-fg-inverse); }
+/* Disabled hosts — same rule against the disabled ink, so the pill
+   dims with its button instead of keeping the variant's colours. */
+.lb-btn:disabled .lb-counter--on-btn,
+.lb-btn[aria-disabled="true"] .lb-counter--on-btn { background: var(--lb-fg-muted); color: var(--lb-bg-disabled); }
+.lb-btn--neutral:disabled .lb-counter--on-btn, .lb-btn--neutral[aria-disabled="true"] .lb-counter--on-btn,
+.lb-btn--subtle:disabled  .lb-counter--on-btn, .lb-btn--subtle[aria-disabled="true"]  .lb-counter--on-btn,
+.lb-btn--ghost:disabled   .lb-counter--on-btn, .lb-btn--ghost[aria-disabled="true"]   .lb-counter--on-btn { background: var(--lb-action-fg-ghost-disabled); color: var(--lb-fg-inverse); }
 
 /* When inside a small button, downsize automatically without
    needing a second --small modifier on the counter. */
