@@ -142,6 +142,7 @@
 
     // Build the inner composer.
     surface.innerHTML = buildComposerMarkup(opts);
+    if (window.LB && window.LB.inheritMotion) window.LB.inheritMotion(surface, opts.anchor instanceof Element ? opts.anchor : null);
     document.body.appendChild(surface);
 
     // Wire LB.Composer onto the freshly-injected node, plus icon swap.

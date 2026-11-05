@@ -325,6 +325,27 @@
       </div>
     </div>
 
+    <!-- ────────────────── Motion control ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Motion control — <code class="lb-code">data-lb-motion</code></h2>
+    <p class="gallery-section__desc">Every letbe-ds motion can be switched off where you choose. Put <code class="lb-code">data-lb-motion="off"</code> on <code class="lb-code">&lt;html&gt;</code> for the whole site, on a section, or on one component, and everything inside becomes instant: transitions, the entry and exit of overlays, the scroll reveal and count-up, the lightbox glide, smooth scrolls. Overlays still open, close and return focus exactly as before. Overlays the script moves under <code class="lb-code">&lt;body&gt;</code> (lightbox, colour picker, calendar popover) take the mode of the element that opened them. Repeating indicators follow the reduced-motion rules: the spinner keeps turning slowly, the shimmer, pulse and streaming caret stop. Useful for screenshot tests, a calm page, or a part of a page that should stay still.</p>
+    <p class="gallery-section__desc"><strong>The user's setting always wins:</strong> under <code class="lb-code">prefers-reduced-motion: reduce</code> letbe-ds drops its movement on its own, and nothing a site sets turns it back on. <strong>Retiming</strong> is a token change: re-declare <code class="lb-code">--lb-animation-dur-*</code> and <code class="lb-code">--lb-animation-ease-*</code> in your theme layer. <strong>Your own scripts</strong> can ask the same question: <code class="lb-code">LB.motion(el)</code> returns <code class="lb-code">'off'</code>, <code class="lb-code">'reduce'</code> or <code class="lb-code">'full'</code> for the motion at <code class="lb-code">el</code>.</p>
+    <pre data-lb-code-block data-lb-lang="html"><code>&lt;html data-lb-motion="off"&gt;                       &lt;!-- the whole site --&gt;
+&lt;section data-lb-motion="off"&gt;                    &lt;!-- one part of a page --&gt;
+&lt;div class="lb-accordion" data-lb-motion="off"&gt;  &lt;!-- one component --&gt;</code></pre>
+    <div id="motion-demo" style="margin-top: var(--lb-size-6x); padding: var(--lb-size-6x); border: var(--lb-border-width-thin) solid var(--lb-border-muted); border-radius: var(--lb-radius-surface); display: flex; flex-wrap: wrap; align-items: center; gap: var(--lb-size-6x);">
+      <label class="lb-switch-wrap"><input type="checkbox" class="lb-switch" role="switch" id="motion-demo-switch"><span class="lb-switch__label">Motion off in this box</span></label>
+      <button class="lb-btn lb-btn--primary lb-btn--medium" type="button" data-lb-modal-open="#motion-demo-modal">Open a modal</button>
+      <div class="lb-modal-backdrop" id="motion-demo-modal" data-lb-modal style="display:none;" role="dialog" aria-modal="true" aria-labelledby="motion-demo-title">
+        <div class="lb-modal lb-modal--small">
+          <div class="lb-modal__header">
+            <div class="lb-modal__header-title"><h3 class="lb-modal__title" id="motion-demo-title">Motion check</h3></div>
+            <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-modal__close" type="button" aria-label="Close"><span data-lb-icon="x"></span></button>
+          </div>
+          <div class="lb-modal__body">With motion on, this dialog rises in and drops out. With motion off in the box, it opens and closes at once.</div>
+        </div>
+      </div>
+    </div>
+
     <!-- ────────────────── Scroll reveal ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Scroll reveal — <code class="lb-code">data-lb-reveal</code></h2>
     <p class="gallery-section__desc">Add <code class="lb-code">data-lb-reveal</code> to a block and it rises a little and fades in the first time it scrolls into view; blocks arriving together come in one after another (a short stagger, at most 6 steps). <code class="lb-code">data-lb-count-up</code> on a number (a Stat value) counts every number in its text up from 0 when it comes into view, while assistive tech reads the final value. Core runtime, no setup.</p>
@@ -349,6 +370,13 @@
 <script src="../js/token-exporter.js"></script>
 <script src="../js/gallery-layout.js"></script>
 
+<script>
+  // Motion control demo: the switch sets data-lb-motion="off" on the box.
+  document.getElementById('motion-demo-switch').addEventListener('change', (e) => {
+    const box = document.getElementById('motion-demo');
+    if (e.target.checked) box.setAttribute('data-lb-motion', 'off'); else box.removeAttribute('data-lb-motion');
+  });
+</script>
 <script>
   // Interactive preview — hover a row to trigger once, Play button to trigger once,
   // or toggle "Play all continuously" at the top.

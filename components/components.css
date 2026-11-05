@@ -159,17 +159,43 @@
 .lb-icon-list--xlarge { gap: var(--lb-size-4x); font-family: var(--lb-t-heading-xl-font-family); font-size: var(--lb-t-heading-xl-font-size); font-weight: var(--lb-t-heading-xl-font-weight); line-height: var(--lb-t-heading-xl-line-height); letter-spacing: var(--lb-t-heading-xl-letter-spacing); }
 
 /* ═══════════════════════════════════════════════════════════
+   MOTION MODE — data-lb-motion="off"
+   On <html>, a section or one component: every letbe-ds motion inside
+   it becomes instant. The L2 durations and the stagger point at
+   --lb-duration-0, which every transition and entry/exit animation
+   reads, and lb.js skips its own waits, glides and smooth scrolls
+   (LB.motion). Repeating indicators follow their reduced-motion rules
+   instead (the spinner keeps turning slowly; shimmer, pulse and the
+   streaming caret stop). The user's prefers-reduced-motion still
+   applies everywhere. :root repeats the attribute so a site theme that
+   re-declares the durations on :root can't outrank it on <html>.
+   ═══════════════════════════════════════════════════════════ */
+:root[data-lb-motion="off"],
+[data-lb-motion="off"] {
+  --lb-animation-dur-micro: var(--lb-duration-0);
+  --lb-animation-dur-fast: var(--lb-duration-0);
+  --lb-animation-dur-normal: var(--lb-duration-0);
+  --lb-animation-dur-gentle: var(--lb-duration-0);
+  --lb-animation-dur-slow: var(--lb-duration-0);
+  --lb-animation-dur-collapse: var(--lb-duration-0);
+  --lb-animation-dur-expressive: var(--lb-duration-0);
+  --lb-animation-dur-stagger: var(--lb-duration-0);
+}
+
+/* ═══════════════════════════════════════════════════════════
    REVEAL — [data-lb-reveal] (LB.Reveal, core runtime)
    Hidden only under html.lb-reveal-on (set by lb.js, or early by a head
    script) and only when motion is welcome; lb.js adds .lb-revealed as
    the element scrolls into view, with --lb-reveal-delay for the stagger.
+   Never hidden inside a data-lb-motion="off" scope (lb.js doesn't watch
+   those blocks, so they show as they are).
    ═══════════════════════════════════════════════════════════ */
 /* A keyframe animation, not a transition: the element keeps its own
    transitions (an interactive card's hover). Hiding is instant. */
 @keyframes lb-reveal-in { from { opacity: 0; translate: 0 var(--lb-size-6x); } }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-reveal-on [data-lb-reveal]:not(.lb-revealed) { opacity: 0; }
-  .lb-reveal-on [data-lb-reveal].lb-revealed { animation: lb-reveal-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in) var(--lb-reveal-delay, 0ms) backwards; }
+  .lb-reveal-on [data-lb-reveal]:not(.lb-revealed):not([data-lb-motion="off"], [data-lb-motion="off"] *) { opacity: 0; }
+  .lb-reveal-on [data-lb-reveal].lb-revealed:not([data-lb-motion="off"], [data-lb-motion="off"] *) { animation: lb-reveal-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in) var(--lb-reveal-delay, 0ms) backwards; }
 }
 @media print {
   [data-lb-reveal] { opacity: 1 !important; translate: none !important; }
@@ -624,6 +650,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 @media (prefers-reduced-motion: reduce) {
   .lb-badge__dot--pulse { animation: none; }
 }
+[data-lb-motion="off"] .lb-badge__dot--pulse { animation: none; }
 
 /* Icon slot — 16px at medium, 12px at small. Inherits currentColor. */
 .lb-badge__icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 1rem; height: 1rem; }
@@ -1014,6 +1041,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 @media (prefers-reduced-motion: reduce) {
   .lb-spinner { animation-duration: 2.4s; }
 }
+[data-lb-motion="off"] .lb-spinner { animation-duration: 2.4s; }
 
 /* ═══════════════════════════════════════════════════════════
    PROGRESS
@@ -1049,6 +1077,11 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-skeleton { display: inline-block; background: var(--lb-bg-bolder); border-radius: var(--lb-radius-interactive); overflow: hidden; position: relative; }
 .lb-skeleton::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, var(--lb-bg-strong) 50%, transparent 100%); background-size: 200% 100%; animation: lb-skeleton-shimmer 1.4s ease-in-out infinite; }
 @keyframes lb-skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+/* Reduced motion and data-lb-motion="off": no shimmer, the block stays. */
+@media (prefers-reduced-motion: reduce) {
+  .lb-skeleton::after { display: none; }
+}
+[data-lb-motion="off"] .lb-skeleton::after { display: none; }
 .lb-skeleton--text { width: 100%; height: 1em; border-radius: var(--lb-radius-interactive); }
 .lb-skeleton--circular { width: 2.5rem; height: 2.5rem; border-radius: 50%; }
 .lb-skeleton--rectangular { width: 100%; height: 8rem; border-radius: var(--lb-radius-surface); }
@@ -3360,7 +3393,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 /* Speed control — a small ghost pill showing the current rate ("1×"); the
    controller cycles the rate on click. Text, not an icon, so it sizes to
    fit "1.75×". */
-.lb-media__speed { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: var(--lb-size-12x); height: var(--lb-size-8x); padding: 0 var(--lb-size-2x); border: none; border-radius: var(--lb-radius-interactive); background: var(--lb-action-bg-ghost-default); color: var(--lb-action-fg-ghost-default); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); font-weight: var(--lb-t-label-m-font-weight); font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color var(--lb-duration-100) var(--lb-ease-standard); }
+.lb-media__speed { flex: none; display: inline-flex; align-items: center; justify-content: center; min-width: var(--lb-size-12x); height: var(--lb-size-8x); padding: 0 var(--lb-size-2x); border: none; border-radius: var(--lb-radius-interactive); background: var(--lb-action-bg-ghost-default); color: var(--lb-action-fg-ghost-default); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); font-weight: var(--lb-t-label-m-font-weight); font-variant-numeric: tabular-nums; cursor: pointer; transition: background-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-media__speed:hover { background: var(--lb-action-bg-ghost-hover); }
 .lb-media__speed:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: var(--lb-size-0-5x); }
 
@@ -3381,8 +3414,8 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    "can't slide"). height:100% + z-index makes the whole bar click+drag. */
 .lb-media__range { -webkit-appearance: none; appearance: none; position: relative; z-index: 1; width: 100%; height: 100%; background: transparent; cursor: pointer; margin: 0; padding: 0; }
 /* Thumb: clean solid circle — matches .lb-slider (rings removed 2026-07-30). */
-.lb-media__range::-webkit-slider-thumb { -webkit-appearance: none; width: var(--lb-size-4x); height: var(--lb-size-4x); border-radius: var(--lb-radius-full); background: var(--lb-bg-accent-value); border: none; cursor: pointer; transition: box-shadow var(--lb-duration-100) var(--lb-ease-standard); }
-.lb-media__range::-moz-range-thumb { width: var(--lb-size-4x); height: var(--lb-size-4x); border-radius: var(--lb-radius-full); background: var(--lb-bg-accent-value); border: none; cursor: pointer; transition: box-shadow var(--lb-duration-100) var(--lb-ease-standard); }
+.lb-media__range::-webkit-slider-thumb { -webkit-appearance: none; width: var(--lb-size-4x); height: var(--lb-size-4x); border-radius: var(--lb-radius-full); background: var(--lb-bg-accent-value); border: none; cursor: pointer; transition: box-shadow var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-media__range::-moz-range-thumb { width: var(--lb-size-4x); height: var(--lb-size-4x); border-radius: var(--lb-radius-full); background: var(--lb-bg-accent-value); border: none; cursor: pointer; transition: box-shadow var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-media__range::-webkit-slider-runnable-track { background: transparent; }
 .lb-media__range::-moz-range-track { background: transparent; }
 .lb-media__range:focus { outline: none; }
@@ -3518,11 +3551,11 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    bg, matching the music player's playlist. */
 .lb-media--video .lb-media__stage { position: relative; overflow: hidden; background: var(--lb-bg-overlay); }
 .lb-media--video video { display: block; width: 100%; height: auto; }
-.lb-media--video .lb-media__controls { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--lb-size-6x) var(--lb-size-3x) var(--lb-size-3x); background: linear-gradient(to top, color-mix(in srgb, var(--lb-bg-overlay) 88%, transparent), transparent); transition: opacity var(--lb-duration-300) var(--lb-ease-standard); }
+.lb-media--video .lb-media__controls { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--lb-size-6x) var(--lb-size-3x) var(--lb-size-3x); background: linear-gradient(to top, color-mix(in srgb, var(--lb-bg-overlay) 88%, transparent), transparent); transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); }
 /* Top bar — mirrors the bottom scrim. Two slots: left (like/dislike) and
    right (speed, share, more). Children must explicitly opt into pointer
    events so the underlying video can still be clicked through the gaps. */
-.lb-media--video .lb-media__top { position: absolute; left: 0; right: 0; top: 0; padding: var(--lb-size-3x) var(--lb-size-3x) var(--lb-size-6x); display: flex; justify-content: space-between; align-items: center; gap: var(--lb-size-2x); background: linear-gradient(to bottom, color-mix(in srgb, var(--lb-bg-overlay) 80%, transparent), transparent); transition: opacity var(--lb-duration-300) var(--lb-ease-standard); pointer-events: none; }
+.lb-media--video .lb-media__top { position: absolute; left: 0; right: 0; top: 0; padding: var(--lb-size-3x) var(--lb-size-3x) var(--lb-size-6x); display: flex; justify-content: space-between; align-items: center; gap: var(--lb-size-2x); background: linear-gradient(to bottom, color-mix(in srgb, var(--lb-bg-overlay) 80%, transparent), transparent); transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); pointer-events: none; }
 .lb-media--video .lb-media__top > * { pointer-events: auto; }
 .lb-media__top-left, .lb-media__top-right { display: flex; align-items: center; gap: var(--lb-size-1x); }
 /* Active reaction (like / dislike) — accent the icon. */
@@ -3542,7 +3575,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 /* Skip feedback badges shown while holding the left/right half. The
    badge fades in with the --rewinding / --ffwding class on the player
    and the accumulating "X0s" updates on each step. */
-.lb-media__skip-fb { position: absolute; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: var(--lb-size-1x); padding: var(--lb-size-2x) var(--lb-size-3x); border-radius: var(--lb-radius-full); background: color-mix(in srgb, var(--lb-bg-overlay) 75%, transparent); color: var(--lb-fg-inverse-strong); font-family: var(--lb-t-label-m-font-family); font-weight: var(--lb-t-label-m-font-weight); opacity: 0; pointer-events: none; transition: opacity var(--lb-duration-150) var(--lb-ease-standard); z-index: 2; }
+.lb-media__skip-fb { position: absolute; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: var(--lb-size-1x); padding: var(--lb-size-2x) var(--lb-size-3x); border-radius: var(--lb-radius-full); background: color-mix(in srgb, var(--lb-bg-overlay) 75%, transparent); color: var(--lb-fg-inverse-strong); font-family: var(--lb-t-label-m-font-family); font-weight: var(--lb-t-label-m-font-weight); opacity: 0; pointer-events: none; transition: opacity var(--lb-animation-dur-normal) var(--lb-animation-ease-ui); z-index: 2; }
 .lb-media__skip-fb--left  { left:  var(--lb-size-4x); }
 .lb-media__skip-fb--right { right: var(--lb-size-4x); }
 .lb-media__skip-fb-icon { width: var(--lb-size-5x); height: var(--lb-size-5x); display: inline-flex; }
@@ -3630,7 +3663,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    click-to-play tracks. Reuses ghost-hover + accent-muted tokens so it
    reads like the List/Menu primitives without forking them. */
 .lb-media__playlist { list-style: none; margin: 0; padding: var(--lb-size-2x) 0 0; display: flex; flex-direction: column; gap: var(--lb-size-0-5x); border-top: var(--lb-border-width-thin) solid var(--lb-border-muted); }
-.lb-media__track { display: flex; align-items: center; gap: var(--lb-size-3x); width: 100%; text-align: left; padding: var(--lb-size-2x) var(--lb-size-3x); border: none; background: transparent; border-radius: var(--lb-radius-interactive); color: var(--lb-fg-default); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); line-height: var(--lb-t-body-m-line-height); cursor: pointer; transition: background-color var(--lb-duration-100) var(--lb-ease-standard), color var(--lb-duration-100) var(--lb-ease-standard), padding-left var(--lb-duration-100) var(--lb-ease-standard); }
+.lb-media__track { display: flex; align-items: center; gap: var(--lb-size-3x); width: 100%; text-align: left; padding: var(--lb-size-2x) var(--lb-size-3x); border: none; background: transparent; border-radius: var(--lb-radius-interactive); color: var(--lb-fg-default); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); line-height: var(--lb-t-body-m-line-height); cursor: pointer; transition: background-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), padding-left var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 /* Hover on the LI (not the button) so the row stays highlighted while the
    pointer moves onto the absolutely-positioned action buttons (share /
    favourite / more) sitting on top of the row. The :not(--active) guard
@@ -3641,7 +3674,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media__track-index { font-variant-numeric: tabular-nums; color: var(--lb-fg-muted); min-width: 1.5rem; text-align: center; }
 .lb-media__track--active .lb-media__track-index { color: var(--lb-action-fg-selected); }
 .lb-media__track-title { flex: 1 1 auto; min-width: 0; }
-.lb-media__track-dur { font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-muted); font-variant-numeric: tabular-nums; flex: none; transition: opacity var(--lb-duration-100) var(--lb-ease-standard); }
+.lb-media__track-dur { font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-muted); font-variant-numeric: tabular-nums; flex: none; transition: opacity var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 
 /* Per-row hover actions — opt-in: add a .lb-media__track-actions sibling
    to the track button inside the <li>. Quick action icon-btns + a
@@ -3653,7 +3686,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    on the row even when the <li> grows due to the expanded inline menu —
    if we anchored to the li's centre, the actions would migrate down into
    the panel area. */
-.lb-media__track-actions { position: absolute; right: var(--lb-size-3x); top: 0; height: var(--lb-size-10x); display: flex; align-items: center; gap: var(--lb-size-0-5x); opacity: 0; pointer-events: none; transition: opacity var(--lb-duration-100) var(--lb-ease-standard); }
+.lb-media__track-actions { position: absolute; right: var(--lb-size-3x); top: 0; height: var(--lb-size-10x); display: flex; align-items: center; gap: var(--lb-size-0-5x); opacity: 0; pointer-events: none; transition: opacity var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-media__playlist > li:hover .lb-media__track-actions,
 .lb-media__playlist > li:focus-within .lb-media__track-actions { opacity: 1; pointer-events: auto; }
 /* Duration only fades when there are per-row actions to take its place
@@ -3688,7 +3721,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    medium token), same reason as .lb-media__track-actions: with
    height:100% the handle would stretch through the expanded inline
    menu and the icon would migrate down out of the row. */
-.lb-media__track-drag { position: absolute; left: 0; top: 0; width: var(--lb-size-6x); height: var(--lb-size-10x); display: flex; align-items: center; justify-content: flex-start; padding-left: 0; color: var(--lb-fg-muted); cursor: grab; opacity: 0; pointer-events: none; transition: opacity var(--lb-duration-100) var(--lb-ease-standard); z-index: 2; touch-action: none; user-select: none; }
+.lb-media__track-drag { position: absolute; left: 0; top: 0; width: var(--lb-size-6x); height: var(--lb-size-10x); display: flex; align-items: center; justify-content: flex-start; padding-left: 0; color: var(--lb-fg-muted); cursor: grab; opacity: 0; pointer-events: none; transition: opacity var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); z-index: 2; touch-action: none; user-select: none; }
 .lb-media__track-drag svg { width: var(--lb-size-4x); height: var(--lb-size-4x); }
 .lb-media__playlist > li:hover .lb-media__track-drag,
 .lb-media__playlist > li:focus-within .lb-media__track-drag { opacity: 0.7; pointer-events: auto; }
@@ -3716,7 +3749,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    playlists which don't inject a panel. The inset spacing lives on
    the inner panel-list as margin, which gets clipped by the panel's
    overflow:hidden when collapsed → row truly collapses to 0. */
-.lb-media__track-panel { overflow: hidden; max-height: 0; opacity: 0; transition: max-height var(--lb-duration-300) var(--lb-ease-standard), opacity var(--lb-duration-200) var(--lb-ease-standard); }
+.lb-media__track-panel { overflow: hidden; max-height: 0; opacity: 0; transition: max-height var(--lb-animation-dur-slow) var(--lb-animation-ease-ui), opacity var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
 .lb-media__playlist > li.lb-media__playlist-li--expanded > .lb-media__track-panel { max-height: 24rem; /* design-intent: media track panel expand cap */ opacity: 1; }
 /* Outer panel uses padding (not content margin) to reveal the parent <li>
    bg-bolder card around the inner menu list — gives a clear "card within
@@ -4338,6 +4371,9 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    ═══════════════════════════════════════════════════════════ */
 
 @keyframes lb-toast-in { from { opacity: 0; transform: translateX(calc(100% + var(--lb-size-4x))); } to { opacity: 1; transform: translateX(0); } }
+/* Dismiss: .lb-toast--leaving slides it back out; LB.toast waits for it
+   (the shared exit wait), then removes the toast. */
+@keyframes lb-toast-out { to { opacity: 0; transform: translateX(100%); } }
 /* Toasts sit above every transient surface: modal backdrop (10000),
    theme editor (9999), command palette backdrop (7500), and any popover
    layer (≤ 10000). Picked 10100 to leave clean headroom above the
@@ -4409,9 +4445,11 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   outline-offset: var(--lb-size-0-5x);
 }
 
-/* Reduced motion: the toast still appears, it just doesn't slide in. */
+.lb-toast--leaving { animation: lb-toast-out var(--lb-animation-dur-gentle) var(--lb-animation-ease-out) forwards; }
+/* Reduced motion: the toast still appears and goes, it just doesn't
+   slide in or out. */
 @media (prefers-reduced-motion: reduce) {
-  .lb-toast { animation: none; }
+  .lb-toast, .lb-toast--leaving { animation: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -7310,6 +7348,7 @@ img.lb-list__icon--round { object-fit: cover; }
     opacity: 0.6;
   }
 }
+[data-lb-motion="off"] .lb-bubble[data-state="streaming"] .lb-bubble__body::after { animation: none; opacity: 0.6; }
 
 /* State: error — danger-tinted border on body. Padded so the border
    sits cleanly around the message content. User-variant errors get
@@ -8147,7 +8186,7 @@ img.lb-list__icon--round { object-fit: cover; }
   color: var(--lb-fg-muted);
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.12s ease;
+  transition: opacity var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
 }
 .lb-conv:hover .lb-conv__kebab,
 .lb-conv:focus-within .lb-conv__kebab,
@@ -8205,7 +8244,7 @@ img.lb-list__icon--round { object-fit: cover; }
   width: 0;
   background: var(--lb-fg-muted);
   border-radius: inherit;
-  transition: width 0.18s ease, background 0.18s ease;
+  transition: width var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui), background var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui);
 }
 .lb-context-budget-bar[data-tone="warning"] { color: var(--lb-fg-warning); }
 .lb-context-budget-bar[data-tone="warning"] .lb-context-budget-bar__fill { background: var(--lb-fg-warning); }
@@ -8462,7 +8501,7 @@ img.lb-list__icon--round { object-fit: cover; }
     max-width: 20rem;
     z-index: 5;
     transform: translateX(-100%);
-    transition: transform 0.18s ease;
+    transition: transform var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui);
     box-shadow: var(--lb-shadow-dropdown);
     flex: 0 0 auto;
   }

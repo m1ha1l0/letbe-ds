@@ -27,7 +27,8 @@
  *     letterboxing it; neighbours are preloaded, a resize refits the
  *     current image, and a link's image is prefetched as soon as it is
  *     hovered, touched or focused.
- *   - Motion (all of it skipped under prefers-reduced-motion): opening,
+ *   - Motion (all of it skipped under prefers-reduced-motion and in a
+ *     data-lb-motion="off" scope around the opening link): opening,
  *     the backdrop fades in while the frame waits unseen for the photo
  *     (at most 4s), then the frame rises in at its final size and the
  *     photo fades in inside it; between images the old one fades out
@@ -55,11 +56,13 @@
   const isVideo = (a) => a.getAttribute('data-lb-type') === 'video' || VIDEO_RE.test(a.getAttribute('href') || '');
   const isMedia = (a) => isVideo(a) || IMG_RE.test(a.getAttribute('href') || '');
 
-  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Motion is read at the viewer's own element, which takes the motion
+  // mode of the link that opened it (LB.inheritMotion in open()).
+  const reduced = (el) => LB.motion(el) !== 'full';
   const rem = () => parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-  function tokenMs(token) {
-    if (reduced()) return 0;
-    const v = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+  function tokenMs(token, el) {
+    if (reduced(el)) return 0;
+    const v = getComputedStyle(el).getPropertyValue(token).trim();
     return (v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000) || 0;
   }
 
@@ -220,9 +223,9 @@
         if (!sw.axis && (Math.abs(sw.dx) > 10 || Math.abs(dy) > 10)) {
           sw.axis = Math.abs(sw.dx) > Math.abs(dy) ? 'x' : 'y';
           if (sw.axis === 'y') { reset(); return; }
-          if (!reduced()) this.el.classList.add('lb-lightbox--dragging');
+          if (!reduced(this.el)) this.el.classList.add('lb-lightbox--dragging');
         }
-        if (sw.axis === 'x' && !reduced()) this._media.style.translate = sw.dx + 'px 0';
+        if (sw.axis === 'x' && !reduced(this.el)) this._media.style.translate = sw.dx + 'px 0';
       });
       const end = (e) => {
         const sw = this._swipe;
@@ -254,7 +257,7 @@
           this._video.src = it.href;
         }
         this._video.setAttribute('aria-label', it.alt || it.head || '');
-        if (!reduced()) { const pr = this._video.play(); if (pr && pr.catch) pr.catch(() => {}); }
+        if (!reduced(this.el)) { const pr = this._video.play(); if (pr && pr.catch) pr.catch(() => {}); }
       } else {
         this._img.src = it.href;
         this._img.alt = it.alt;
@@ -307,7 +310,7 @@
         loading.then((nat) => {
           if (ticket !== this._switching) return;
           const size = this._fit(nat.w, nat.h);
-          if (instant || reduced()) { this._placeInstant(it, size); return; }
+          if (instant || reduced(this.el)) { this._placeInstant(it, size); return; }
           // Old image and caption fade out fast, the frame glides to the
           // new size, the new image fades in and settles half-way through.
           this.el.classList.add('lb-lightbox--switching');
@@ -316,8 +319,8 @@
             this._place(it, size);
             setTimeout(() => {
               if (ticket === this._switching) this.el.classList.remove('lb-lightbox--switching');
-            }, tokenMs('--lb-animation-dur-slow') / 2);
-          }, tokenMs('--lb-animation-dur-normal'));
+            }, tokenMs('--lb-animation-dur-slow', this.el) / 2);
+          }, tokenMs('--lb-animation-dur-normal', this.el));
         });
       }
       // warm the neighbours (images only — videos load when shown)
@@ -335,16 +338,17 @@
       const href = link.getAttribute('href');
       const start = this._items.findIndex((it) => it.href === href);
       this._nav.hidden = this._items.length < 2;
+      LB.inheritMotion(this.el, link);
       // The frame stays unseen (--loading) until the photo is in place,
       // then rises in at its final size and the photo fades in after it.
-      const motion = !reduced();
+      const motion = !reduced(this.el);
       if (motion) this.el.classList.add('lb-lightbox--loading');
       this.show(start < 0 ? 0 : start, true, () => {
         if (!motion) return;
         this.el.classList.remove('lb-lightbox--loading');
         this.el.classList.add('lb-lightbox--revealing');
         void this._media.offsetWidth;
-        setTimeout(() => this.el.classList.remove('lb-lightbox--revealing'), tokenMs('--lb-animation-dur-gentle'));
+        setTimeout(() => this.el.classList.remove('lb-lightbox--revealing'), tokenMs('--lb-animation-dur-gentle', this.el));
       });
       LB.Modal.open(this.el);
     }

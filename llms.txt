@@ -37,6 +37,11 @@ render. lb.js then owns the DOM of every `data-lb-*` element (plus
 a stable key, read their events, call their API. Plain-CSS components are
 safe to render from state.
 
+Motion: every component honours `prefers-reduced-motion`. `data-lb-motion="off"`
+on `<html>`, a section or one component makes all letbe-ds motion inside
+it instant (CSS and scripts); `LB.motion(el)` returns `'off'`, `'reduce'` or
+`'full'` for your own scripts. Retime with the `--lb-animation-*` tokens.
+
 Class combos are contracts: copy the full combo from each demo (base +
 variant + size, e.g. `lb-btn lb-btn--secondary lb-btn--medium`; every table
 cell carries `lb-table__cell`). Base classes alone render unstyled.
@@ -76,7 +81,7 @@ Token-level pages — vocabulary and scales, not classed components.
 - [Radius](/radius/): Corner radius primitives (L1) and semantic aliases (L2) for interactive, field, surface, overlay, badge, and full/pill shapes. Theme editor's corner-radius knob remaps the L2 aliases to different L1 values so all components follow one slider.
 - [Shadow](/shadow/): Elevation shadows. L1 shadow.1–4 define progressively deeper drop-shadows; L2 aliases (card, dropdown, modal, tooltip, focus) point at the right primitive for each surface role. The focus shadow (L1 shadow.ring) is available for inset focus indicators; no shipped component uses it — focus states are drawn with outline instead.
 - [Opacity](/opacity/): Opacity scale for transparent overlays and muted elements. L1 provides 0, 0.05, 0.1, 0.2, 0.4, 0.6, 0.8, 1. L2 names them (hidden, faint, subtle, light, medium, heavy, strong, opaque) for semantic use in interactive states.
-- [Animation](/animation/): Motion tokens — durations (0–500ms for UI, 700ms for expressive motion) and easing curves. L2 aliases give semantic names like `dur-fast` (100ms, state changes), `dur-normal` (150ms, menus/tooltips), `dur-gentle` (200ms, transitions), `ease-ui` (standard UI), and `ease-bounce` (playful spring). Honors `prefers-reduced-motion`.
+- [Animation](/animation/): Motion tokens — durations (0–500ms for UI, 700ms for expressive motion) and easing curves. L2 aliases give semantic names like `dur-fast` (100ms, state changes), `dur-normal` (150ms, menus/tooltips), `dur-gentle` (200ms, transitions), `ease-ui` (standard UI), and `ease-bounce` (playful spring). Honors `prefers-reduced-motion`; `data-lb-motion="off"` on `<html>`, a section or one component switches letbe-ds motion off there.
 - [Layout](/layout/): Four single-purpose layout primitives covering ~80% of the spacing patterns we use: **Stack** (vertical, gap), **Cluster** (horizontal, gap, wraps) with --start/--end/--center/--between alignment modifiers, **Grid** (auto-fit columns with --min and --gap), and **Masonry** (Pinterest-style packed columns for variable-height items). Each accepts CSS custom properties so the same class works for tight toolbars and breathing-room hero sections. Replaces inline `style="display: flex; gap: …"` everywhere — composes freely (Stack of Clusters is the form-row pattern; Grid of Cards is the dashboard pattern).
 
 ## Charts (8)

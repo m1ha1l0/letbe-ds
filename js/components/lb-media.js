@@ -436,13 +436,14 @@
     // hover-reveal — keeping the behaviour an integral part of the player.
     _setupMarquees() {
       this.marquees = [];
-      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // No marquee under reduced motion or in a data-lb-motion="off" scope.
+      const reduce = LB.motion(this.el) !== 'full';
       // Wire a hover trigger to reveal a marquee box. The reveal slides out
       // on enter; on leave it slides back but KEEPS the full text visible
       // until the transform finishes (transitionend), then restores the
       // ellipsis — so the return never flashes a clipped/ellipsised string.
       const wire = (box, trigger) => {
-        if (reduce) return; // honour reduced-motion: no marquee animation
+        if (reduce) return;
         trigger.addEventListener('pointerenter', () => {
           if (!box.classList.contains('lb-media__marquee--scrollable')) return;
           clearTimeout(box._returnT);

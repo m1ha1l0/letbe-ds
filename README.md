@@ -195,6 +195,14 @@ too. Everything a consumer has needed so far — full brand retunes, new fonts,
 radius language, marketing type scales — has been value changes in one file,
 zero forks.
 
+**Motion** follows the same rule. Retime it by re-declaring the L2 motion
+tokens (`--lb-animation-dur-*`, `--lb-animation-ease-*`) in your layer. To
+switch letbe-ds motion off, put `data-lb-motion="off"` on `<html>` (the
+whole site), on a section or on one component: everything inside becomes
+instant, scripts included, and overlays still open, close and return focus.
+The user's `prefers-reduced-motion` setting always applies on top. Details
+and a live demo on the [Animation page](https://letbe.design/animation/).
+
 ## Local development
 
 No build step. Serve the repo root as static files and open the gallery at `/`:

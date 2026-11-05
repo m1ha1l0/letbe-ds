@@ -88,18 +88,43 @@ const LB = (() => {
     if (!_scrollLockOwners.size) document.documentElement.classList.remove('lb-scroll-locked', 'lb-scroll-locked--body');
   }
 
+  // ─── MOTION MODE ───────────────────────────────────────────
+  // data-lb-motion="off" on <html>, a section or one component makes all
+  // letbe-ds motion inside it instant: CSS points the L2 durations at
+  // --lb-duration-0, and the scripts ask motion(el) before they animate,
+  // wait or scroll smoothly. motion(el) → 'off' (an off scope holds el),
+  // 'reduce' (the user's prefers-reduced-motion) or 'full'. "custom" reads
+  // as 'full' here: it only drops the CSS entry and exit.
+  function motion(el) {
+    const from = el && el.closest ? el : document.documentElement;
+    const scope = from.closest('[data-lb-motion]');
+    if (scope && scope.getAttribute('data-lb-motion') === 'off') return 'off';
+    return matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduce' : 'full';
+  }
+  // An overlay the script moves under <body> takes the motion mode of the
+  // element it opens from, so a scope around the opener still reaches it.
+  // (A mode on <html> reaches it anyway.)
+  function inheritMotion(overlay, from) {
+    const scope = from && from.closest ? from.closest('[data-lb-motion]') : null;
+    if (scope && scope !== document.documentElement) overlay.setAttribute('data-lb-motion', scope.getAttribute('data-lb-motion'));
+    else overlay.removeAttribute('data-lb-motion');
+  }
+  const scrollBehavior = (el) => (motion(el) === 'full' ? 'smooth' : 'auto');
+
   // ─── EXIT MOTION ───────────────────────────────────────────
   // An overlay closes in two steps: add a leaving class, wait for the
   // finite CSS animations/transitions that class starts anywhere in `el`
   // (infinite ones such as a spinner are ignored), then run `done`, which
   // hides the element. With nothing to wait for (reduced motion, or a
   // theme that sets no exit) `done` runs synchronously, exactly like the
-  // old instant close. A timeout guard means a cancelled or never-ending
-  // animation can never keep an overlay on screen. The leaving class is
-  // the public hook: style it to give any overlay your own exit.
+  // old instant close; under data-lb-motion="off" it doesn't even look.
+  // A timeout guard means a cancelled or never-ending animation can never
+  // keep an overlay on screen. The leaving class is the public hook: style
+  // it to give any overlay your own exit.
   // Returns a cancel function for re-opening mid-exit, or null when the
   // close already finished synchronously.
   function playExit(el, cls, done) {
+    if (motion(el) === 'off') { done(); return null; }
     el.classList.add(cls);
     const anims = (el.getAnimations ? el.getAnimations({ subtree: true }) : [])
       .filter((a) => Number.isFinite(a.effect?.getComputedTiming().endTime));
@@ -4269,6 +4294,7 @@ const LB = (() => {
         });
       });
 
+      inheritMotion(pop, anchor);
       document.body.appendChild(pop);
       this._morePopover = pop;
     }
@@ -4357,6 +4383,7 @@ const LB = (() => {
     }
     _openFloater() {
       if (!this._floater.parentNode) document.body.appendChild(this._floater);
+      inheritMotion(this._floater, this._trigger);
       this._open = true;
       this._floater.style.display = '';
       this._trigger.setAttribute('aria-expanded', 'true');
@@ -6304,7 +6331,7 @@ const LB = (() => {
         invalid.sort((x, y) => (x === y ? 0 : x.compareDocumentPosition(y) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
         const first = invalid[0];
         if (first.focus) first.focus({ preventScroll: true });
-        if (first.scrollIntoView) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        if (first.scrollIntoView) first.scrollIntoView({ block: 'center', behavior: scrollBehavior(first) });
         return false;
       }
       return true;
@@ -6480,7 +6507,7 @@ const LB = (() => {
       this.refresh();
     }
 
-    _reduced() { return matchMedia('(prefers-reduced-motion: reduce)').matches; }
+    _reduced() { return motion(this.el) !== 'full'; }
 
     // Offset of physical child k inside the scroller.
     _x(k) {
@@ -6597,7 +6624,6 @@ const LB = (() => {
   // tech reads). LB.Reveal.show(el, instant) reveals by hand.
   const Reveal = (() => {
     const can = typeof window !== 'undefined' && 'IntersectionObserver' in window;
-    const motion = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
     let io = null, countIo = null;
     const stepMs = () => {
       const v = getComputedStyle(document.documentElement).getPropertyValue('--lb-animation-dur-stagger').trim();
@@ -6621,7 +6647,7 @@ const LB = (() => {
       const nodes = [];
       let n;
       while ((n = walker.nextNode())) if (/\d/.test(n.nodeValue)) nodes.push({ node: n, end: n.nodeValue, parts: n.nodeValue.split(/(\d+)/) });
-      if (!nodes.length || !motion()) return;
+      if (!nodes.length || motion(el) !== 'full') return;
       const sr = document.createElement('span');
       sr.className = 'lb-visually-hidden';
       sr.textContent = el.textContent.trim().replace(/\s+/g, ' ');
@@ -6644,7 +6670,10 @@ const LB = (() => {
       const els = root.querySelectorAll('[data-lb-reveal]');
       const counts = root.querySelectorAll('[data-lb-count-up]');
       if (!els.length && !counts.length) return;
-      if (els.length && motion()) {
+      // Only blocks whose motion is 'full' are hidden and observed; under
+      // reduced motion or in a data-lb-motion="off" scope they just show.
+      const moving = [...els].filter((el) => motion(el) === 'full');
+      if (moving.length) {
         if (!io) {
           document.documentElement.classList.add('lb-reveal-on');
           io = new IntersectionObserver((entries) => {
@@ -6657,7 +6686,7 @@ const LB = (() => {
             while (el) { show(el, 0, true); el = el.parentElement && el.parentElement.closest('[data-lb-reveal]:not(.lb-revealed)'); }
           });
         }
-        els.forEach((el) => { if (!el._lbReveal && !el.classList.contains('lb-revealed')) { el._lbReveal = true; io.observe(el); } });
+        moving.forEach((el) => { if (!el._lbReveal && !el.classList.contains('lb-revealed')) { el._lbReveal = true; io.observe(el); } });
       }
       if (counts.length) {
         if (!countIo) countIo = new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) { countIo.unobserve(en.target); countUp(en.target); } }), { threshold: 0.4 });
@@ -6764,7 +6793,7 @@ const LB = (() => {
       if (this._collapsed) return;
       this._collapsed = true;
       this.refresh();
-      window.scrollTo({ top: this._restoreY, behavior: 'smooth' });
+      window.scrollTo({ top: this._restoreY, behavior: scrollBehavior(this.grid) });
       this.grid.dispatchEvent(new CustomEvent('lb-show-more-toggle', { detail: { expanded: false }, bubbles: true }));
     }
 
@@ -6889,11 +6918,9 @@ const LB = (() => {
 
     dismiss(id) {
       const toast = document.getElementById(id);
-      if (toast) {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(100%)';
-        toast.style.transition = 'opacity 200ms, transform 200ms';
-        setTimeout(() => toast.remove(), 200);
+      if (toast && !toast._lbLeaving) {
+        toast._lbLeaving = true;
+        playExit(toast, 'lb-toast--leaving', () => toast.remove());
       }
     }
   }
@@ -9781,6 +9808,8 @@ const LB = (() => {
     lockScroll,
     unlockScroll,
     playExit,
+    motion,
+    inheritMotion,
     observe,
   };
 })();

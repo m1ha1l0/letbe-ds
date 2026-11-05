@@ -5,6 +5,33 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Motion off switch** (new): `data-lb-motion="off"` on `<html>`, a
+  section or one component makes every letbe-ds motion inside it
+  instant. CSS points the L2 durations and the stagger at
+  `--lb-duration-0`; lb.js skips its exit waits, the lightbox glide, the
+  scroll reveal and count-up, the media title marquee and smooth
+  scrolls. Overlays still open, close and return focus, and overlays the
+  script moves under `<body>` (lightbox, colour picker, calendar
+  popover, chat menus) take the mode of the element that opened them.
+  Repeating indicators follow their reduced-motion rules (the spinner
+  turns slowly; shimmer, pulse and the streaming caret stop). The
+  user's `prefers-reduced-motion` always applies. New Motion control
+  section with a live demo on the Animation page.
+- **`LB.motion(el)`** (new API): `'off'`, `'reduce'` or `'full'` for the
+  motion at `el`, so a site's own scripts can follow the same switch;
+  `LB.inheritMotion(overlay, opener)` for overlays a script moves under
+  `<body>`.
+- **Reduced motion** (fix): the skeleton shimmer now stops under
+  `prefers-reduced-motion` (it had no rule); the form's scroll to the
+  first error and Show more's scroll back on collapse no longer scroll
+  smoothly when motion is reduced; a dismissed toast now leaves through
+  `.lb-toast--leaving` on the motion tokens (it ran a hard-coded 200ms
+  slide in script, even under reduced motion).
+- **Motion tokens everywhere** (fix): the media player's transitions and
+  3 chat transitions moved from L1 values and raw milliseconds onto the
+  L2 motion tokens (same speeds), so theme retiming and the off switch
+  reach them.
+
 ## [1.17.0] — 2026-11-05
 
 Minor: danger and no-entry icons (`skull`, `ban` and their filled

@@ -1906,6 +1906,7 @@
         + '<li class="lb-list__item" role="menuitem" tabindex="-1" data-action="share">Share</li>'
         + '<li class="lb-list__item" role="menuitem" tabindex="-1" data-action="move">Move…</li>'
         + '<li class="lb-list__item lb-list__item--danger" role="menuitem" tabindex="-1" data-action="delete">Delete</li>';
+      if (window.LB && window.LB.inheritMotion) window.LB.inheritMotion(menu, kebab);
       document.body.appendChild(menu);
 
       // Position: align top-right of menu to bottom-right of kebab.
