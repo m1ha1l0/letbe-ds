@@ -1427,6 +1427,13 @@ From the value-deck findings. Library work, one component per round:
   menus may carry page items after a separator; new
   `lb-board--stacked` layout (lanes stacked at full width); a lane
   without a footer has a 12px bottom inset.
+  ✅ DONE in library 2026-11-05 (board is now a set `layout=columns |
+  stacked` — stacked = 360 wide, lanes full width, no bottom padding;
+  board/column gained `footer (show)` and moved the 12px into the cards
+  area (cards pad-bottom 3x, footer pad-top 0: same look with a footer,
+  12px inset without), mirrored in the board's two frame lanes. Move-to
+  arrows and page items live in card/lane menus, which the library does
+  not draw open — code behaviour, noted in the description)
 - **Tooltip**: the bubble keeps to one line up to 15rem (was wrapping
   word by word); near an edge the bubble slides and the arrow stays on
   the trigger — model an end-aligned bubble with its arrow under the
