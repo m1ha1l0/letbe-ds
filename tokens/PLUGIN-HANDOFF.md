@@ -1557,6 +1557,15 @@ Library work, one component per round:
   under the content). If the card footer is a nested instance or a
   variant, add the plain form; a `rule (show)` toggle, on by default,
   also works.
+  ✅ DONE in library 2026-11-05 (`card` footer was a plain frame, so all
+  15 variants now hold `footer` = a vertical wrapper (gap = the footer's
+  top padding token, size/3x S, size/4x M + L) with a 1px `rule`
+  (height `border-width/thin`, `surface/border/default`) over the
+  `actions` row (side + bottom padding kept, top 0). New `rule (show)`,
+  on by default: off = no rule and no top padding, the action sits under
+  the content. Cards grew 1px, as the CSS border-top does (the old
+  inside stroke was painted in the padding). 8 carousel instances have
+  the footer off, untouched; Light + Dark verified)
 - **Header drawer tools (finding 52):** in `header/drawer` (the full phone
   menu from item 38) the head can hold a control beside the close:
   brand · [ghost M icon button `sun` "Switch theme" · close], gap
