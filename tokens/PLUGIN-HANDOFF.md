@@ -1521,3 +1521,39 @@ Library work, one component per round:
   library. The Menu component's email default was `jane@letbe.art`
   (another project's domain) → `jane@letbe.design`, matching the Menu
   demo. File-wide: 0 `letbe.art` left.
+
+### 43. v1.16.0 consumer findings — library relay 🟡 OPEN (2026-11-05) — no plugin action, no new tokens
+
+From the mihailo.net and mihailo.ink findings after their v1.15.0 update.
+Library work, one component per round:
+
+- **Content text in the default ink (finding 46, in part):** the
+  accordion panel paragraph, the sheet body text and the popover body
+  text rebind from `fg/muted` to `fg/default` (they are the component's
+  content; muted stays for labels and meta). Light + Dark.
+- **Stat, value first (finding 50):** a new value-first form on the
+  `stat` set (a `variant=value-first` beside default/compact/row, or the
+  library's equivalent): the value (display-s) on top, the label under it
+  in body/m, sentence case with no overline caps and the body letter
+  spacing, ink `fg/muted` like the other labels, gap `size/1x`. Demo text:
+  "12 / Countries served".
+- **Card, plain footer (finding 51):** a card footer without the top rule
+  and with no top padding (`.lb-card__footer--plain`, the action sits
+  under the content). If the card footer is a nested instance or a
+  variant, add the plain form; a `rule (show)` toggle, on by default,
+  also works.
+- **Header drawer tools (finding 52):** in `header/drawer` (the full phone
+  menu from item 38) the head can hold a control beside the close:
+  brand · [ghost M icon button `sun` "Switch theme" · close], gap
+  `size/2x`, the close staying on the bar's menu button. Optional, behind
+  a `tools (show)` toggle, off by default.
+- **Media player, narrow layout (mihailo.ink):** only if the library has a
+  phone-width player (a template or a narrow example): at 480px of player
+  width or less the times sit on the scrubber's line (current · scrubber ·
+  duration) and the line below holds only buttons, transport left, the
+  rest pushed right. The 5 layouts at desktop width don't change.
+- **Code only, nothing to do:** `lb-link--inline` (a link inside a
+  sentence; in Figma that is a styled text range, not a component),
+  `lb-media--no-volume-touch` (a pointer media query), and the card's
+  linked picture (an inset focus ring and the zoom, states the library
+  doesn't model).
