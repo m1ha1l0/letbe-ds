@@ -26,6 +26,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   the button line, Shuffle, Repeat, Speed or the volume wrapped onto a
   third line on a 390px phone (worse with 48px touch buttons). No markup
   change; `--compact` and `--card` keep their layouts (mihailo.ink).
+- **Media Player, no volume on touch screens** (new):
+  `lb-media--no-volume-touch` drops mute and the volume slider only where
+  the primary pointer is touch (`pointer: coarse`), in CSS. A site no
+  longer toggles `--no-volume` from a `matchMedia` script, so a slow
+  phone never paints the controls first (mihailo.ink).
 
 ## [1.15.0] — 2026-11-05
 

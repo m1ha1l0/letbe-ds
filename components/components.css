@@ -3398,6 +3398,13 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    its push (it sits on the last transport button, not on mute). */
 .lb-media--no-volume [data-lb-media-mute],
 .lb-media--no-volume .lb-media__volume { display: none; }
+/* --no-volume-touch: the same, only where the primary pointer is touch
+   (phones and tablets set the volume with their own buttons). CSS, so
+   there is no first paint with the controls before a script runs. */
+@media (pointer: coarse) {
+  .lb-media--no-volume-touch [data-lb-media-mute],
+  .lb-media--no-volume-touch .lb-media__volume { display: none; }
+}
 @container (max-width: 480px) {
   .lb-media__controls { flex-wrap: wrap; }
   .lb-media__scrubber { order: -1; flex: 1 1 0; }
