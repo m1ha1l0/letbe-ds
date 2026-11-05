@@ -1543,6 +1543,15 @@ Library work, one component per round:
   in body/m, sentence case with no overline caps and the body letter
   spacing, ink `fg/muted` like the other labels, gap `size/1x`. Demo text:
   "12 / Countries served".
+  ✅ DONE in library 2026-11-05 (`stat` set gained `layout=value-first`
+  280w: value `display/s` fg/default on top, then the label row (icon
+  toggle kept) with the label on `letbe/text/body/m`, no caps, body
+  letter spacing, fg/muted, wrapping instead of truncating, gap `size/1x`;
+  no delta/caption row, like the demo, so those toggles don't show on it;
+  value/label/icon refs match the other variants. The text props are
+  shared across the set, so the master shows the set default and "12 /
+  Countries served" is an instance override (tested with the 3 demo
+  stats, icon on, Light + Dark). Set frame now fits every variant)
 - **Card, plain footer (finding 51):** a card footer without the top rule
   and with no top padding (`.lb-card__footer--plain`, the action sits
   under the content). If the card footer is a nested instance or a
