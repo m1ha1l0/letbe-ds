@@ -2219,7 +2219,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   flex-direction: column;
   overflow: hidden;            /* contains the inner scroll region */
   font-family: var(--lb-t-body-m-font-family);
-  animation: var(--_lb-overlay-motion, lb-cmdk-in) var(--lb-animation-dur-normal) cubic-bezier(0.16, 1, 0.3, 1);
+  animation: var(--_lb-overlay-motion, lb-cmdk-in) var(--lb-animation-dur-normal) var(--lb-animation-ease-expressive-in);
 }
 @keyframes lb-cmdk-in {
   from { opacity: 0; transform: translateY(-8px) scale(0.98); } /* design-intent: cmdk drop-in offset */
@@ -4425,7 +4425,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    layer (≤ 10000). Picked 10100 to leave clean headroom above the
    highest existing layer without dipping into 2^15+ paranoia values. */
 .lb-toast-region { position: fixed; bottom: var(--lb-size-4x); right: var(--lb-size-4x); display: flex; flex-direction: column; gap: var(--lb-size-2x); z-index: 10100; pointer-events: none; max-width: 22rem; width: 100%; }
-.lb-toast { display: flex; align-items: flex-start; gap: var(--lb-size-3x); padding: var(--lb-size-3x) var(--lb-size-4x); border-radius: var(--lb-radius-surface); border: var(--lb-border-width-action) solid transparent; box-shadow: var(--lb-shadow-modal); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); line-height: var(--lb-t-body-s-line-height); pointer-events: all; color: var(--lb-fg-default); animation: var(--_lb-overlay-motion, lb-toast-in) var(--lb-animation-dur-gentle) cubic-bezier(0.16, 1, 0.3, 1); }
+.lb-toast { display: flex; align-items: flex-start; gap: var(--lb-size-3x); padding: var(--lb-size-3x) var(--lb-size-4x); border-radius: var(--lb-radius-surface); border: var(--lb-border-width-action) solid transparent; box-shadow: var(--lb-shadow-modal); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); line-height: var(--lb-t-body-s-line-height); pointer-events: all; color: var(--lb-fg-default); animation: var(--_lb-overlay-motion, lb-toast-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-expressive-in); }
 /* Toast reads as soft tinted container, same as Banner. */
 .lb-toast--info    { background: var(--lb-bg-info-subtle);    border-color: var(--lb-border-info-muted); }
 .lb-toast--success { background: var(--lb-bg-success-subtle); border-color: var(--lb-border-success-muted); }

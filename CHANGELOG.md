@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Toast and command palette entry easing** now read
+  `--lb-animation-ease-expressive-in` instead of a raw `cubic-bezier`,
+  so a theme that changes the token changes them too. Same curve by
+  default, no visible change.
+
 ## [1.18.0] — 2026-11-05
 
 Minor: motion control. `data-lb-motion="off"` and `"custom"` at any
