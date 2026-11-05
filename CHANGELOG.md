@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.17.0] — 2026-11-05
+
+Minor: danger and no-entry icons (`skull`, `ban` and their filled
+pairs) and the `llms-full.txt` reference. No new tokens and no renames.
+
 - **Danger and no-entry icons** (new): `skull` and `ban` (a circle with a
   diagonal bar), Lucide originals like the rest of the outlined set, and
   solid `skull-filled` and `ban-filled` beside the other filled status
