@@ -5,6 +5,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.19.0] — 2026-11-05
+
+Minor: a visual retune of the accordion (20px under an open answer, was
+32px) and a 160px floor for the media player's progress bar on one row
+(`--lb-media-bar-min`). No new tokens and no renames.
+
 - **Accordion: 20px under an open answer, was 32px** (visual retune,
   review before bumping). With 8px between question and answer, 32px
   under it read as an empty gap after short answers; both consumer sites
