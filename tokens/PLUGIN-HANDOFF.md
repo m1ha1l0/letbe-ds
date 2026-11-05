@@ -1591,3 +1591,12 @@ Library work:
   `ban-filled` (264 in the set, was 260; 15 filled, was 13). Add the
   outlined pair to the icon library like the rest of the outlined set and
   the filled pair beside `x-circle-filled` / `alert-triangle-filled`.
+
+### 45. Motion control (v1.18.0) 🟢 code-side only — no plugin or library action (2026-11-05)
+
+`data-lb-motion="off"` / `"custom"`, `LB.motion(el)`, the reveal timing
+hooks (`--lb-reveal-dur/-ease/-step`) and the accordion motion with its
+hooks (`--lb-accordion-dur/-dur-close/-ease`). No new tokens: "off" points
+the existing L2 durations at the existing L1 `--lb-duration-0` inside the
+attribute, and the hooks are component custom properties that fall back
+to existing L2 tokens. The library models no motion, so nothing to mirror.
