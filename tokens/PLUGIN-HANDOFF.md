@@ -1215,7 +1215,7 @@ Plugin (checked read-only against letbe-tokens-figma main.js,
 
 Library: nothing (Figma prototypes don't bind motion variables).
 
-### 38. v1.5.0–v1.9.0 components and variants — library relay 🔵 LIBRARY (2026-11-04) — no plugin action, no new tokens
+### 38. v1.5.0–v1.9.0 components and variants — library relay ✅ DONE in library 2026-11-05 (every bullet; ships in the cycle's one publish) — no plugin action, no new tokens
 
 New visuals shipped from the mihailo.net / mihailo.ink findings, all on
 existing tokens. Library work (one component per round, as usual):
@@ -1314,6 +1314,12 @@ existing tokens. Library work (one component per round, as usual):
     default|success|warning|danger|muted, icon 1.1em centred on the first
     line, icon (swap) + text props; `icon-list` size M|L|XL with 2x / 3x
     / 4x line gaps, 4 exposed items, item-4 (show) off; Light + Dark)
+  - Carousel ✅ DONE in library 2026-11-05 (new Carousel page:
+    `carousel` layout single (576) | cards (720, 320 cards so the next
+    peeks), a clipped `content` SLOT with a 4x gap prefilled with card
+    instances, controls row gap 2x with status (caption-m muted,
+    `status (show)` off) and Previous / Next secondary M icon buttons,
+    `controls (show)` off = --static)
 
 Code-only (behaviour, never mirrored in the library): overlay
 entry/exit motion and `LB.playExit`, the shared scroll lock, the
