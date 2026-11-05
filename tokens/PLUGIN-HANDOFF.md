@@ -1247,6 +1247,10 @@ existing tokens. Library work (one component per round, as usual):
 - **Brand icons**: instagram, facebook, youtube, github (Simple Icons)
   and linkedin, twitter (Bootstrap Icons) are now filled logos — refresh
   those six in the icon library.
+  ✅ DONE in library 2026-11-05 (geometry swapped IN PLACE on the
+  existing layers, so placed instances and their colours survive — the
+  footer's GitHub/YouTube checked: full-box filled logos on `icon-fill`,
+  `icon` emptied; Instagram was two-tone, now a filled logo)
 - **Flags**: the set is the full ISO 3166-1 list + XK (250, was 172) —
   add the 78 new circle flags if the library carries flags.
 - **Select / Multi-Select options** may carry a flag or an icon before
