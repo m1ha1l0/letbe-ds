@@ -1522,7 +1522,7 @@ Library work, one component per round:
   (another project's domain) → `jane@letbe.design`, matching the Menu
   demo. File-wide: 0 `letbe.art` left.
 
-### 43. v1.16.0 consumer findings — library relay 🟡 OPEN (2026-11-05) — no plugin action, no new tokens
+### 43. v1.16.0 consumer findings — library relay ✅ DONE in library 2026-11-05 (4 changes + the player check; ships in the cycle's one publish) — no plugin action, no new tokens
 
 From the mihailo.net and mihailo.ink findings after their v1.15.0 update.
 Library work, one component per round:
@@ -1581,6 +1581,11 @@ Library work, one component per round:
   width or less the times sit on the scrubber's line (current · scrubber ·
   duration) and the line below holds only buttons, transport left, the
   rest pushed right. The 5 layouts at desktop width don't change.
+  ✅ CHECKED in library 2026-11-05, nothing to change: no phone-width
+  player. `media` content boxes are bar / bar-art / compact 528, video
+  640 (all over 480), and the 320w `card` keeps its own sub-rows, which
+  the CSS defends from the narrow query; no `media` instances or
+  templates anywhere in the file
 - **Code only, nothing to do:** `lb-link--inline` (a link inside a
   sentence; in Figma that is a styled text range, not a component),
   `lb-media--no-volume-touch` (a pointer media query), and the card's
