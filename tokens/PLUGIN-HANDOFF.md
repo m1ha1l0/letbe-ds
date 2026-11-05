@@ -1412,6 +1412,9 @@ From the value-deck findings. Library work, one component per round:
 - **`lb-btn--large`**: 48px high (size/12x), 24px side padding
   (size/6x), the action-l text style — new size on the button set,
   pairs with `lb-icon-btn--large`.
+  ✅ DONE in library 2026-11-05 (`size=L` × 6 types × 4 states = 24
+  variants cloned from M in-set: height size/12x, padding size/6x, label
+  action/l, 144 prop refs restored; size order S, M, L; Light + Dark)
 - **Menu panel**: sits 4px (size/1x) below its trigger (was touching);
   a trailing kebab's panel lines up with the trigger's right edge
   (`data-lb-menu-align="end"`).
