@@ -1531,6 +1531,12 @@ Library work, one component per round:
   accordion panel paragraph, the sheet body text and the popover body
   text rebind from `fg/muted` to `fg/default` (they are the component's
   content; muted stays for labels and meta). Light + Dark.
+  ✅ DONE in library 2026-11-05 (9 text fills rebound to `fg/default`:
+  `accordion/item` panel `content` in all 3 states incl. disabled (CSS
+  greys only the trigger), the `sheet` body `paragraph` on all 4 sides +
+  the expanded peek sheet, the `popover` body `paragraph`; the sheet bar
+  `meta` stays muted; 0 instance overrides left on the old ink; Light +
+  Dark verified)
 - **Stat, value first (finding 50):** a new value-first form on the
   `stat` set (a `variant=value-first` beside default/compact/row, or the
   library's equivalent): the value (display-s) on top, the label under it
