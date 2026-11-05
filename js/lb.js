@@ -6634,8 +6634,9 @@ const LB = (() => {
   //     page; focus that lands inside a block shows it at once; print
   //     shows everything.
   // data-lb-count-up on an element counts every number in its text up
-  // from 0 when it comes into view (the final value is what assistive
-  // tech reads). LB.Reveal.show(el, instant) reveals by hand.
+  // from 0 when it comes into view, each in its written format (the
+  // final value is what assistive tech reads). LB.Reveal.show(el,
+  // instant) reveals by hand.
   const Reveal = (() => {
     const can = typeof window !== 'undefined' && 'IntersectionObserver' in window;
     let io = null, countIo = null;
@@ -6659,27 +6660,88 @@ const LB = (() => {
       el.style.setProperty('--lb-reveal-delay', Math.min(i, 6) * stepMs(el) + 'ms');
       el.classList.add('lb-revealed');
     }
+    // A number counts as 1 value in the way the page writes it: the group
+    // and decimal marks come from the nearest lang ("2,000" and "4.5" in
+    // English, "2 000" and "4,5" in Swedish), and every step keeps them.
+    // A year (4 bare digits, 1900–2099) stays as written, and so does any
+    // number inside [data-lb-count-up="off"].
+    const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    function numberRe(el) {
+      const host = el.closest('[lang]');
+      let group = ',', decimal = '.';
+      try {
+        new Intl.NumberFormat((host && host.lang) || 'en').formatToParts(12345.6).forEach((p) => {
+          if (p.type === 'group') group = p.value;
+          else if (p.type === 'decimal') decimal = p.value;
+        });
+      } catch (e) { /* unknown lang: English marks */ }
+      // A space-like group mark is often typed as a plain space.
+      const g = /\s/.test(group) ? '[ \\u00A0\\u202F]' : esc(group);
+      const d = esc(decimal);
+      return { re: new RegExp(`\\d{1,3}(?:${g}\\d{3})+(?:${d}\\d+)?|\\d+(?:${d}\\d+)?`, 'g'), decimal };
+    }
+    function parseNumber(s, decimal) {
+      const [int, frac = ''] = s.split(decimal);
+      const group = int.replace(/\d/g, '').charAt(0);
+      return { to: parseFloat(int.replace(/\D/g, '') + '.' + (frac || '0')), dec: frac.length, group, decimal };
+    }
+    function formatNumber(x, k) {
+      const [int, frac] = (x.to * k).toFixed(x.dec).split('.');
+      return (x.group ? int.replace(/\B(?=(\d{3})+(?!\d))/g, x.group) : int) + (frac ? x.decimal + frac : '');
+    }
     function countUp(el) {
       if (el._lbCounted) return;
       el._lbCounted = true;
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const { re, decimal } = numberRe(el);
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+        acceptNode: (t) => (t.parentElement.closest('[data-lb-count-up]') === el ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
+      });
       const nodes = [];
       let n;
-      while ((n = walker.nextNode())) if (/\d/.test(n.nodeValue)) nodes.push({ node: n, end: n.nodeValue, parts: n.nodeValue.split(/(\d+)/) });
+      while ((n = walker.nextNode())) {
+        const parts = [];
+        let last = 0, m, counts = false;
+        re.lastIndex = 0;
+        while ((m = re.exec(n.nodeValue))) {
+          if (/^(19|20)\d\d$/.test(m[0])) continue;
+          parts.push(n.nodeValue.slice(last, m.index), parseNumber(m[0], decimal));
+          last = m.index + m[0].length;
+          counts = true;
+        }
+        if (!counts) continue;
+        parts.push(n.nodeValue.slice(last));
+        nodes.push({ node: n, end: n.nodeValue, parts });
+      }
       if (!nodes.length || motion(el) !== 'full') return;
       const sr = document.createElement('span');
       sr.className = 'lb-visually-hidden';
       sr.textContent = el.textContent.trim().replace(/\s+/g, ' ');
       el.parentNode.insertBefore(sr, el);
       el.setAttribute('aria-hidden', 'true');
-      const dur = 1100; // design-intent: a count reads as counting, not as a flicker
-      const at = (e) => nodes.forEach((x) => { x.node.nodeValue = x.parts.map((p, i) => (i % 2 ? String(Math.round(parseInt(p, 10) * e)) : p)).join(''); });
+      // A number inside a line holds its final width while it counts, so
+      // the words after it stay still.
+      const cs = getComputedStyle(el);
+      const inline = cs.display.startsWith('inline');
+      const kept = [el.style.width, el.style.whiteSpace, el.style.display];
+      if (inline) {
+        el.style.width = el.getBoundingClientRect().width + 'px';
+        el.style.whiteSpace = 'nowrap';
+        if (cs.display === 'inline') el.style.display = 'inline-block';
+      }
+      // --lb-count-up-dur on the number or a container sets the pace.
+      const v = cs.getPropertyValue('--lb-count-up-dur').trim();
+      const ms = v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000;
+      const dur = Number.isFinite(ms) ? ms : 1100; // design-intent: a count reads as counting, not as a flicker
+      const at = (e) => nodes.forEach((x) => { x.node.nodeValue = x.parts.map((p) => (typeof p === 'string' ? p : formatNumber(p, e))).join(''); });
       let t0 = null;
       const frame = (t) => {
         if (t0 === null) t0 = t;
-        const p = Math.min(1, (t - t0) / dur);
+        const p = dur > 0 ? Math.min(1, (t - t0) / dur) : 1;
         if (p < 1) { at(1 - Math.pow(1 - p, 3)); requestAnimationFrame(frame); }
-        else nodes.forEach((x) => { x.node.nodeValue = x.end; });
+        else {
+          nodes.forEach((x) => { x.node.nodeValue = x.end; });
+          if (inline) [el.style.width, el.style.whiteSpace, el.style.display] = kept;
+        }
       };
       at(0);
       requestAnimationFrame(frame);
@@ -6687,7 +6749,7 @@ const LB = (() => {
     function init(root) {
       if (!can) return;
       const els = root.querySelectorAll('[data-lb-reveal]');
-      const counts = root.querySelectorAll('[data-lb-count-up]');
+      const counts = root.querySelectorAll('[data-lb-count-up]:not([data-lb-count-up="off"])');
       if (!els.length && !counts.length) return;
       // Only blocks whose motion is 'full' are hidden and observed; under
       // reduced motion or in a data-lb-motion="off" scope they just show.

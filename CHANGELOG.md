@@ -5,6 +5,18 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Count-up keeps a number's format.** `data-lb-count-up` counted
+  every run of digits on its own, so "2,000+" read "1,0+" while it
+  counted, "+4.5%" counted the 4 and the 5 apart, and a year counted up
+  from 0. A number with thousands marks or decimals now counts as 1
+  value and keeps its format at every step; the marks follow the page
+  `lang` (2,000 and 4.5 in English, 2 000 and 4,5 in Swedish). A year
+  (1900–2099 in 4 plain digits) stays as written, and so does anything
+  inside `data-lb-count-up="off"`. A number inside a sentence holds its
+  final width while it counts, so the line no longer moves. New:
+  `--lb-count-up-dur` on the number or a container sets the pace
+  (default 1100ms), not a token.
+
 ## [1.19.0] — 2026-11-05
 
 Minor: a visual retune of the accordion (20px under an open answer, was
