@@ -5,6 +5,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.16.0] — 2026-11-05
+
+Minor: links inside sentences, a 2-line narrow media player, volume
+hidden on touch screens, card linked pictures and a plain footer, a
+drawer tools slot, content text in the default ink and a value-first
+stat (from the mihailo.net and mihailo.ink findings). No new tokens and
+no renames.
+
 - **Link in running text** (new): `lb-link lb-link--inline` is a plain
   inline link for use inside a sentence. It wraps word by word (the sized
   link is one unbreakable box that drops whole to the next line, leaving
