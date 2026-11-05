@@ -1303,6 +1303,12 @@ existing tokens. Library work (one component per round, as usual):
     bg/strong, code/s fg/default, `key` text prop; the command palette's
     8 footer keys now are kbd instances and the duplicate hidden
     `.cmdk/kbd` footer variant is gone — only its Esc hint remains)
+  - Description List ✅ DONE in library 2026-11-05 (new Description List
+    page: `description-list/item` layout stacked|inline × size M|L —
+    label-m muted term, body-m value, heading-m on L, inline term column
+    min 128 baseline-aligned — and `description-list` layout
+    stacked|inline|grid × size M|L with 4 exposed items (gaps 4x / 3x /
+    6x), ruled (show) hairlines with 6x padding, item-3/4 (show))
 
 Code-only (behaviour, never mirrored in the library): overlay
 entry/exit motion and `LB.playExit`, the shared scroll lock, the
