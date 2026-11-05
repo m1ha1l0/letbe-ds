@@ -119,6 +119,24 @@ glyph in an icon, no behaviour — until you run `LB.init(container)` on it
 added under `document.body` is initialised for you; it returns a function
 that stops observing.
 
+**With React, or any framework that renders the DOM.** Load `lb.js` with a
+`<script src>` tag rather than importing it into your bundle: that tag is
+how it finds `assets/icons/` (otherwise call `LB.setIconBasePath`). After
+your root's first render, call `LB.init(document.body)` and `LB.observe()`
+once. From then on lb.js changes the DOM of what it initialises: every
+element with a `data-lb-*` attribute, plus a few touches by class
+(`.lb-checkbox` gets wrapped in its glyph frame, field hints get a leading
+icon, `data-lb-icon` spans get their SVG). So:
+
+- Render those parts once, with a stable `key`, and don't conditionally
+  add, remove or reorder nodes next to them afterwards.
+- Read their state from their events (`lb-menu-select`, `lb-file-added`,
+  `lb-color-change`, …) with `addEventListener`, and change it through
+  their API (`el._lbColorPicker.setValue()`, …), not by re-rendering their
+  markup.
+- Everything else is plain CSS (buttons, cards, badges, layout, a static
+  app shell) and is safe to render from state.
+
 **4. Optional:** `assets/flags/` (Phone input), `assets/avatars/` (demo only).
 `theme-editor.js`, `token-exporter.js`, and `gallery-layout.js` are gallery
 chrome — consumers never need them.

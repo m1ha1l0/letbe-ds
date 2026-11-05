@@ -49,6 +49,14 @@ push('Markup inserted after load stays uninitialised until `LB.init(container)`'
 push('runs on it (idempotent), or call `LB.observe()` once to initialise every');
 push('element added under `document.body` automatically.');
 push();
+push('Frameworks that render the DOM (React…): load `lb.js` with a `<script src>`');
+push('tag (that is how it finds `assets/icons/`; or call `LB.setIconBasePath`),');
+push('then call `LB.init(document.body)` and `LB.observe()` once after the first');
+push('render. lb.js then owns the DOM of every `data-lb-*` element (plus');
+push('`.lb-checkbox` frames, field-hint icons, icon SVGs): render those once with');
+push('a stable key, read their events, call their API. Plain-CSS components are');
+push('safe to render from state.');
+push();
 push('Class combos are contracts: copy the full combo from each demo (base +');
 push('variant + size, e.g. `lb-btn lb-btn--secondary lb-btn--medium`; every table');
 push('cell carries `lb-table__cell`). Base classes alone render unstyled.');

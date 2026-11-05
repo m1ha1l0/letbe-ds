@@ -5,6 +5,9 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Using letbe-ds with React** (docs): README and llms.txt say how to
+  load and start lb.js in a framework that renders the DOM, which parts
+  lb.js owns after init, and how to read and drive them (sketcher F6).
 - **Floating toolbar** (new): `.lb-toolbar--floating` puts the toolbar on
   the overlay surface as a compact bar over a canvas, map or image
   preview (zoom, fit, tools). Pure CSS: the page positions it and owns
