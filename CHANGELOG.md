@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.18.0] — 2026-11-05
+
+Minor: motion control. `data-lb-motion="off"` and `"custom"` at any
+scope with `LB.motion(el)`, scroll reveal and accordion timing hooks,
+accordion motion, and reduced-motion fixes (skeleton, toast, 2 smooth
+scrolls). No new tokens and no renames.
+
 - **Accordion motion** (new): a panel opens and closes by its height
   (a grid row from 0fr to 1fr) while its content fades in and settles a
   few px, 300ms open and 200ms close; reopening mid-close reverses. The
