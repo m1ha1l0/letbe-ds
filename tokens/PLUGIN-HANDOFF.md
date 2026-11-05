@@ -1438,6 +1438,11 @@ From the value-deck findings. Library work, one component per round:
   word by word); near an edge the bubble slides and the arrow stays on
   the trigger — model an end-aligned bubble with its arrow under the
   trigger if the library shows edge placements.
+  ✅ DONE in library 2026-11-05 (the tooltip text already hugged one
+  line up to its cap: M 224 = 15rem border-box minus 8px padding each
+  side; S corrected to 228 for its 6px padding; the library shows only
+  centred placements, so no edge variant — the description says how code
+  slides the bubble)
 
 Code-only (never mirrored): top-layer menu placement and flip, delegated
 menu items, tooltip fitting, drag skipping form fields, kebab
