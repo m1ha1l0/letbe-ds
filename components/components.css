@@ -1291,6 +1291,10 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-card__footer--start { justify-content: flex-start; }
 .lb-card__footer--spread { justify-content: space-between; }
 .lb-card--sm .lb-card__footer { padding: var(--lb-size-3x) var(--_card-pad); }
+/* --plain: no rule and no top padding, so the action sits under the
+   content as part of it (a "Read more" link, a single button). Doubled
+   class so it holds over the size tiers' padding. */
+.lb-card__footer.lb-card__footer--plain { border-top: none; padding-top: 0; }
 
 /* ── Media ── */
 
@@ -1298,11 +1302,20 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   overflow: hidden;
   background: var(--lb-bg-strong);
 }
+/* A linked picture: the media box may hold a link around the picture
+   (.lb-card__media > a > img) so the picture is clickable as well as the
+   title. The link fills the box, and its focus ring is drawn inside,
+   because the media box clips. */
+.lb-card__media > a { display: block; height: 100%; }
+.lb-card__media > a:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: calc(-1 * var(--lb-border-width-medium)); }
 /* Media zoom (opt-in, --media-zoom): the picture eases in a touch while
-   the card is hovered or focused; the frame stays put (media clips). */
+   the card is hovered or focused, or a link inside it has keyboard
+   focus; the frame stays put (media clips). A linked picture zooms too. */
 @media (prefers-reduced-motion: no-preference) {
-  .lb-card--media-zoom .lb-card__media > :is(img, video) { transition: scale var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in); }
-  .lb-card--media-zoom:is(:hover, :focus-visible) .lb-card__media > :is(img, video) { scale: 1.03; /* design-intent: hover zoom depth */ }
+  .lb-card--media-zoom .lb-card__media > :is(img, video),
+  .lb-card--media-zoom .lb-card__media > a > :is(img, video) { transition: scale var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in); }
+  .lb-card--media-zoom:is(:hover, :focus-visible, :has(:focus-visible)) .lb-card__media > :is(img, video),
+  .lb-card--media-zoom:is(:hover, :focus-visible, :has(:focus-visible)) .lb-card__media > a > :is(img, video) { scale: 1.03; /* design-intent: hover zoom depth */ }
 }
 .lb-card__media img,
 .lb-card__media video {

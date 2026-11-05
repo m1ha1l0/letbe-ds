@@ -98,9 +98,22 @@
       </div>
     </div>
 
+    <p class="gallery-section__desc" style="margin-top: var(--lb-size-6x);"><strong>Plain footer</strong> — <code class="lb-code">lb-card__footer--plain</code> drops the rule and the top padding, so a single action sits under the content as part of it.</p>
+    <div style="max-width: 480px;">
+      <div class="lb-card">
+        <div class="lb-card__body">
+          <h3 class="lb-card__title">Quarterly report</h3>
+          <p class="lb-card__description">Revenue, retention and the roadmap for the next 3 months, in 12 pages.</p>
+        </div>
+        <div class="lb-card__footer lb-card__footer--plain lb-card__footer--start">
+          <a class="lb-link lb-link--medium" href="#">Read the report<span class="lb-link__icon" aria-hidden="true" data-lb-icon="arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+
     <!-- ────────────────── Media variants ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Media — top / left / background</h2>
-    <p class="gallery-section__desc">Media slot supports three positions. Left (<code class="lb-code">lb-card--media-left</code>) pairs with horizontal layout — media takes a 14rem-max column. Background (<code class="lb-code">lb-card--media-bg</code>) overlays content on a full-bleed image with a dark-to-transparent scrim for legibility. Right (<code class="lb-code">lb-card--media-right</code>) mirrors left. Add <code class="lb-code">lb-card--media-zoom</code> and the picture eases in a touch (3%) while the card is hovered or focused, the frame staying put; off under reduced motion.</p>
+    <p class="gallery-section__desc">Media slot supports three positions. Left (<code class="lb-code">lb-card--media-left</code>) pairs with horizontal layout — media takes a 14rem-max column. Background (<code class="lb-code">lb-card--media-bg</code>) overlays content on a full-bleed image with a dark-to-transparent scrim for legibility. Right (<code class="lb-code">lb-card--media-right</code>) mirrors left. Add <code class="lb-code">lb-card--media-zoom</code> and the picture eases in a touch (3%) while the card is hovered or focused, or a link inside it has keyboard focus, the frame staying put; off under reduced motion. The picture can sit in a link (<code class="lb-code">.lb-card__media &gt; a &gt; img</code>) so it is clickable as well as the title: the link fills the box, zooms the same and draws its focus ring inside. When it repeats the title link, give it <code class="lb-code">tabindex="-1"</code> and <code class="lb-code">aria-hidden="true"</code> so keyboard and screen reader users meet the card once.</p>
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--lb-size-4x);">
       <div class="lb-card">
         <div class="lb-card__media lb-card__media--top lb-card__media--16x9" style="background-image: linear-gradient(135deg, var(--lb-violet-500), var(--lb-blue-600)); background-size: cover;"></div>
@@ -123,6 +136,16 @@
         <div class="lb-card__body" style="justify-content: flex-end; flex: 1;">
           <h3 class="lb-card__title">Background media</h3>
           <p class="lb-card__description">Full-bleed image with scrim. Content overlays — all text flips to inverse for legibility.</p>
+        </div>
+      </div>
+
+      <div class="lb-card lb-card--media-zoom">
+        <div class="lb-card__media lb-card__media--top lb-card__media--16x9">
+          <a href="#" tabindex="-1" aria-hidden="true"><img src="../assets/media/letbe-design-hero.jpg" alt="" loading="lazy"></a>
+        </div>
+        <div class="lb-card__body">
+          <h3 class="lb-card__title"><a class="lb-link lb-link--inline" href="#">Linked picture</a></h3>
+          <p class="lb-card__description">The picture sits in a link, so it opens the page too. It zooms on hover and when the title link has keyboard focus.</p>
         </div>
       </div>
     </div>

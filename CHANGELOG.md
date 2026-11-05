@@ -31,6 +31,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   the primary pointer is touch (`pointer: coarse`), in CSS. A site no
   longer toggles `--no-volume` from a `matchMedia` script, so a slow
   phone never paints the controls first (mihailo.ink).
+- **Card, linked picture** (fix + docs): the media box may hold a link
+  around the picture (`.lb-card__media > a > img`). The link fills the
+  box and draws its focus ring inside (the box clips), and
+  `--media-zoom` now zooms a linked picture too, and also while a link
+  inside the card has keyboard focus. New demo on the Card page
+  (mihailo.net finding 43).
+- **Card, plain footer** (new): `.lb-card__footer--plain` drops the rule
+  and the top padding, so a single action sits under the content
+  (mihailo.net finding 51).
 
 ## [1.15.0] — 2026-11-05
 
