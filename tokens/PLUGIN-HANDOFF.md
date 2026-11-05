@@ -1236,6 +1236,9 @@ existing tokens. Library work (one component per round, as usual):
   + **`lb-header__drawer-footer`** (social row) — header drawer variant.
 - **`lb-icon-btn--large`**: 48px box (size/12x), 32px icon (size/8x) —
   new size on the icon-button set.
+  ✅ DONE in library 2026-11-05 (`size=L` × 4 types × 3 states = 12
+  variants cloned from M inside the set, w/h bound size/12x, 32px icon,
+  swap refs restored; size order S, M, L; Light + Dark verified)
 - **`lb-avatar--xlarge`**: 64px (size/16x), heading-m initials — new
   size on the avatar set.
 - **Brand icons**: instagram, facebook, youtube, github (Simple Icons)
