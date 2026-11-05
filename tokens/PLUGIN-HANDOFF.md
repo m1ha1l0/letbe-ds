@@ -1403,7 +1403,7 @@ The 4 disabled ghost variants (button M/S, icon-button M/S) now bind
 `fg/inverse` — it had been invisible since the re-import. File-wide sweep:
 no text left on a transparent token.
 
-### 40. v1.13.0 variants and behaviour — library relay 🔵 LIBRARY (2026-11-04) — no plugin action beyond item 39
+### 40. v1.13.0 variants and behaviour — library relay ✅ DONE in library 2026-11-05 (every bullet + the peek-sheet addendum; ships in the cycle's one publish) — no plugin action beyond item 39
 
 From the value-deck findings. Library work, one component per round:
 
@@ -1456,6 +1456,13 @@ with square top corners, the bar on top with a hairline under it and
 the chevron turned down, scrim behind. New variant on the sheet set
 (state=[collapsed, expanded]). Behaviour (inert body, focus trap, scroll
 lock) is code-only.
+✅ DONE in library 2026-11-05 (sheet set gained `state` = default |
+collapsed | expanded; the 4 sides are state=default; side=bottom
+collapsed = the bar only, 390 wide (title heading-s, `meta (show)` +
+`meta` body-s muted, chevron-up 20, padding 4x, gap 3x) with the top
+border, overlay radius and modal shadow; expanded = 390×844, square top
+corners, bar + hairline + body (paragraph, custom slot), chevron down;
+scrim note in the description)
 
 ### 41. Button counter on disabled buttons — library relay ✅ DONE in library 2026-11-05 (12 disabled button variants rebound, Light + Dark verified) — no plugin action, no new tokens
 
