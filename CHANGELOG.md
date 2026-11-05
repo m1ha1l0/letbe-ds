@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Floating toolbar** (new): `.lb-toolbar--floating` puts the toolbar on
+  the overlay surface as a compact bar over a canvas, map or image
+  preview (zoom, fit, tools). Pure CSS: the page positions it and owns
+  what the buttons do; `role="group"` + `aria-label`, clusters split with
+  `.lb-divider--vertical`. Demo on the Library page (sketcher F1).
 - **File Uploader without a file list** (new): `.lb-uploader__files` is
   optional. Leave it out for an "open a file" flow: no rows render and
   `lb-file-added` still carries the `File` (it used to stop initialising).

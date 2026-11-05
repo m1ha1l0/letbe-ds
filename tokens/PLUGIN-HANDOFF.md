@@ -1405,3 +1405,10 @@ Library work, one component per round:
   after the label. Hidden in the icon-rail state. If the library's shell
   item has slots, add an optional counter slot (show toggle, off by
   default) reusing the counter component.
+- **Floating toolbar (F1):** `.lb-toolbar--floating` — a hugging bar on
+  `surface/bg/overlay` + thin `surface/border/overlay`, `radius/overlay`,
+  the dropdown shadow, 4px (size/1x) padding and 4px gaps, holding small
+  ghost icon buttons (32px), an optional small ghost text button for a
+  readout ("100%") and a 16px vertical divider between clusters. New
+  variant on the toolbar row set (or a small set of its own if the row
+  set can't hug).

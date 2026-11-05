@@ -10035,6 +10035,19 @@ button[aria-expanded="true"] [data-lb-icon="chevron-down"] { transform: rotate(1
   color: var(--lb-fg-default);
   white-space: nowrap;
 }
+/* Floating — a compact bar over a canvas, map or image (zoom, fit,
+   tools) on the overlay surface. Pure CSS: the page positions it and
+   owns what its buttons do. Clusters split with .lb-divider--vertical. */
+.lb-toolbar--floating {
+  display: inline-flex;
+  gap: var(--lb-size-1x);
+  min-height: 0;
+  padding: var(--lb-size-1x);
+  background: var(--lb-surface-bg-overlay);
+  border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay);
+  border-radius: var(--lb-radius-overlay);
+  box-shadow: var(--lb-shadow-dropdown);
+}
 
 /* ═══════════════════════════════════════════════════════════
    MEDIA CARD + SELECTION — modules S3b/S3c.

@@ -167,6 +167,19 @@
       </div>
     </div>
 
+    <!-- ────────────────── Floating toolbar ────────────────── -->
+    <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Floating toolbar — <code class="lb-code">--floating</code></h2>
+    <p class="gallery-section__desc">The toolbar as a small bar over a canvas, map or image preview (zoom, fit, tools). <code class="lb-code">.lb-toolbar--floating</code> puts it on the overlay surface with a tight 4px inset. The page places it (here bottom centre, <code class="lb-code">position: absolute</code> in the canvas) and owns what the buttons do. Give it <code class="lb-code">role="group"</code> and an <code class="lb-code">aria-label</code>, split clusters with <code class="lb-code">.lb-divider--vertical</code>, and show a readout such as 100% as a ghost button only when clicking it does something (here: reset).</p>
+    <div style="position: relative; height: 240px; overflow: hidden; border: var(--lb-border-width-thin) solid var(--lb-surface-border-default); border-radius: var(--lb-radius-surface); background: var(--lb-bg-strong);">
+      <div class="lb-toolbar lb-toolbar--floating" role="group" aria-label="Zoom" style="position: absolute; left: 50%; bottom: var(--lb-size-4x); transform: translateX(-50%);">
+        <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--small" type="button" aria-label="Zoom out"><span data-lb-icon="zoom-out"></span></button>
+        <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" aria-label="Reset zoom to 100%"><span class="lb-btn__label">100%</span></button>
+        <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--small" type="button" aria-label="Zoom in"><span data-lb-icon="zoom-in"></span></button>
+        <span class="lb-divider lb-divider--vertical" role="separator" aria-orientation="vertical"></span>
+        <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--small" type="button" aria-label="Fit to screen"><span data-lb-icon="maximize"></span></button>
+      </div>
+    </div>
+
     <!-- ────────────────── Usage ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Usage</h2>
     <p class="gallery-section__desc">Load <code class="lb-code">js/components/lb-selection.js</code>. Container: <code class="lb-code">data-lb-selection</code> (+ <code class="lb-code">data-lb-selection-toolbar="#id"</code>); items: <code class="lb-code">data-lb-selectable data-lb-id="…"</code> each holding a <code class="lb-code">.lb-media-card__check</code> checkbox. Toolbar hooks: <code class="lb-code">data-lb-selection-all / -count / -clear</code>. API at <code class="lb-code">el._lbSelection</code>: <code class="lb-code">getSelected() · selectAll() · clear() · toggle(id)</code>. Event: <code class="lb-code">lb-selection-change {ids, count, total}</code> — wire your bulk actions to it; selection persists after actions until you call <code class="lb-code">clear()</code>.</p>
