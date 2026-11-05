@@ -1264,7 +1264,7 @@ declarative modal opener, lightbox motion/swipe/video, hide-on-scroll
 header, `--lb-header-bg` / `--lb-header-pad-*` hooks, form-native
 Phone, `LB.observe`, scroll reveal and count-up, button press motion.
 
-### 39. Ghost on any surface — 5 new L1 + 3 new L2 alpha colour tokens (v1.13.0) ✅ PLUGIN DONE in v1.0.4 2026-11-05 (babb441 alpha import, cd96164 see-through rows fixed) — 🔵 LIBRARY part now unblocked (see "Library" below, relayed with item 40)
+### 39. Ghost on any surface — 5 new L1 + 3 new L2 alpha colour tokens (v1.13.0) ✅ PLUGIN DONE in v1.0.4 2026-11-05 (babb441 alpha import, cd96164 see-through rows fixed) — ✅ LIBRARY DONE 2026-11-05 (see "Library" below)
 
 **Resolved in the plugin 2026-11-05:** plugin v1.0.4 published and the
 library file re-imported from letbe-ds main. `hexToFigmaRGB` reads the
@@ -1331,11 +1331,20 @@ Library (after the plugin fix and re-import):
   `fg/inverse` (was `action/bg-ghost-default`, which would be invisible)
   — rebind the counter text in those variants.
 
+**Library done 2026-11-05:** ghost fills were already on `action/bg-ghost-*`
+and went see-through with the re-import (rest 0%, hover 4%, pressed 11%).
+The 4 disabled ghost variants (button M/S, icon-button M/S) now bind
+`action/bg-ghost-disabled` with no stroke, label and icons on
+`action/fg-ghost-disabled` (was `bg/disabled` + `border/disabled` +
+`fg/muted`). The counter digit in all 8 ghost button variants is on
+`fg/inverse` — it had been invisible since the re-import. File-wide sweep:
+no text left on a transparent token.
+
 ### 40. v1.13.0 variants and behaviour — library relay 🔵 LIBRARY (2026-11-04) — no plugin action beyond item 39
 
 From the value-deck findings. Library work, one component per round:
 
-- **Ghost family** — see item 39 (clear rest, see-through hover and
+- **Ghost family** ✅ done 2026-11-05 — see item 39 (clear rest, see-through hover and
   pressed, clear disabled, counter digit on `fg/inverse`).
 - **`lb-btn--large`**: 48px high (size/12x), 24px side padding
   (size/6x), the action-l text style — new size on the button set,
