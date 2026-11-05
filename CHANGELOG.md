@@ -19,6 +19,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   links.
 - **Icons** (fix): `LB.initIcons()` trims the loaded SVG, so a file's
   trailing newline no longer lands in the slot as a text node.
+- **Media Player, narrow layout** (visual): at 480px of player width or
+  less the times move onto the scrubber's line (current · scrubber ·
+  duration, the Playbar shape) and the line below holds only the
+  buttons, transport left and the rest pushed right. With the times on
+  the button line, Shuffle, Repeat, Speed or the volume wrapped onto a
+  third line on a 390px phone (worse with 48px touch buttons). No markup
+  change; `--compact` and `--card` keep their layouts (mihailo.ink).
 
 ## [1.15.0] — 2026-11-05
 

@@ -3373,43 +3373,37 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media__range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-border-focus); }
 .lb-media__range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-border-focus); }
 
-/* Narrow players (compact / mobile): the scrubber can't share the line,
-   so it takes its own full-width line and everything else keeps the
-   desktop shape on ONE line below it — play + times on the left, mute +
-   volume on the right (auto margin AFTER the duration, so the right group
-   stays right whichever of its controls a page hides — e.g. mute and
-   volume on touch screens, where iOS ignores a page's volume), volume
-   the smallest piece:
-   its flex-basis IS the size-12x floor, growing into leftover line space
-   up to its size-24x desktop width. The basis must be the floor, not the
-   desktop width — in a wrap container, line-breaking uses the
-   hypothetical size (basis clamped by min/max), so a large basis would
-   wrap the slider off the line instead of ever shrinking it. With the
-   48px basis the slider holds the shared line on any player ≥320px outer
-   at coarse pointer (icon buttons are flex-shrink:0, times flex:none);
-   no dedicated volume row — no mainstream player stacks volume on its
-   own line. Video is the exception: its controls row (play · times ·
-   mute · PiP · fullscreen) can only hold a phone line without the
-   slider, so the narrow layout hides the slider and the mute button
-   stays as the sound control — the mobile-video norm (level comes from
-   hardware keys). Below the supported floor, trailing items wrap in DOM
-   order as flexbox dictates. Visual order stays DOM order throughout,
-   except the pre-existing scrubber order:-1. Container query → automatic
-   for any player whose content box is 480px or narrower, no
-   demo-specific markup; 480 accommodates the coarse-pointer 48px buttons
-   below (the old 320px threshold never fired on real ~340–410px phone
-   players, so the row overflowed the box). Variants with their own
-   arrangements defend themselves after this block (--compact nowrap,
+/* Narrow players (phones): 2 rows. Row 1 is the timeline, current time ·
+   scrubber · duration (the Playbar and Card shape); row 2 holds only the
+   buttons, transport on the left and the rest pushed right (auto margin
+   after the control just before the current time, i.e. the last
+   transport button, so the push holds whichever right-hand controls a
+   page hides). Times on the button row cost 96px + 2 gaps there, which
+   wrapped Shuffle, Repeat, Speed or the volume onto a third row on a
+   390px phone, worse with 48px touch buttons (mihailo.ink, 2026-11-05).
+   The row break is a zero-height ::after with order -1 after the
+   duration; the timeline items take a negative block-end margin of one
+   gap, so the zero-height line costs no second gap. Volume is the
+   smallest piece: its flex-basis IS the size-12x floor, growing up to
+   its size-24x desktop width (a large basis would wrap the slider off
+   the line in a wrap container instead of shrinking it). Video hides the
+   slider here; mute stays as the sound control, the mobile-video norm.
+   Visual order follows DOM order on each row. Container query, so it is
+   automatic for any player whose content box is 480px or narrower (480
+   fits the 48px coarse-pointer buttons). Variants with their own
+   arrangements defend themselves after this block (--compact one line,
    --card sub-rows). */
 /* No volume (--no-volume): drops mute and the slider, e.g. on touch
    screens where iOS ignores a page's volume; the right-hand group keeps
-   its push (it sits after the duration, not on mute). */
+   its push (it sits on the last transport button, not on mute). */
 .lb-media--no-volume [data-lb-media-mute],
 .lb-media--no-volume .lb-media__volume { display: none; }
 @container (max-width: 480px) {
   .lb-media__controls { flex-wrap: wrap; }
-  .lb-media__scrubber { order: -1; flex: 1 1 100%; }
-  .lb-media__controls > [data-lb-media-duration] { margin-inline-end: auto; }
+  .lb-media__scrubber { order: -1; flex: 1 1 0; }
+  .lb-media__controls > :is([data-lb-media-current], .lb-media__scrubber, [data-lb-media-duration]) { order: -1; margin-block-end: calc(-1 * var(--lb-size-2x)); }
+  .lb-media__controls:has(> .lb-media__scrubber)::after { content: ""; order: -1; flex-basis: 100%; height: 0; }
+  .lb-media__controls > :has(+ [data-lb-media-current]) { margin-inline-end: auto; }
   .lb-media__controls > .lb-media__volume { flex: 1 1 var(--lb-size-12x); width: auto; max-width: var(--lb-size-24x); }
   .lb-media--video .lb-media__volume { display: none; }
   /* video top bar (like/dislike · utility actions) wraps too instead of
@@ -3485,6 +3479,8 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    stay flanking the scrubber on one row */
 .lb-media--compact .lb-media__controls { flex-wrap: nowrap; }
 .lb-media--compact .lb-media__scrubber { order: 0; flex: 1 1 auto; }
+.lb-media--compact .lb-media__controls > * { margin-block-end: 0; }
+.lb-media--compact .lb-media__controls::after { content: none; }
 
 /* Video layout — auto-applied when the player wraps a <video>. The video
    fills the frame; controls overlay the bottom over a scrim gradient and
