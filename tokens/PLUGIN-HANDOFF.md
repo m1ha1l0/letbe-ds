@@ -1241,6 +1241,9 @@ existing tokens. Library work (one component per round, as usual):
   swap refs restored; size order S, M, L; Light + Dark verified)
 - **`lb-avatar--xlarge`**: 64px (size/16x), heading-m initials — new
   size on the avatar set.
+  ✅ DONE in library 2026-11-05 (`size=XL` for initials, image and count,
+  w/h bound size/16x; initials on the heading/m style, count a composite
+  at heading-m size + medium weight, as the CSS count is medium)
 - **Brand icons**: instagram, facebook, youtube, github (Simple Icons)
   and linkedin, twitter (Bootstrap Icons) are now filled logos — refresh
   those six in the icon library.
