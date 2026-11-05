@@ -1280,6 +1280,11 @@ existing tokens. Library work (one component per round, as usual):
   override), 73 prop refs restored per clone)
 - **Card**: `lb-card--media-right` (mirror of media-left) and
   `lb-card__nav-icon--start` (leading chevron) for a previous/next pair.
+  ✅ DONE in library 2026-11-05 (card set gained `nav-icon-start (show)`,
+  a leading chevron-left at the start of the body in all 15 variants,
+  off by default; hover variants now ink both arrows fg/default as the
+  CSS does. Media-right stays a design-time composition like media-left,
+  which the library never modeled — the description says so)
 - **Media player**: shuffle and repeat toggle buttons (pressed = accent,
   same as Playbar) and `lb-media--no-volume`.
 - **New components**: Carousel (viewport + track + secondary icon-button
