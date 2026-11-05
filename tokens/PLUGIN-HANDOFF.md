@@ -1418,6 +1418,10 @@ From the value-deck findings. Library work, one component per round:
 - **Menu panel**: sits 4px (size/1x) below its trigger (was touching);
   a trailing kebab's panel lines up with the trigger's right edge
   (`data-lb-menu-align="end"`).
+  ✅ DONE in library 2026-11-05 (no library composition shows a menu
+  open under its trigger — the menu is a standalone panel — so this is
+  placement guidance in the menu description: 4px / size/1x below, start
+  aligned, end-aligned under a trailing kebab)
 - **Board**: "Move to" rows use arrow-left / arrow-right (arrow-up /
   arrow-down on a stacked board) instead of corner-down-right; card
   menus may carry page items after a separator; new
