@@ -1571,6 +1571,11 @@ Library work, one component per round:
   brand · [ghost M icon button `sun` "Switch theme" · close], gap
   `size/2x`, the close staying on the bar's menu button. Optional, behind
   a `tools (show)` toggle, off by default.
+  ✅ DONE in library 2026-11-05 (`header/drawer` head = brand ↔ `tools`
+  row, gap `size/2x`: exposed `theme` (icon-button ghost M, icon `sun`,
+  swappable) behind the new `tools (show)`, off by default, then the
+  exposed `close`, still on the far right where the menu button sits;
+  no drawer instances in the file; Light + Dark verified)
 - **Media player, narrow layout (mihailo.ink):** only if the library has a
   phone-width player (a template or a narrow example): at 480px of player
   width or less the times sit on the scrubber's line (current · scrubber ·
