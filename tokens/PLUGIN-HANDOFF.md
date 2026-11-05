@@ -1309,6 +1309,11 @@ existing tokens. Library work (one component per round, as usual):
     min 128 baseline-aligned — and `description-list` layout
     stacked|inline|grid × size M|L with 4 exposed items (gaps 4x / 3x /
     6x), ruled (show) hairlines with 6x padding, item-3/4 (show))
+  - Icon List ✅ DONE in library 2026-11-05 (new Icon List page:
+    `icon-list/item` size M|L|XL (body-m / body-l / heading-xl) × tone
+    default|success|warning|danger|muted, icon 1.1em centred on the first
+    line, icon (swap) + text props; `icon-list` size M|L|XL with 2x / 3x
+    / 4x line gaps, 4 exposed items, item-4 (show) off; Light + Dark)
 
 Code-only (behaviour, never mirrored in the library): overlay
 entry/exit motion and `LB.playExit`, the shared scroll lock, the
