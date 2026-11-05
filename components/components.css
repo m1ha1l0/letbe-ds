@@ -3516,10 +3516,14 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    How wide 1 row must be depends on which controls a page includes and
    on the button size: prev, play, next, shuffle, repeat, mute, both times,
    scrubber and volume need 616px with 48px touch buttons (568px with a
-   mouse), so 481px to 615px overflowed. LB.Media measures 1 row and adds
-   --stacked when it would overflow. :where() keeps the specificity of the
-   container block above, so --compact and --card still defend themselves.
-   Keep in step with that block's layout rules. */
+   mouse), so 481px to 615px overflowed. LB.Media measures 1 row with
+   --measuring on, which holds the bar at its 1-row floor (160px, or
+   --lb-media-bar-min on the player or a parent), and adds --stacked when
+   that row would overflow: a bar squeezed to 64px reads as no bar (mihailo.ink,
+   2026-11-05). :where() keeps the specificity of the container block above,
+   so --compact and --card still defend themselves. Keep in step with that
+   block's layout rules. */
+.lb-media--measuring .lb-media__controls > .lb-media__scrubber { min-width: var(--lb-media-bar-min, calc(2 * var(--lb-size-20x))); }
 :where(.lb-media--stacked) .lb-media__controls { flex-wrap: wrap; }
 :where(.lb-media--stacked) .lb-media__scrubber { order: -1; flex: 1 1 0; }
 :where(.lb-media--stacked) .lb-media__controls > :is([data-lb-media-current], .lb-media__scrubber, [data-lb-media-duration]) { order: -1; margin-block-end: calc(-1 * var(--lb-size-2x)); }

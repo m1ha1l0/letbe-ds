@@ -444,13 +444,17 @@
       }
     }
 
-    // 1 row is measured with --stacked off. Both class changes happen in
-    // the same task, so nothing paints in between.
+    // 1 row is measured with --stacked off and --measuring on (the bar at
+    // its 1-row floor). All class changes happen in the same task, so
+    // nothing paints in between.
     _fitControls() {
       const c = this.controls;
       if (!c) return;
       this.el.classList.remove('lb-media--stacked');
-      this.el.classList.toggle('lb-media--stacked', c.scrollWidth > c.clientWidth);
+      this.el.classList.add('lb-media--measuring');
+      const over = c.scrollWidth > c.clientWidth;
+      this.el.classList.remove('lb-media--measuring');
+      this.el.classList.toggle('lb-media--stacked', over);
     }
 
     // Collect every marquee box in the player (now-playing title +

@@ -5,6 +5,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Media player: the progress bar keeps at least 160px on one row.**
+  v1.18.1 switched a player to 2 rows only when one row overflowed, so
+  a full playlist player still showed a 64px to 160px bar just above
+  that point (mihailo.ink: window 650px to 745px, controls 568px to
+  663px with a mouse). `LB.Media` now measures the row with the bar at
+  a 160px floor and stacks when that row would not fit. Move the floor
+  with `--lb-media-bar-min` on the player or a parent.
+
 ## [1.18.1] — 2026-11-05
 
 Patch: the media player no longer overflows a player 481px to 615px
