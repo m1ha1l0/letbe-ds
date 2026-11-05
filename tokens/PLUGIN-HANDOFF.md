@@ -1298,6 +1298,11 @@ existing tokens. Library work (one component per round, as usual):
   rows, body-m / body-l / heading-xl, status inks), and Kbd (v1.12.0:
   mono code-s keycap on bg/strong, radius/interactive — the command
   palette footer keycaps already use the same recipe).
+  - Kbd ✅ DONE in library 2026-11-05 (public `kbd` component on a new
+    Kbd page: hug, size/1_5x side padding, 18 min, radius/interactive,
+    bg/strong, code/s fg/default, `key` text prop; the command palette's
+    8 footer keys now are kbd instances and the duplicate hidden
+    `.cmdk/kbd` footer variant is gone — only its Esc hint remains)
 
 Code-only (behaviour, never mirrored in the library): overlay
 entry/exit motion and `LB.playExit`, the shared scroll lock, the
