@@ -2,8 +2,10 @@
 
 **Status (trued up 2026-09-15, owner-confirmed)**: All plugin-side work is DELIVERED through plugin v1.0.3 (live on Community 2026-09-02) and the Figma library is PUBLISHED through the second-accent republish (+16 variants, 2026-09-02) — items 1–30 closed. **Open queue is library-only**: 🔵 items 27 (toast neutral+action), 31 (header active indicator), 32 (segmented inset-ring parity check), 34 (Lightbox set), 36 (stepper dots). 🟢 items 12–14/33/35 are mapping references / code-side only — no action unless a build reveals a gap. **No new colour tokens are planned** — components build entirely from existing L2/L3 (user decision 2026-05-27); new tokens get minted ONLY if a built component looks visually off, and then only via the plugin.
 
-**Latest update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
-**Previous update**: 2026-09-15 (ledger trued: items 11/16/29/30 marked ✅ per owner; items 31–36 appended from the v1.2.0–v1.4.0 releases)
+**Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports.
+
+**Latest update**: 2026-11-05 (items 39–45 from the v1.13.0–v1.18.0 releases; plugin check above)
+**Previous update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
 **First created**: 2026-05-03
 
 ---
