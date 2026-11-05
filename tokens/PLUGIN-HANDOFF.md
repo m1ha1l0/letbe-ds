@@ -1392,7 +1392,7 @@ fill):
 Applies to `:disabled` and `[aria-disabled="true"]`. Library: rebind the
 counter pill and digit in the 12 disabled button variants.
 
-### 42. sketcher findings — library relay 🔵 LIBRARY (2026-11-05) — no plugin action, no new tokens
+### 42. sketcher findings — library relay ✅ DONE in library 2026-11-05 (icons, app shell item count, floating toolbar; ships in the cycle's one publish) — no plugin action, no new tokens
 
 From the sketcher consumer findings (a local viewer for design files).
 Library work, one component per round:
@@ -1421,3 +1421,14 @@ Library work, one component per round:
   readout ("100%") and a 16px vertical divider between clusters. New
   variant on the toolbar row set (or a small set of its own if the row
   set can't hug).
+  ✅ DONE in library 2026-11-05 (`toolbar` set gained `mode=floating`, a
+  hugging variant 179×42 = CSS: fill `surface/bg/overlay`, stroke
+  `surface/border/overlay` at `border-width/thin`, `radius/overlay`,
+  `letbe/shadow/dropdown`, padding + gap `size/1x`; zoom-out · "100%"
+  readout (ghost S button, `readout (show)` on by default) · zoom-in ·
+  vertical divider 16 · fit (maximize), icon buttons ghost S 32px, all
+  exposed; Light + Dark verified)
+- **Name check:** no "Vatroslav K" / v.kova@letbe.art anywhere in the
+  library. The Menu component's email default was `jane@letbe.art`
+  (another project's domain) → `jane@letbe.design`, matching the Menu
+  demo. File-wide: 0 `letbe.art` left.
