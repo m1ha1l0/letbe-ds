@@ -1260,6 +1260,9 @@ existing tokens. Library work (one component per round, as usual):
   `icon` emptied; Instagram was two-tone, now a filled logo)
 - **Flags**: the set is the full ISO 3166-1 list + XK (250, was 172) —
   add the 78 new circle flags if the library carries flags.
+  ✅ DONE in library 2026-11-05 (78 `flags/<iso>-<name>` components built
+  like the existing 172 from assets/flags/, English CLDR names, keywords +
+  docs link; Flags page re-sorted A–Z, 250 total)
 - **Select / Multi-Select options** may carry a flag or an icon before
   the label (row, trigger, pill) — optional slot in the option row.
 - **Table**: a styled `<caption>` (caption-m, default ink, start-aligned
