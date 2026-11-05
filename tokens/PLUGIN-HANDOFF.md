@@ -1620,7 +1620,7 @@ the existing L2 durations at the existing L1 `--lb-duration-0` inside the
 attribute, and the hooks are component custom properties that fall back
 to existing L2 tokens. The library models no motion, so nothing to mirror.
 
-### 46. Accordion answer spacing (v1.19.0) — library relay 🔵 LIBRARY (2026-11-05) — no plugin action, no new tokens
+### 46. Accordion answer spacing (v1.19.0) — library relay ✅ DONE in library 2026-11-06 (accordion padding + media bar widths; ships in the cycle's one publish) — no plugin action, no new tokens
 
 Library work:
 
@@ -1630,6 +1630,10 @@ Library work:
   stay 0. Reason: with 8px between question and answer, 32px under a
   short answer read as an empty gap, and both consumer sites had cut it
   to 20px.
+  ✅ DONE in library 2026-11-06 (`accordion/item` panel bottom padding
+  bound `size/5x` in all 3 expanded states incl. disabled, top + sides
+  stay 0; open item 120 → 108, the `accordion` demo 240 → 228; the
+  description says size/5x; no instance overrides)
 
 - **Media player check (bar-art):** code now keeps a player on 1 row
   only while its progress bar keeps 160px (`--lb-media-bar-min`) and
@@ -1641,3 +1645,10 @@ Library work:
   `bar-art` content box to 568px or more (1 row, bar 160px or more), or
   check what its instance holds if the controls differ. `compact`
   (528) and video (640) are unaffected.
+  ✅ DONE in library 2026-11-06, the controls differ: the library's
+  `bar` AND `bar-art` both hold skip back, play, skip forward (48 touch
+  buttons), 2 times, scrubber, mute (32), volume (96) and speed (48), so
+  at 528 their bar was 48px. Both widened 560 → 672 (content box 640,
+  bar 160); playlist now FILL (640 when shown), set re-gridded. With
+  shuffle + repeat on the bar drops to 80, so the description says to
+  widen the instance to 752 then
