@@ -1409,6 +1409,11 @@ Library work, one component per round:
   after the label. Hidden in the icon-rail state. If the library's shell
   item has slots, add an optional counter slot (show toggle, off by
   default) reusing the counter component.
+  ✅ DONE in library 2026-11-05 (`app-shell/item` has no slots, so it
+  follows the button's counter pattern: nested `counter` instance, tone
+  subtle, size M, count "12", exposed, after the label and before the
+  chevron, behind `counter (show)` off by default, all 3 states; Light +
+  Dark verified; description says to leave it off on the icon rail)
 - **Floating toolbar (F1):** `.lb-toolbar--floating` — a hugging bar on
   `surface/bg/overlay` + thin `surface/border/overlay`, `radius/overlay`,
   the dropdown shadow, 4px (size/1x) padding and 4px gaps, holding small
