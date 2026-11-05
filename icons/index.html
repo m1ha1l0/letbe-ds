@@ -18,7 +18,7 @@
 <main class="gallery-main">
   <section class="gallery-section" id="icons">
     <h1 class="gallery-section__title" style="font-size: var(--lb-t-heading-l-font-size); line-height: var(--lb-t-heading-l-line-height);">Icons</h1>
-    <p class="gallery-section__desc">260 icons bundled as standalone SVGs. The circle family ships in mixed historical orderings (<code class="lb-code">circle-check</code> but <code class="lb-code">help-circle</code>) — the loader accepts both orders for every circle icon, so either guess resolves. Use <code class="lb-code">LB.icon('name', element)</code> to inject by name. Stroke width follows <code class="lb-code">--lb-stroke-icon</code>. Requires serving over http (not <code class="lb-code">file://</code>) — icons are fetched at runtime.</p>
+    <p class="gallery-section__desc">264 icons bundled as standalone SVGs. The circle family ships in mixed historical orderings (<code class="lb-code">circle-check</code> but <code class="lb-code">help-circle</code>) — the loader accepts both orders for every circle icon, so either guess resolves. Use <code class="lb-code">LB.icon('name', element)</code> to inject by name. Stroke width follows <code class="lb-code">--lb-stroke-icon</code>. Requires serving over http (not <code class="lb-code">file://</code>) — icons are fetched at runtime.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> <code class="lb-code">LB.icon()</code> injects the raw SVG and nothing else — no <code class="lb-code">role</code>, no name, and the shipped files carry no <code class="lb-code">aria-hidden</code> of their own — so an icon is only ever decoration or a glyph inside something already named: components set <code class="lb-code">aria-hidden=true</code> on their own icon slots, and icon-only controls carry an <code class="lb-code">aria-label</code>.</p>
 
 <hr class="gallery-desc-divider">
@@ -59,7 +59,7 @@
       'undo-2','redo-2','archive','flag','pipette','grip-vertical',
       // Status / Info
       'check','check-check','check-square','circle-check','alert-triangle','x-circle','info','help-circle',
-      'bell','circle-dot','circle-alert','loader-circle','history','timer',
+      'bell','circle-dot','circle-alert','loader-circle','history','timer','skull','ban',
       // People / Accounts
       'user','users','user-plus','user-check','user-x','user-circle','log-in','log-out','lock','unlock',
       'key','key-round','fingerprint','shield-check',
@@ -95,6 +95,7 @@
 
     const filledNames = [
       'info-filled','circle-check-filled','alert-triangle-filled','x-circle-filled',
+      'skull-filled','ban-filled',
       'star-filled','heart-filled','thumbs-up-filled','thumbs-down-filled',
       'laugh-filled','smile-filled','meh-filled','frown-filled','angry-filled',
     ];

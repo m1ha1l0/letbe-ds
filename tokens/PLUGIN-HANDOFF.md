@@ -1572,3 +1572,13 @@ Library work, one component per round:
   `lb-media--no-volume-touch` (a pointer media query), and the card's
   linked picture (an inset focus ring and the zoom, states the library
   doesn't model).
+
+### 44. Danger and no-entry icons — library relay 🔵 LIBRARY (2026-11-05) — no plugin action, no new tokens
+
+Library work:
+
+- **Icons:** 2 new outlined Lucide icons, `skull` and `ban` (a circle
+  with a diagonal bar), and 2 new filled glyphs, `skull-filled` and
+  `ban-filled` (264 in the set, was 260; 15 filled, was 13). Add the
+  outlined pair to the icon library like the rest of the outlined set and
+  the filled pair beside `x-circle-filled` / `alert-triangle-filled`.
