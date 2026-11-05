@@ -46,6 +46,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   mihailo.net and mihailo.ink already wrote this class themselves; it is
   now part of the design system. Shown in the full-screen menu demo
   (mihailo.net finding 52).
+- **Content text in the default ink** (visual): the accordion panel
+  (`.lb-accordion__panel-inner`), the sheet body (`.lb-sheet__body`) and
+  the popover body (`.lb-popover__body`) hold the component's content, so
+  they now use `--lb-fg-default` instead of `--lb-fg-muted` (the sheet
+  body turned everything inside it grey). Labels and meta stay muted by
+  design: card description, stat label, footer link, breadcrumb,
+  description list term (mihailo.net finding 46, in part).
 
 ## [1.15.0] — 2026-11-05
 

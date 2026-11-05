@@ -2743,8 +2743,9 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-accordion__panel { overflow: hidden; }
 /* [hidden] handled by global rule near top of file */
 /* Panel content: no side padding so text aligns with trigger label;
-   generous bottom padding for breathing room when expanded. */
-.lb-accordion__panel-inner { padding: 0 0 var(--lb-size-8x); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); font-weight: var(--lb-t-body-m-font-weight); line-height: var(--lb-t-body-m-line-height); color: var(--lb-fg-muted); }
+   generous bottom padding for breathing room when expanded. The answer
+   is the content, so it reads in the default ink (muted is for meta). */
+.lb-accordion__panel-inner { padding: 0 0 var(--lb-size-8x); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); font-weight: var(--lb-t-body-m-font-weight); line-height: var(--lb-t-body-m-line-height); color: var(--lb-fg-default); }
 
 /* ═══════════════════════════════════════════════════════════
    TABS
@@ -2936,7 +2937,8 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-sheet__close { display: flex; align-items: center; justify-content: center; width: var(--lb-size-8x); height: var(--lb-size-8x); padding: 0; background: none; border: none; border-radius: var(--lb-radius-interactive); color: var(--lb-fg-muted); cursor: pointer; transition: background var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); margin-left: auto; }
 .lb-sheet__close:hover { background: var(--lb-action-bg-ghost-hover); color: var(--lb-fg-default); }
 .lb-sheet__close:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: var(--lb-size-0-5x); }
-.lb-sheet__body { flex: 1; overflow-y: auto; padding: var(--lb-size-4x); color: var(--lb-fg-muted); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); line-height: var(--lb-t-body-m-line-height); }
+/* The body is the sheet's content: default ink (muted is for meta). */
+.lb-sheet__body { flex: 1; overflow-y: auto; padding: var(--lb-size-4x); color: var(--lb-fg-default); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); line-height: var(--lb-t-body-m-line-height); }
 
 /* Peek — a non-modal bottom sheet that never leaves (.lb-sheet--peek on
    a .lb-sheet--bottom). Collapsed, only .lb-sheet__bar shows, docked at
@@ -3137,7 +3139,8 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-popover--right  { left: calc(100% + 8px);   /* design-intent: popover gap from anchor */ top: 50%; transform: translateY(-50%); }
 .lb-popover--left   { right: calc(100% + 8px);  /* design-intent: popover gap from anchor */ top: 50%; transform: translateY(-50%); }
 .lb-popover__header { padding: var(--lb-size-3x) var(--lb-size-3x) var(--lb-size-2x); font-weight: var(--lb-font-weight-medium); font-size: var(--lb-t-body-m-font-size); border-bottom: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); }
-.lb-popover__body { padding: var(--lb-size-3x); color: var(--lb-fg-muted); line-height: var(--lb-t-body-s-line-height); }
+/* The body is the popover's content: default ink (muted is for meta). */
+.lb-popover__body { padding: var(--lb-size-3x); color: var(--lb-fg-default); line-height: var(--lb-t-body-s-line-height); }
 
 /* ═══════════════════════════════════════════════════════════
    TOOLTIP
