@@ -159,7 +159,7 @@
 .lb-icon-list--xlarge { gap: var(--lb-size-4x); font-family: var(--lb-t-heading-xl-font-family); font-size: var(--lb-t-heading-xl-font-size); font-weight: var(--lb-t-heading-xl-font-weight); line-height: var(--lb-t-heading-xl-line-height); letter-spacing: var(--lb-t-heading-xl-letter-spacing); }
 
 /* ═══════════════════════════════════════════════════════════
-   MOTION MODE — data-lb-motion="off"
+   MOTION MODE — data-lb-motion="off" | "custom"
    On <html>, a section or one component: every letbe-ds motion inside
    it becomes instant. The L2 durations and the stagger point at
    --lb-duration-0, which every transition and entry/exit animation
@@ -181,6 +181,18 @@
   --lb-animation-dur-expressive: var(--lb-duration-0);
   --lb-animation-dur-stagger: var(--lb-duration-0);
 }
+/* data-lb-motion="custom": the built-in entry and exit of overlays
+   (modal, sheet, drawers, menus and lists, popovers, toasts, command
+   palette) stop playing inside it, and only those. Every one of those
+   animations reads its name through --_lb-overlay-motion, which points
+   here at a keyframes name that is never defined (not "none": in the
+   animation shorthand "none" is read as the fill mode, and a later
+   forwards/backwards would become the name), so nothing of ours runs.
+   A site's own animation on the same element, or on the leaving hooks
+   (.lb-modal-backdrop--leaving, .lb-sheet-root--leaving,
+   .lb-header--drawer-leaving, .lb-dropdown-list--leaving,
+   .lb-toast--leaving), plays instead, and the close still waits for it. */
+[data-lb-motion="custom"] { --_lb-overlay-motion: lb-overlay-motion-custom; }
 
 /* ═══════════════════════════════════════════════════════════
    REVEAL — [data-lb-reveal] (LB.Reveal, core runtime)
@@ -2186,7 +2198,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   padding-top: 12vh;           /* top-anchored, not vertically centred */
   padding-left: var(--lb-size-4x);
   padding-right: var(--lb-size-4x);
-  animation: lb-cmdk-backdrop-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
+  animation: var(--_lb-overlay-motion, lb-cmdk-backdrop-in) var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
 }
 /* [hidden] handled by global [class*="lb-"][hidden] rule near top of file */
 @keyframes lb-cmdk-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
@@ -2203,7 +2215,7 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
   flex-direction: column;
   overflow: hidden;            /* contains the inner scroll region */
   font-family: var(--lb-t-body-m-font-family);
-  animation: lb-cmdk-in var(--lb-animation-dur-normal) cubic-bezier(0.16, 1, 0.3, 1);
+  animation: var(--_lb-overlay-motion, lb-cmdk-in) var(--lb-animation-dur-normal) cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes lb-cmdk-in {
   from { opacity: 0; transform: translateY(-8px) scale(0.98); } /* design-intent: cmdk drop-in offset */
@@ -2865,17 +2877,17 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 @keyframes lb-modal-drop-out { to { opacity: 0; transform: translateY(var(--lb-size-2x)); } }
 .lb-modal-backdrop--leaving { pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-modal-backdrop { animation: lb-overlay-fade-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
-  .lb-modal-backdrop > .lb-modal { animation: lb-modal-rise-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
+  .lb-modal-backdrop { animation: var(--_lb-overlay-motion, lb-overlay-fade-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
+  .lb-modal-backdrop > .lb-modal { animation: var(--_lb-overlay-motion, lb-modal-rise-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
   /* A full-screen dialog is a large surface arriving and leaving: the
      expressive tier (a shorter exit, as everywhere). */
-  .lb-modal-backdrop > .lb-modal--fullscreen { animation: lb-modal-rise-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in); }
-  .lb-modal-backdrop--leaving { animation: lb-overlay-fade-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
-  .lb-modal-backdrop--leaving > .lb-modal { animation: lb-modal-drop-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
-  .lb-modal-backdrop--leaving > .lb-modal--fullscreen { animation: lb-modal-drop-out var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
+  .lb-modal-backdrop > .lb-modal--fullscreen { animation: var(--_lb-overlay-motion, lb-modal-rise-in) var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in); }
+  .lb-modal-backdrop--leaving { animation: var(--_lb-overlay-motion, lb-overlay-fade-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-modal-backdrop--leaving > .lb-modal { animation: var(--_lb-overlay-motion, lb-modal-drop-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-modal-backdrop--leaving > .lb-modal--fullscreen { animation: var(--_lb-overlay-motion, lb-modal-drop-out) var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
   /* The backdrop is the dialog's parent: its fade must last as long, or
      it cuts the full-screen exit short. */
-  .lb-modal-backdrop--leaving:has(> .lb-modal--fullscreen) { animation: lb-overlay-fade-out var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
+  .lb-modal-backdrop--leaving:has(> .lb-modal--fullscreen) { animation: var(--_lb-overlay-motion, lb-overlay-fade-out) var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -2936,13 +2948,13 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    ═══════════════════════════════════════════════════════════ */
 
 .lb-sheet-root { position: fixed; inset: 0; z-index: 200; display: flex; }
-.lb-sheet-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); animation: lb-sheet-overlay-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+.lb-sheet-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); animation: var(--_lb-overlay-motion, lb-sheet-overlay-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
 @keyframes lb-sheet-overlay-in { from { opacity: 0; } to { opacity: 1; } }
 .lb-sheet { position: fixed; background: var(--lb-surface-bg-overlay); display: flex; flex-direction: column; font-family: var(--lb-t-body-m-font-family); z-index: 201; overflow: hidden; }
-.lb-sheet--right { top: 0; right: 0; bottom: 0; width: 400px; /* design-intent: side-sheet default width */ border-left: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); animation: lb-sheet-right-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
-.lb-sheet--left { top: 0; left: 0; bottom: 0; width: 400px; /* design-intent: side-sheet default width */ border-right: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); animation: lb-sheet-left-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
-.lb-sheet--bottom { left: 0; right: 0; bottom: 0; height: 50vh; /* design-intent: bottom-sheet half-viewport drawer */ border-top: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay) var(--lb-radius-overlay) 0 0; animation: lb-sheet-bottom-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
-.lb-sheet--top { left: 0; right: 0; top: 0; height: 50vh; /* design-intent: top-sheet half-viewport drawer */ border-bottom: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: 0 0 var(--lb-radius-overlay) var(--lb-radius-overlay); animation: lb-sheet-top-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+.lb-sheet--right { top: 0; right: 0; bottom: 0; width: 400px; /* design-intent: side-sheet default width */ border-left: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); animation: var(--_lb-overlay-motion, lb-sheet-right-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+.lb-sheet--left { top: 0; left: 0; bottom: 0; width: 400px; /* design-intent: side-sheet default width */ border-right: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); animation: var(--_lb-overlay-motion, lb-sheet-left-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+.lb-sheet--bottom { left: 0; right: 0; bottom: 0; height: 50vh; /* design-intent: bottom-sheet half-viewport drawer */ border-top: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay) var(--lb-radius-overlay) 0 0; animation: var(--_lb-overlay-motion, lb-sheet-bottom-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+.lb-sheet--top { left: 0; right: 0; top: 0; height: 50vh; /* design-intent: top-sheet half-viewport drawer */ border-bottom: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: 0 0 var(--lb-radius-overlay) var(--lb-radius-overlay); animation: var(--_lb-overlay-motion, lb-sheet-top-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
 @keyframes lb-sheet-right-in  { from { transform: translateX(100%); } to { transform: translateX(0); } }
 @keyframes lb-sheet-left-in   { from { transform: translateX(-100%); } to { transform: translateX(0); } }
 @keyframes lb-sheet-bottom-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -2956,11 +2968,11 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 @keyframes lb-sheet-top-out    { to { transform: translateY(-100%); } }
 .lb-sheet-root--leaving { pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-sheet-root--leaving .lb-sheet-overlay { animation: lb-overlay-fade-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
-  .lb-sheet-root--leaving .lb-sheet--right  { animation: lb-sheet-right-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
-  .lb-sheet-root--leaving .lb-sheet--left   { animation: lb-sheet-left-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
-  .lb-sheet-root--leaving .lb-sheet--bottom { animation: lb-sheet-bottom-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
-  .lb-sheet-root--leaving .lb-sheet--top    { animation: lb-sheet-top-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet-overlay { animation: var(--_lb-overlay-motion, lb-overlay-fade-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet--right  { animation: var(--_lb-overlay-motion, lb-sheet-right-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet--left   { animation: var(--_lb-overlay-motion, lb-sheet-left-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet--bottom { animation: var(--_lb-overlay-motion, lb-sheet-bottom-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-sheet-root--leaving .lb-sheet--top    { animation: var(--_lb-overlay-motion, lb-sheet-top-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lb-sheet, .lb-sheet-overlay { animation: none; }
@@ -3031,14 +3043,14 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-dropdown-wrap__clear { position: absolute; right: calc(var(--lb-size-3x) + 1.25rem); display: flex; align-items: center; justify-content: center; width: 1.25rem; height: 1.25rem; padding: 0; border: none; background: transparent; border-radius: 999px; color: var(--lb-fg-muted); cursor: pointer; font-size: 1rem; line-height: 1; transition: background-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-dropdown-wrap__clear:hover { background: var(--lb-action-bg-ghost-hover); color: var(--lb-fg-default); }
 .lb-dropdown--clearable { padding-right: calc(var(--lb-size-3x) + 2.75rem); }
-.lb-dropdown-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 100; list-style: none; margin: 0; padding: var(--lb-size-1x) 0; background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); max-height: 220px; overflow-y: auto; animation: lb-dropdown-list-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-dropdown-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 100; list-style: none; margin: 0; padding: var(--lb-size-1x) 0; background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); max-height: 220px; overflow-y: auto; animation: var(--_lb-overlay-motion, lb-dropdown-list-in) var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 @keyframes lb-dropdown-list-in { from { opacity: 0; transform: translateY(-4px); /* design-intent: dropdown drop-in offset */ } to { opacity: 1; transform: translateY(0); } }
 /* Exit — Select / Multi-Select / Phone close their list through
    LB.playExit: --leaving lifts it back up and fades it, then it goes. */
 @keyframes lb-dropdown-list-out { to { opacity: 0; transform: translateY(-4px); /* design-intent: dropdown drop-in offset */ } }
 .lb-dropdown-list--leaving, .lb-phone__dropdown--leaving { pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-dropdown-list.lb-dropdown-list--leaving, .lb-phone__dropdown.lb-phone__dropdown--leaving { animation: lb-dropdown-list-out var(--lb-animation-dur-fast) var(--lb-animation-ease-out) forwards; }
+  .lb-dropdown-list.lb-dropdown-list--leaving, .lb-phone__dropdown.lb-phone__dropdown--leaving { animation: var(--_lb-overlay-motion, lb-dropdown-list-out) var(--lb-animation-dur-fast) var(--lb-animation-ease-out) forwards; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lb-dropdown-list, .lb-phone__dropdown.lb-phone__dropdown, .lb-datepicker__select-list { animation: none; }
@@ -3162,7 +3174,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 
 .lb-popover-host { position: relative; display: inline-flex; }
 .lb-popover-trigger { display: inline-flex; cursor: pointer; }
-.lb-popover { position: absolute; z-index: 100; min-width: 200px; max-width: min(320px, calc(100vw - var(--lb-size-4x))); /* 320 design-intent cap; never wider than the viewport minus a size-2x gutter per side */ background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-default); animation: lb-popover-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-popover { position: absolute; z-index: 100; min-width: 200px; max-width: min(320px, calc(100vw - var(--lb-size-4x))); /* 320 design-intent cap; never wider than the viewport minus a size-2x gutter per side */ background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-default); animation: var(--_lb-overlay-motion, lb-popover-in) var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 /* Fade-in only — don't animate transform. Position variants (--bottom, --top, etc.)
    set their own translate() for centering; animating transform here would override
    that centering during the 120ms animation, causing the popover to snap on open. */
@@ -4149,7 +4161,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-datepicker-trigger__chevron { display: flex; align-items: center; color: var(--lb-fg-muted); flex-shrink: 0; margin-left: auto; width: 1.25rem; height: 1.25rem; transition: transform var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
 .lb-datepicker-trigger__chevron--open { transform: rotate(180deg); }
 .lb-datepicker-trigger__chevron svg { width: 100%; height: 100%; }
-.lb-datepicker-popover { position: absolute; top: calc(100% + 4px); /* design-intent: popover gap from anchor */ left: 0; z-index: 100; background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); animation: lb-datepicker-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); padding: var(--lb-size-4x); }
+.lb-datepicker-popover { position: absolute; top: calc(100% + 4px); /* design-intent: popover gap from anchor */ left: 0; z-index: 100; background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); animation: var(--_lb-overlay-motion, lb-datepicker-in) var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); padding: var(--lb-size-4x); }
 @keyframes lb-datepicker-in { from { opacity: 0; transform: translateY(-4px); /* design-intent: datepicker drop-in offset */ } to { opacity: 1; transform: translateY(0); } }
 .lb-datepicker--inline .lb-datepicker__grid-root { background: var(--lb-surface-bg-default); border: var(--lb-border-width-thin) solid var(--lb-surface-border-default); border-radius: var(--lb-radius-overlay); padding: var(--lb-size-4x); }
 /* width: 280px is the *content* area (7 × 40px day cells). content-box
@@ -4205,7 +4217,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-datepicker__select-text { overflow: hidden; text-overflow: ellipsis; }
 .lb-datepicker__select-chevron { display: flex; align-items: center; color: var(--lb-fg-muted); flex-shrink: 0; transition: transform var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
 .lb-datepicker__select-chevron--open { transform: rotate(180deg); }
-.lb-datepicker__select-list { position: absolute; top: calc(100% + 2px); /* design-intent: select-list gap from anchor */ left: 0; right: 0; z-index: 300; list-style: none; margin: 0; padding: var(--lb-size-1x) 0; background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); max-height: 200px; /* design-intent: datepicker select-list scroll cap */ overflow-y: auto; animation: lb-dropdown-list-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-datepicker__select-list { position: absolute; top: calc(100% + 2px); /* design-intent: select-list gap from anchor */ left: 0; right: 0; z-index: 300; list-style: none; margin: 0; padding: var(--lb-size-1x) 0; background: var(--lb-surface-bg-overlay); border: var(--lb-border-width-thin) solid var(--lb-surface-border-overlay); border-radius: var(--lb-radius-overlay); box-shadow: var(--lb-shadow-dropdown); max-height: 200px; /* design-intent: datepicker select-list scroll cap */ overflow-y: auto; animation: var(--_lb-overlay-motion, lb-dropdown-list-in) var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 /* [hidden] handled by global rule near top of file */
 .lb-datepicker__select-option { padding: var(--lb-size-1x) var(--lb-size-2x); font-size: var(--lb-t-body-s-font-size); color: var(--lb-fg-default); cursor: pointer; transition: background var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-datepicker__select-option:hover { background: var(--lb-action-bg-ghost-hover); }
@@ -4379,7 +4391,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    layer (≤ 10000). Picked 10100 to leave clean headroom above the
    highest existing layer without dipping into 2^15+ paranoia values. */
 .lb-toast-region { position: fixed; bottom: var(--lb-size-4x); right: var(--lb-size-4x); display: flex; flex-direction: column; gap: var(--lb-size-2x); z-index: 10100; pointer-events: none; max-width: 22rem; width: 100%; }
-.lb-toast { display: flex; align-items: flex-start; gap: var(--lb-size-3x); padding: var(--lb-size-3x) var(--lb-size-4x); border-radius: var(--lb-radius-surface); border: var(--lb-border-width-action) solid transparent; box-shadow: var(--lb-shadow-modal); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); line-height: var(--lb-t-body-s-line-height); pointer-events: all; color: var(--lb-fg-default); animation: lb-toast-in var(--lb-animation-dur-gentle) cubic-bezier(0.16, 1, 0.3, 1); }
+.lb-toast { display: flex; align-items: flex-start; gap: var(--lb-size-3x); padding: var(--lb-size-3x) var(--lb-size-4x); border-radius: var(--lb-radius-surface); border: var(--lb-border-width-action) solid transparent; box-shadow: var(--lb-shadow-modal); font-family: var(--lb-t-body-s-font-family); font-size: var(--lb-t-body-s-font-size); line-height: var(--lb-t-body-s-line-height); pointer-events: all; color: var(--lb-fg-default); animation: var(--_lb-overlay-motion, lb-toast-in) var(--lb-animation-dur-gentle) cubic-bezier(0.16, 1, 0.3, 1); }
 /* Toast reads as soft tinted container, same as Banner. */
 .lb-toast--info    { background: var(--lb-bg-info-subtle);    border-color: var(--lb-border-info-muted); }
 .lb-toast--success { background: var(--lb-bg-success-subtle); border-color: var(--lb-border-success-muted); }
@@ -4445,7 +4457,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   outline-offset: var(--lb-size-0-5x);
 }
 
-.lb-toast--leaving { animation: lb-toast-out var(--lb-animation-dur-gentle) var(--lb-animation-ease-out) forwards; }
+.lb-toast--leaving { animation: var(--_lb-overlay-motion, lb-toast-out) var(--lb-animation-dur-gentle) var(--lb-animation-ease-out) forwards; }
 /* Reduced motion: the toast still appears and goes, it just doesn't
    slide in or out. */
 @media (prefers-reduced-motion: reduce) {
@@ -4510,7 +4522,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   border-radius: var(--lb-radius-overlay);
   box-shadow: var(--lb-shadow-dropdown);
   max-height: 280px; /* design-intent: phone country menu scroll cap */
-  animation: lb-phone-dropdown-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
+  animation: var(--_lb-overlay-motion, lb-phone-dropdown-in) var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
 }
 @keyframes lb-phone-dropdown-in { from { opacity: 0; transform: translateY(-4px); /* design-intent: dropdown drop-in offset */ } to { opacity: 1; transform: translateY(0); } }
 /* [hidden] handled by global rule near top of file */
@@ -5940,7 +5952,7 @@ img.lb-list__icon--round { object-fit: cover; }
 .lb-color-picker__popover--floating {
   position: fixed;
   z-index: 10000;
-  animation: lb-popover-in var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
+  animation: var(--_lb-overlay-motion, lb-popover-in) var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
 }
 
 /* Inline body — used directly in inline mode and inside the popover. */
@@ -9109,7 +9121,7 @@ img.lb-list__icon--round { object-fit: cover; }
   border-left: var(--lb-border-width-thin) solid var(--lb-surface-border-default);
   box-shadow: var(--lb-shadow-modal);
   overflow-y: auto;
-  animation: lb-header-drawer-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui);
+  animation: var(--_lb-overlay-motion, lb-header-drawer-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui);
 }
 .lb-header__drawer[hidden] { display: none; }
 /* Before lb-header.js runs (it sets role="dialog"), a drawer authored
@@ -9123,9 +9135,9 @@ img.lb-list__icon--round { object-fit: cover; }
 .lb-header--drawer-leaving .lb-header__drawer,
 .lb-header--drawer-leaving .lb-header__scrim { pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-header__scrim { animation: lb-overlay-fade-in var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
-  .lb-header--drawer-leaving .lb-header__drawer { animation: lb-header-drawer-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
-  .lb-header--drawer-leaving .lb-header__scrim { animation: lb-overlay-fade-out var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-header__scrim { animation: var(--_lb-overlay-motion, lb-overlay-fade-in) var(--lb-animation-dur-gentle) var(--lb-animation-ease-in); }
+  .lb-header--drawer-leaving .lb-header__drawer { animation: var(--_lb-overlay-motion, lb-header-drawer-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
+  .lb-header--drawer-leaving .lb-header__scrim { animation: var(--_lb-overlay-motion, lb-overlay-fade-out) var(--lb-animation-dur-normal) var(--lb-animation-ease-out) forwards; }
 }
 .lb-header__drawer-head {
   display: flex;
@@ -9212,12 +9224,12 @@ img.lb-list__icon--round { object-fit: cover; }
 .lb-header__drawer--full .lb-header__drawer-actions .lb-btn--primary { order: -1; }
 .lb-header__drawer--full > .lb-header__drawer-footer { justify-content: center; }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-header__drawer--full { animation: lb-overlay-fade-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive); }
+  .lb-header__drawer--full { animation: var(--_lb-overlay-motion, lb-overlay-fade-in) var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive); }
   .lb-header__drawer--full .lb-header__link {
-    animation: lb-modal-rise-in var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in) backwards;
+    animation: var(--_lb-overlay-motion, lb-modal-rise-in) var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in) backwards;
     animation-delay: calc(var(--lb-header-link-i, 0) * var(--lb-animation-dur-stagger));
   }
-  .lb-header--drawer-leaving .lb-header__drawer--full { animation: lb-overlay-fade-out var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
+  .lb-header--drawer-leaving .lb-header__drawer--full { animation: var(--_lb-overlay-motion, lb-overlay-fade-out) var(--lb-animation-dur-slow) var(--lb-animation-ease-expressive-out) forwards; }
 }
 
 /* ── Responsive: collapse nav → hamburger at ≤768px ── */

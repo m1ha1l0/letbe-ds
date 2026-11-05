@@ -5,6 +5,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Custom overlay motion** (new): `data-lb-motion="custom"` on an
+  overlay, or around it, stops the built-in entry and exit of modals,
+  sheets, drawers, menus and lists, popovers, toasts and the command
+  palette, and nothing else. The leaving classes are still added and the
+  close still waits for whatever animation the site puts on them, so a
+  site's own curtain or rise needs no `animation: none` overrides. Each
+  of those 35 animations reads its name through one private property the
+  attribute switches. Documented with an example on the Animation page
+  (mihailo.net finding 47).
+
 - **Motion off switch** (new): `data-lb-motion="off"` on `<html>`, a
   section or one component makes every letbe-ds motion inside it
   instant. CSS points the L2 durations and the stagger at

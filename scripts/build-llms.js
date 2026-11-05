@@ -76,7 +76,9 @@ function build(full) {
   push('Motion: every component honours `prefers-reduced-motion`. `data-lb-motion="off"`');
   push('on `<html>`, a section or one component makes all letbe-ds motion inside');
   push('it instant (CSS and scripts); `LB.motion(el)` returns `\'off\'`, `\'reduce\'` or');
-  push('`\'full\'` for your own scripts. Retime with the `--lb-animation-*` tokens.');
+  push('`\'full\'` for your own scripts. `data-lb-motion="custom"` drops the built-in');
+  push('overlay entry/exit so your own animation plays on the same leaving hooks');
+  push('(the close waits for it). Retime with the `--lb-animation-*` tokens.');
   push();
   push('Class combos are contracts: copy the full combo from each demo (base +');
   push('variant + size, e.g. `lb-btn lb-btn--secondary lb-btn--medium`; every table');

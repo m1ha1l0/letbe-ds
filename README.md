@@ -200,7 +200,11 @@ tokens (`--lb-animation-dur-*`, `--lb-animation-ease-*`) in your layer. To
 switch letbe-ds motion off, put `data-lb-motion="off"` on `<html>` (the
 whole site), on a section or on one component: everything inside becomes
 instant, scripts included, and overlays still open, close and return focus.
-The user's `prefers-reduced-motion` setting always applies on top. Details
+For your own overlay motion, `data-lb-motion="custom"` drops the built-in
+entry and exit of modals, sheets, drawers, menus and toasts: animate the
+overlay and its leaving class (`.lb-modal-backdrop--leaving` and its
+siblings) in your layer, and the close waits for your animation. The
+user's `prefers-reduced-motion` setting always applies on top. Details
 and a live demo on the [Animation page](https://letbe.design/animation/).
 
 ## Local development
