@@ -1265,6 +1265,12 @@ existing tokens. Library work (one component per round, as usual):
   docs link; Flags page re-sorted A–Z, 250 total)
 - **Select / Multi-Select options** may carry a flag or an icon before
   the label (row, trigger, pill) — optional slot in the option row.
+  ✅ DONE in library 2026-11-05 (row: list/item already had icon (show)
+  + icon (swap) — a flags/* component swaps in; trigger: the dropdown's
+  existing leading icon slot (shared with the date picker, so it stays
+  20px; description notes the code's 16px on S); pill: chip gained
+  icon (show) + icon (swap), 16px before the label in all 6 states,
+  inked like the label. Descriptions on all three say how)
 - **Table**: a styled `<caption>` (caption-m, default ink, start-aligned
   above the table) and `lb-table--text` (top-aligned cells).
 - **Card**: `lb-card--media-right` (mirror of media-left) and
