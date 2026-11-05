@@ -355,6 +355,12 @@
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">Scroll reveal — <code class="lb-code">data-lb-reveal</code></h2>
     <p class="gallery-section__desc">Add <code class="lb-code">data-lb-reveal</code> to a block and it rises a little and fades in the first time it scrolls into view; blocks arriving together come in one after another (a short stagger, at most 6 steps). <code class="lb-code">data-lb-count-up</code> on a number (a Stat value) counts every number in its text up from 0 when it comes into view, while assistive tech reads the final value. Core runtime, no setup.</p>
     <p class="gallery-section__desc"><strong>Accessible by construction:</strong> nothing is hidden unless motion is welcome (<code class="lb-code">prefers-reduced-motion: no-preference</code>) and the browser has IntersectionObserver; only opacity and <code class="lb-code">translate</code> move (no layout shift, the element keeps its own transitions); hidden blocks stay in the page for screen readers and find-in-page; focus that lands in a block shows it at once; print shows everything. lb.js sets <code class="lb-code">html.lb-reveal-on</code> when it starts, so a block already on screen at load may show for a frame before it rises — to avoid that, set the class in the <code class="lb-code">&lt;head&gt;</code> with a fallback that takes it back if lb.js never arrives:</p>
+    <p class="gallery-section__desc"><strong>Timing of its own:</strong> the reveal runs on the expressive tokens it shares with the full-screen menu and modal. To give it a different pace without slowing those, set <code class="lb-code">--lb-reveal-dur</code>, <code class="lb-code">--lb-reveal-ease</code> and <code class="lb-code">--lb-reveal-step</code> (the gap between blocks arriving together) on <code class="lb-code">:root</code>, a section or one block. Each falls back to the tokens, and <code class="lb-code">data-lb-motion="off"</code> still wins over them.</p>
+    <pre data-lb-code-block data-lb-lang="css"><code>:root {
+  --lb-reveal-dur: 1000ms;
+  --lb-reveal-ease: var(--lb-ease-standard);
+  --lb-reveal-step: 110ms;
+}</code></pre>
     <pre data-lb-code-block data-lb-lang="html"><code>&lt;script&gt;
   if (matchMedia('(prefers-reduced-motion: no-preference)').matches &amp;&amp; 'IntersectionObserver' in window) {
     document.documentElement.classList.add('lb-reveal-on');

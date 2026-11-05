@@ -5,6 +5,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Scroll reveal timing** (new): `--lb-reveal-dur`, `--lb-reveal-ease`
+  and `--lb-reveal-step` on `:root`, a section or one block give the
+  reveal its own pace, falling back to the expressive tokens and the L2
+  stagger, so a site can slow the reveal without slowing the full-screen
+  menu and modal that share those tokens. lb.js now reads the stagger at
+  the block, not only on `<html>`, and a 0ms step is honoured (it fell
+  back to 50ms). `data-lb-motion="off"` still wins (mihailo.net finding
+  48).
+
 - **Custom overlay motion** (new): `data-lb-motion="custom"` on an
   overlay, or around it, stops the built-in entry and exit of modals,
   sheets, drawers, menus and lists, popovers, toasts and the command

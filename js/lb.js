@@ -6625,9 +6625,14 @@ const LB = (() => {
   const Reveal = (() => {
     const can = typeof window !== 'undefined' && 'IntersectionObserver' in window;
     let io = null, countIo = null;
-    const stepMs = () => {
-      const v = getComputedStyle(document.documentElement).getPropertyValue('--lb-animation-dur-stagger').trim();
-      return (v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000) || 50;
+    // The stagger step is read at the block: --lb-reveal-step if a block
+    // or a container sets one, else the L2 stagger (so an off scope's 0ms
+    // and a section's own step both reach it). 0ms is a valid step.
+    const stepMs = (el) => {
+      const cs = getComputedStyle(el);
+      const v = (cs.getPropertyValue('--lb-reveal-step').trim() || cs.getPropertyValue('--lb-animation-dur-stagger').trim());
+      const ms = v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000;
+      return Number.isFinite(ms) ? ms : 50;
     };
     function show(el, i = 0, instant = false) {
       if (el.classList.contains('lb-revealed')) return;
@@ -6637,7 +6642,7 @@ const LB = (() => {
         el.classList.add('lb-revealed');
         return;
       }
-      el.style.setProperty('--lb-reveal-delay', Math.min(i, 6) * stepMs() + 'ms');
+      el.style.setProperty('--lb-reveal-delay', Math.min(i, 6) * stepMs(el) + 'ms');
       el.classList.add('lb-revealed');
     }
     function countUp(el) {
