@@ -5,6 +5,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Accordion motion** (new): a panel opens and closes by its height
+  (a grid row from 0fr to 1fr) while its content fades in and settles a
+  few px, 300ms open and 200ms close; reopening mid-close reverses. The
+  close waits for the motion before the panel takes `[hidden]`, so a
+  closed panel still leaves the tab order and the accessibility tree.
+  Instant under reduced motion and `data-lb-motion="off"`. Timing of its
+  own with `--lb-accordion-dur`, `--lb-accordion-dur-close` and
+  `--lb-accordion-ease`. The Theme Editor and the calendar list use it
+  too (mihailo.net finding 49).
+
 - **Scroll reveal timing** (new): `--lb-reveal-dur`, `--lb-reveal-ease`
   and `--lb-reveal-step` on `:root`, a section or one block give the
   reveal its own pace, falling back to the expressive tokens and the L2

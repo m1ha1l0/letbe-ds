@@ -2795,6 +2795,36 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    generous bottom padding for breathing room when expanded. The answer
    is the content, so it reads in the default ink (muted is for meta). */
 .lb-accordion__panel-inner { padding: 0 0 var(--lb-size-8x); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); font-weight: var(--lb-t-body-m-font-weight); line-height: var(--lb-t-body-m-line-height); color: var(--lb-fg-default); }
+/* Motion: a panel opens and closes by its height (a grid row from 0fr
+   to 1fr) while its content fades in and settles a few px. lb.js puts
+   .lb-accordion__panel--collapsed on the closed end of the motion: for
+   one frame before an opening panel grows, and on a closing panel until
+   its transition ends (the shared exit wait), then sets [hidden]; only
+   when LB.motion is 'full', so reduced motion and data-lb-motion="off"
+   open and close at once. Reopening mid-close reverses smoothly. The
+   close is shorter than the open, like an overlay's exit. Timing of its
+   own on the accordion, a section or :root: --lb-accordion-dur (open),
+   --lb-accordion-dur-close and --lb-accordion-ease. */
+@media (prefers-reduced-motion: no-preference) {
+  .lb-accordion__panel {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows var(--lb-accordion-dur, var(--lb-animation-dur-slow)) var(--lb-accordion-ease, var(--lb-animation-ease-ui));
+  }
+  .lb-accordion__panel > .lb-accordion__panel-inner {
+    min-height: 0;
+    transition-property: opacity, translate, padding-bottom;
+    transition-duration: var(--lb-accordion-dur, var(--lb-animation-dur-slow));
+    transition-timing-function: var(--lb-accordion-ease, var(--lb-animation-ease-ui));
+  }
+  .lb-accordion__panel--collapsed { grid-template-rows: 0fr; transition-duration: var(--lb-accordion-dur-close, var(--lb-animation-dur-gentle)); }
+  .lb-accordion__panel--collapsed > .lb-accordion__panel-inner {
+    padding-bottom: 0;
+    opacity: 0;
+    translate: 0 calc(-1 * var(--lb-size-2x));
+    transition-duration: var(--lb-accordion-dur-close, var(--lb-animation-dur-gentle));
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════
    TABS

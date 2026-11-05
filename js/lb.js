@@ -372,12 +372,12 @@ const LB = (() => {
 
     _toggle(item) {
       const trigger = item.querySelector('.lb-accordion__trigger');
-      const panel = item.querySelector('.lb-accordion__panel');
-      const chevron = item.querySelector('.lb-accordion__chevron');
       if (trigger.disabled) return;
 
       const id = item.dataset.lbId || trigger.id;
-      const opening = panel.hasAttribute('hidden');
+      // aria-expanded, not [hidden], is the state: a closing panel stays
+      // shown until its motion ends, and a click then reopens it.
+      const opening = trigger.getAttribute('aria-expanded') !== 'true';
 
       if (opening && !this.allowMultiple) {
         this._openIds.forEach((openId) => {
@@ -385,19 +385,40 @@ const LB = (() => {
         });
       }
 
-      if (opening) {
-        panel.removeAttribute('hidden');
-        trigger.setAttribute('aria-expanded', 'true');
-        if (chevron) chevron.classList.add('lb-accordion__chevron--open');
-        this._openIds.add(id);
-      } else {
-        panel.setAttribute('hidden', '');
-        trigger.setAttribute('aria-expanded', 'false');
-        if (chevron) chevron.classList.remove('lb-accordion__chevron--open');
-        this._openIds.delete(id);
-      }
-
+      this._set(item, opening);
       this.el.dispatchEvent(new CustomEvent('lb-accordion-change', { detail: { id, open: opening } }));
+    }
+
+    // Open or close one item. With motion 'full' the panel grows from and
+    // shrinks to .lb-accordion__panel--collapsed (CSS transitions); the
+    // close waits for them (playExit) before [hidden], and a reopen
+    // mid-close cancels the wait so the transition simply reverses.
+    _set(item, open) {
+      const trigger = item.querySelector('.lb-accordion__trigger');
+      const panel = item.querySelector('.lb-accordion__panel');
+      const chevron = item.querySelector('.lb-accordion__chevron');
+      const id = item.dataset.lbId || trigger?.id;
+      if (!panel) return;
+      trigger?.setAttribute('aria-expanded', String(open));
+      chevron?.classList.toggle('lb-accordion__chevron--open', open);
+      if (open) {
+        this._openIds.add(id);
+        if (panel._lbCancelExit) { panel._lbCancelExit(); panel._lbCancelExit = null; return; }
+        const grow = panel.hasAttribute('hidden') && motion(panel) === 'full';
+        panel.removeAttribute('hidden');
+        if (grow) {
+          panel.classList.add('lb-accordion__panel--collapsed');
+          void panel.offsetHeight; // start from the collapsed end
+          panel.classList.remove('lb-accordion__panel--collapsed');
+        }
+      } else {
+        this._openIds.delete(id);
+        if (panel.hasAttribute('hidden') || panel._lbCancelExit) return;
+        panel._lbCancelExit = playExit(panel, 'lb-accordion__panel--collapsed', () => {
+          panel._lbCancelExit = null;
+          panel.setAttribute('hidden', '');
+        });
+      }
     }
 
     _close(id) {
@@ -405,14 +426,7 @@ const LB = (() => {
       items.forEach((item) => {
         const trigger = item.querySelector('.lb-accordion__trigger');
         const itemId = item.dataset.lbId || trigger?.id;
-        if (itemId === id) {
-          const panel = item.querySelector('.lb-accordion__panel');
-          const chevron = item.querySelector('.lb-accordion__chevron');
-          panel?.setAttribute('hidden', '');
-          trigger?.setAttribute('aria-expanded', 'false');
-          chevron?.classList.remove('lb-accordion__chevron--open');
-          this._openIds.delete(id);
-        }
+        if (itemId === id) this._set(item, false);
       });
     }
   }
