@@ -421,12 +421,36 @@
       this._setupMarquees();
       this._measureMarquees();
       if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => this._measureMarquees());
+        document.fonts.ready.then(() => { this._measureMarquees(); this._fitControls(); });
       }
       window.addEventListener('resize', () => {
         clearTimeout(this._titleT);
         this._titleT = setTimeout(() => this._measureMarquees(), 150);
       });
+
+      // Controls that don't fit 1 row take the narrow 2-row layout on a
+      // wider player too (.lb-media--stacked). Measured now and whenever
+      // the player's size changes, so a sidebar or a split window counts.
+      this.controls = this.el.querySelector('.lb-media__controls');
+      this._fitControls();
+      if (this.controls && typeof ResizeObserver !== 'undefined') {
+        let pending = false;
+        this._fitRo = new ResizeObserver(() => {
+          if (pending) return;
+          pending = true;
+          requestAnimationFrame(() => { pending = false; this._fitControls(); });
+        });
+        this._fitRo.observe(this.el);
+      }
+    }
+
+    // 1 row is measured with --stacked off. Both class changes happen in
+    // the same task, so nothing paints in between.
+    _fitControls() {
+      const c = this.controls;
+      if (!c) return;
+      this.el.classList.remove('lb-media--stacked');
+      this.el.classList.toggle('lb-media--stacked', c.scrollWidth > c.clientWidth);
     }
 
     // Collect every marquee box in the player (now-playing title +

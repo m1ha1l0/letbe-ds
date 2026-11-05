@@ -5,6 +5,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Media player: no more overflow between 481px and 615px.** The
+  2-row narrow layout started at a fixed 480px, but how wide 1 row must
+  be depends on the controls a page includes and on the button size.
+  Previous, play, next, shuffle, repeat, mute and volume need 616px with
+  48px touch buttons (568px with a mouse), so such a player overflowed
+  its box by up to 135px on small tablets, split windows and narrow
+  columns. `LB.Media` now measures the row and adds `.lb-media--stacked`
+  when it would overflow, which gives the same 2 rows as a phone. Players
+  that fit keep their single row; `--compact` and `--card` are unchanged.
 - **Toast and command palette entry easing** now read
   `--lb-animation-ease-expressive-in` instead of a raw `cubic-bezier`,
   so a theme that changes the token changes them too. Same curve by

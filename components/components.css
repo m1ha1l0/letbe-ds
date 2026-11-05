@@ -3512,6 +3512,20 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
      pushing the actions cluster out of the frame on very narrow players */
   .lb-media__top { flex-wrap: wrap; }
 }
+/* The same 2 rows on a wider player whose controls don't fit 1 row.
+   How wide 1 row must be depends on which controls a page includes and
+   on the button size: prev, play, next, shuffle, repeat, mute, both times,
+   scrubber and volume need 616px with 48px touch buttons (568px with a
+   mouse), so 481px to 615px overflowed. LB.Media measures 1 row and adds
+   --stacked when it would overflow. :where() keeps the specificity of the
+   container block above, so --compact and --card still defend themselves.
+   Keep in step with that block's layout rules. */
+:where(.lb-media--stacked) .lb-media__controls { flex-wrap: wrap; }
+:where(.lb-media--stacked) .lb-media__scrubber { order: -1; flex: 1 1 0; }
+:where(.lb-media--stacked) .lb-media__controls > :is([data-lb-media-current], .lb-media__scrubber, [data-lb-media-duration]) { order: -1; margin-block-end: calc(-1 * var(--lb-size-2x)); }
+:where(.lb-media--stacked) .lb-media__controls:has(> .lb-media__scrubber)::after { content: ""; order: -1; flex-basis: 100%; height: 0; }
+:where(.lb-media--stacked) .lb-media__controls > :has(+ [data-lb-media-current]) { margin-inline-end: auto; }
+:where(.lb-media--stacked) .lb-media__controls > .lb-media__volume { flex: 1 1 var(--lb-size-12x); width: auto; max-width: var(--lb-size-24x); }
 
 /* Touch-target sizing — when the primary pointer is coarse (touch screens,
    not desktop or hybrid laptops), bump the player's medium icon-buttons
