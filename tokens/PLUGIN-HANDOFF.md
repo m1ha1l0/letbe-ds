@@ -1227,6 +1227,10 @@ existing tokens. Library work (one component per round, as usual):
   icon-button ghost size=M, 40px bound size/10x, 24px icon)
 - **`lb-modal--fullscreen`**: no border/radius/shadow, page surface,
   header row on the site header's padding — new modal variant.
+  ✅ DONE in library 2026-11-05 (`type=default, size=fullscreen`, 1440×900;
+  header/body/footer capped at 1200 and centred like the header set, so the
+  inset matches `max(6x, (100% − 75rem)/2 + 6x)` at any width; default type
+  only, alert stays a small dialog)
 - **`lb-header__drawer--full`** (full-screen phone menu: head on the
   bar's row, heading-l centred links, actions at the foot primary-first)
   + **`lb-header__drawer-footer`** (social row) — header drawer variant.
