@@ -9077,6 +9077,10 @@ img.lb-list__icon--round { object-fit: cover; }
   justify-content: space-between;
   margin-bottom: var(--lb-size-3x);
 }
+/* Drawer head tools: a control beside the close (a theme switch, a
+   language picker) goes in .lb-header__drawer-tools together with the
+   close, spaced like the bar's actions. */
+.lb-header__drawer-tools { display: inline-flex; align-items: center; gap: var(--lb-size-2x); }
 .lb-header__drawer .lb-header__link { width: 100%; justify-content: flex-start; }
 /* Drawer rows are a vertical list — the active page takes the vertical
    nav's treatment (selected fill + left bar) instead of the underline. */

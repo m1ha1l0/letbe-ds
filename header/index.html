@@ -171,7 +171,7 @@
 
     <!-- ────────────────── D. Full-screen phone menu ────────────────── -->
     <h2 class="gallery-section__title" style="margin-top: var(--lb-size-10x);">D · Full-screen phone menu — <code class="lb-code">__drawer--full</code></h2>
-    <p class="gallery-section__desc">Add <code class="lb-code">.lb-header__drawer--full</code> to the drawer and the phone menu covers the screen: its head sits on the bar's row (brand on the brand, close on the menu button), the page names are large and centred, the actions sit at the foot with the primary first, and an optional <code class="lb-code">.lb-header__drawer-footer</code> row holds social links (<code class="lb-code">.lb-icon-btn--large</code>, 48px). It fades in with the links rising in a short stagger, and fades out on close; reduced motion skips both. Narrow the window below 769px and open the menu to try it.</p>
+    <p class="gallery-section__desc">Add <code class="lb-code">.lb-header__drawer--full</code> to the drawer and the phone menu covers the screen: its head sits on the bar's row (brand on the brand, close on the menu button), the page names are large and centred, the actions sit at the foot with the primary first, and an optional <code class="lb-code">.lb-header__drawer-footer</code> row holds social links (<code class="lb-code">.lb-icon-btn--large</code>, 48px). A control beside the close (a theme switch, a language picker) goes in <code class="lb-code">.lb-header__drawer-tools</code> together with the close, as in this demo. It fades in with the links rising in a short stagger, and fades out on close; reduced motion skips both. Narrow the window below 769px and open the menu to try it.</p>
     <div style="border: var(--lb-border-width-thin) solid var(--lb-border-muted); border-radius: var(--lb-radius-overlay); overflow: hidden;">
       <header class="lb-header" data-lb-header>
         <a class="lb-header__skip" href="#demoD-main">Skip to content</a>
@@ -190,7 +190,10 @@
         <div class="lb-header__drawer lb-header__drawer--full" data-lb-header-drawer aria-label="Menu" hidden>
           <div class="lb-header__drawer-head">
             <a class="lb-header__brand" href="#"><span class="lb-header__logo" data-lb-icon="letbe"></span> letbe</a>
-            <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-header__toggle" data-lb-header-drawer-close aria-label="Close menu"><span data-lb-icon="x"></span></button>
+            <div class="lb-header__drawer-tools">
+              <button type="button" class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium" aria-label="Switch theme"><span data-lb-icon="sun"></span></button>
+              <button class="lb-icon-btn lb-icon-btn--ghost lb-icon-btn--medium lb-header__toggle" data-lb-header-drawer-close aria-label="Close menu"><span data-lb-icon="x"></span></button>
+            </div>
           </div>
           <a class="lb-header__link lb-header__link--active" href="#" aria-current="page">Product</a>
           <a class="lb-header__link" href="#">Pricing</a>

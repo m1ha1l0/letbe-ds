@@ -40,6 +40,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 - **Card, plain footer** (new): `.lb-card__footer--plain` drops the rule
   and the top padding, so a single action sits under the content
   (mihailo.net finding 51).
+- **Header, drawer tools** (new): `.lb-header__drawer-tools` holds a
+  control beside the close in a drawer head (a theme switch, a language
+  picker) together with the close, spaced like the bar's actions. Both
+  mihailo.net and mihailo.ink already wrote this class themselves; it is
+  now part of the design system. Shown in the full-screen menu demo
+  (mihailo.net finding 52).
 
 ## [1.15.0] — 2026-11-05
 
