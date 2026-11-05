@@ -1594,7 +1594,7 @@ Library work, one component per round:
   linked picture (an inset focus ring and the zoom, states the library
   doesn't model).
 
-### 44. Danger and no-entry icons — library relay 🔵 LIBRARY (2026-11-05) — no plugin action, no new tokens
+### 44. Danger and no-entry icons — library relay ✅ DONE in library 2026-11-06 (4 icons; ships in the cycle's one publish) — no plugin action, no new tokens
 
 Library work:
 
@@ -1603,6 +1603,13 @@ Library work:
   `ban-filled` (264 in the set, was 260; 15 filled, was 13). Add the
   outlined pair to the icon library like the rest of the outlined set and
   the filled pair beside `x-circle-filled` / `alert-triangle-filled`.
+  ✅ DONE in library 2026-11-06 (`icons/skull` + `icons/ban` at the end
+  of the outlined rows, `icons/skull-filled` + `icons/ban-filled` at the
+  end of the filled row; same 2-layer recipe as every icon: real shape on
+  `icon` (outlined, stroke weight `size/theme`) or `icon-fill` (filled,
+  eye, nose and bar cut out) plus the empty partner, ink
+  `field/fg/default`, keywords + Docs link; 264 icons, 15 filled; Light +
+  Dark verified)
 
 ### 45. Motion control (v1.18.0) 🟢 code-side only — no plugin or library action (2026-11-05)
 
