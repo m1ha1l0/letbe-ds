@@ -1375,7 +1375,7 @@ the chevron turned down, scrim behind. New variant on the sheet set
 (state=[collapsed, expanded]). Behaviour (inert body, focus trap, scroll
 lock) is code-only.
 
-### 41. Button counter on disabled buttons — library relay 🔵 LIBRARY (2026-11-05) — no plugin action, no new tokens
+### 41. Button counter on disabled buttons — library relay ✅ DONE in library 2026-11-05 (12 disabled button variants rebound, Light + Dark verified) — no plugin action, no new tokens
 
 From the library session's review: on a disabled button the counter kept
 its variant's colours (a disabled primary showed a white pill with a
