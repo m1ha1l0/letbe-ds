@@ -6640,13 +6640,28 @@ const LB = (() => {
   const Reveal = (() => {
     const can = typeof window !== 'undefined' && 'IntersectionObserver' in window;
     let io = null, countIo = null;
+    // A timing setting in ms: the first of the names the element sees,
+    // resolved by the CSS engine so calc() works too ("calc(var(--lb-
+    // duration-500) * 2)"). NaN when unset or unreadable; 0ms is valid.
+    const timeMs = (el, names) => {
+      const cs = getComputedStyle(el);
+      let v = '';
+      for (const name of names) if ((v = cs.getPropertyValue(name).trim())) break;
+      if (!/^[\d.]+m?s$/.test(v)) {
+        const probe = document.createElement('i');
+        probe.style.transitionDuration = v;
+        if (!probe.style.transitionDuration) return NaN;
+        document.documentElement.appendChild(probe);
+        v = getComputedStyle(probe).transitionDuration;
+        probe.remove();
+      }
+      return v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000;
+    };
     // The stagger step is read at the block: --lb-reveal-step if a block
     // or a container sets one, else the L2 stagger (so an off scope's 0ms
-    // and a section's own step both reach it). 0ms is a valid step.
+    // and a section's own step both reach it).
     const stepMs = (el) => {
-      const cs = getComputedStyle(el);
-      const v = (cs.getPropertyValue('--lb-reveal-step').trim() || cs.getPropertyValue('--lb-animation-dur-stagger').trim());
-      const ms = v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000;
+      const ms = timeMs(el, ['--lb-reveal-step', '--lb-animation-dur-stagger']);
       return Number.isFinite(ms) ? ms : 50;
     };
     function show(el, i = 0, instant = false) {
@@ -6729,8 +6744,7 @@ const LB = (() => {
         if (cs.display === 'inline') el.style.display = 'inline-block';
       }
       // --lb-count-up-dur on the number or a container sets the pace.
-      const v = cs.getPropertyValue('--lb-count-up-dur').trim();
-      const ms = v.endsWith('ms') ? parseFloat(v) : parseFloat(v) * 1000;
+      const ms = timeMs(el, ['--lb-count-up-dur']);
       const dur = Number.isFinite(ms) ? ms : 1100; // design-intent: a count reads as counting, not as a flicker
       const at = (e) => nodes.forEach((x) => { x.node.nodeValue = x.parts.map((p) => (typeof p === 'string' ? p : formatNumber(p, e))).join(''); });
       let t0 = null;

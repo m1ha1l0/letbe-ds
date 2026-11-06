@@ -17,6 +17,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   `--lb-count-up-dur` on the number or a container sets the pace
   (default 1100ms), not a token.
 
+- **Reveal: `--lb-reveal-step` reads a `calc()` value.** lb.js read
+  the step as plain text, so a step written on the tokens
+  (`calc(var(--lb-duration-50) * 2)`) fell back to 50ms. The CSS engine
+  now resolves it, and the new `--lb-count-up-dur` the same way.
+
 - **Accordion: the chevron turns with its panel** (visual retune,
   review before bumping). Its own rule (200ms) never applied, because
   the generic disclosure chevron rule outranked it, so it turned in
