@@ -5,6 +5,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Disabled controls keep the normal pointer.** The 35 disabled-state
+  rules in components.css showed `cursor: not-allowed`, a prohibition
+  sign that reads as an error; they now set `cursor: default`, as
+  disabled controls do in the operating system. The disabled look is
+  unchanged. A blocked week-view calendar slot also lost its hover
+  tint: the `[disabled]:hover` reset repainted it with the bookable
+  slot's colour. The slot's hover now skips disabled slots and both
+  reset rules are gone.
+
 ## [1.21.1] — 2026-11-06
 
 Patch: wide content in an open accordion panel is no longer cut off.

@@ -185,6 +185,8 @@ announcements), APG-patterned tables (`role=table`, `aria-sort`), focus-
 trapped modal drawers, labelled comboboxes, `prefers-reduced-motion`
 opt-outs. Each gallery page carries an "a11y (built in)" paragraph stating
 exactly what the code does — claims are verified against the source.
+Disabled controls keep the normal arrow pointer (`cursor: default`) and
+show no hover effect; the disabled look alone carries the state.
 
 ## Files
 

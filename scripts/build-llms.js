@@ -143,6 +143,8 @@ function build(full) {
   push('trapped modal drawers, labelled comboboxes, `prefers-reduced-motion`');
   push('opt-outs. Each gallery page carries an "a11y (built in)" paragraph stating');
   push('exactly what the code does — claims are verified against the source.');
+  push('Disabled controls keep the normal arrow pointer (`cursor: default`) and');
+  push('show no hover effect; the disabled look alone carries the state.');
   push();
   push('## Files');
   push();
