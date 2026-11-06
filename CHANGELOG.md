@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.20.0] — 2026-11-06
+
+Minor: count-up keeps a number's format, the accordion chevron turns
+with its panel (a visual retune, 100ms was a bug), and 2 new timing
+settings (`--lb-count-up-dur`, `--lb-card-zoom-dur/-ease`). No new
+tokens and no renames.
+
 - **Count-up keeps a number's format.** `data-lb-count-up` counted
   every run of digits on its own, so "2,000+" read "1,0+" while it
   counted, "+4.5%" counted the 4 and the 5 apart, and a year counted up
