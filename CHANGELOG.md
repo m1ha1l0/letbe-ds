@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.21.1] — 2026-11-06
+
+Patch: wide content in an open accordion panel is no longer cut off.
+No new tokens and no renames.
+
 - **Wide accordion content is no longer cut off.** Since v1.18.0 an
   open panel is a grid, for its height motion, and content that cannot
   shrink widened the grid's column past the panel. A row with a long
