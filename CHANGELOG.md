@@ -5,6 +5,12 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.21.0] — 2026-11-06
+
+Minor: the header's hide on scroll no longer restyles the whole page on
+every frame, and companion bars follow it through a new attribute,
+`data-lb-header-follow`. No new tokens and no renames.
+
 - **Header hide on scroll no longer restyles the whole page every frame.**
   `lb-header--autohide` wrote `--lb-header-visible` on `<html>` on every
   frame the bar moved, and a value on the root restyles every element:
