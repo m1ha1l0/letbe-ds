@@ -5,6 +5,17 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Header hide on scroll no longer restyles the whole page every frame.**
+  `lb-header--autohide` wrote `--lb-header-visible` on `<html>` on every
+  frame the bar moved, and a value on the root restyles every element:
+  on a phone (CPU slowed 4x) mihailo.ink's home page had 44 to 54 slow
+  frames per scroll run, now 0. A companion sticky bar now follows when
+  marked `data-lb-header-follow` (with `top: var(--lb-header-visible,
+  0px)`): it gets the value on itself every frame and eases with the
+  bar's settle. `<html>` gets the value only once the bar is at rest. A
+  bar that read it from `<html>` while scrolling needs the attribute.
+  The bar's height is measured on resize, no longer read every frame.
+
 ## [1.20.1] — 2026-11-06
 
 Patch: count-up no longer flashes a number's final value before it

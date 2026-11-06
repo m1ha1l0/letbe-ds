@@ -8931,11 +8931,15 @@ img.lb-list__icon--round { object-fit: cover; }
    moves the sticky top by --lb-header-hide as you read down, pixel for
    pixel, brings it back on the way up, and settles it shown or hidden at
    rest (--settling animates that last step). It moves `top`, never a
-   transform, so the fixed drawer inside keeps the viewport as its box. */
+   transform, so the fixed drawer inside keeps the viewport as its box.
+   A companion sticky bar marked data-lb-header-follow gets the visible
+   height as --lb-header-visible on itself every frame (top: var(--lb-
+   header-visible, 0px)) and eases with the bar's settle. */
 .lb-header--autohide.lb-header--sticky { top: calc(0px - var(--lb-header-hide, 0px)); }
 .lb-header--autohide.lb-header--floating { top: calc(var(--lb-size-4x) - var(--lb-header-hide, 0px)); }
 @media (prefers-reduced-motion: no-preference) {
-  .lb-header--autohide.lb-header--settling { transition: top var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+  .lb-header--autohide.lb-header--settling,
+  .lb-header-follow--settling { transition: top var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
 }
 
 /* Skip-to-content — visually hidden until focused (WCAG bypass block).
