@@ -5,6 +5,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Wide accordion content is no longer cut off.** Since v1.18.0 an
+  open panel is a grid, for its height motion, and content that cannot
+  shrink widened the grid's column past the panel. A row with a long
+  label and 4 badges in a 260px panel took 486px, and a code block with
+  a long line took 725px; the panel's `overflow: hidden` cut both, and
+  the code block could not scroll. `.lb-accordion__panel-inner` now has
+  `min-width: 0` in the motion rule, so the content takes the panel's
+  width, as it always did with reduced motion.
+
 ## [1.21.0] — 2026-11-06
 
 Minor: the header's hide on scroll no longer restyles the whole page on

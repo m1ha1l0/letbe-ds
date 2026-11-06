@@ -2819,7 +2819,9 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    open and close at once. Reopening mid-close reverses smoothly. The
    close is shorter than the open, like an overlay's exit. Timing of its
    own on the accordion, a section or :root: --lb-accordion-dur (open),
-   --lb-accordion-dur-close and --lb-accordion-ease. */
+   --lb-accordion-dur-close and --lb-accordion-ease. min-width: 0 keeps
+   the grid column at the panel's width, as block layout does, so wide
+   content (a row of badges, a code line) fits or scrolls, not cut. */
 @media (prefers-reduced-motion: no-preference) {
   .lb-accordion__panel {
     display: grid;
@@ -2828,6 +2830,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   }
   .lb-accordion__panel > .lb-accordion__panel-inner {
     min-height: 0;
+    min-width: 0;
     transition-property: opacity, translate, padding-bottom;
     transition-duration: var(--lb-accordion-dur, var(--lb-animation-dur-slow));
     transition-timing-function: var(--lb-accordion-ease, var(--lb-animation-ease-ui));
