@@ -21,16 +21,29 @@
     <p class="gallery-section__desc">Non-modal floating panel anchored to a trigger. Four positions: top, bottom, left, right. Use for quick supplementary info, tool panels, or simple actions that don't warrant a full modal. Dismisses on outside click, or on <kbd>Esc</kbd> while focus is inside <code class="lb-code">.lb-popover-host</code>.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>a11y (built in):</strong> <code class="lb-code">LB.Popover</code> wires the pair on init — the trigger gets <code class="lb-code">aria-haspopup="dialog"</code> + <code class="lb-code">aria-expanded</code> + <code class="lb-code">aria-controls</code> (the panel id is minted if you don't supply one), and the panel gets <code class="lb-code">role="dialog"</code> with <code class="lb-code">aria-modal="false"</code> — this one is deliberately non-modal. Focus is neither moved nor trapped: the panel follows its trigger in DOM order, so <kbd>Tab</kbd> walks straight into it, <kbd>Esc</kbd> closes while focus is anywhere inside <code class="lb-code">.lb-popover-host</code>, and a mousedown outside closes it. Opening is an opacity-only fade — nothing travels.</p>
     <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Usage:</strong> Everything lives in one wrapper: <code class="lb-code">.lb-popover-host</code> with <code class="lb-code">data-lb-popover</code>, containing a <code class="lb-code">.lb-popover-trigger</code> (stack it with normal <code class="lb-code">.lb-btn</code> classes) followed by its <code class="lb-code">.lb-popover</code> panel with one position modifier (<code class="lb-code">.lb-popover--top/bottom/left/right</code>). Author the panel with inline <code class="lb-code">display:none</code> as the demo does — the stylesheet never hides it, and init's own hiding only lands at <code class="lb-code">DOMContentLoaded</code>; auto-init then wires the trigger click to toggle, with no ids to manage. It dispatches no CustomEvents and has no public open/close methods; the only JS hook is the <code class="lb-code">onOpenChange(open)</code> callback, so when you need to react, assign <code class="lb-code">host._lbPopover = new LB.Popover(host, { onOpenChange })</code> before DOMContentLoaded and the auto-init sweep will skip that host. <code class="lb-code">destroy()</code> removes the document-level outside-click listener when you tear the host down.</p>
+    <p class="gallery-section__desc" style="margin-top: calc(-1 * var(--lb-size-4x)); margin-bottom: var(--lb-size-6x);"><strong>Width:</strong> the panel sizes to its content, from 200px up to 320px (never wider than the screen minus 8px a side), whatever the trigger's size, so a note behind a small icon button wraps at 320px. Content laid out in a row is measured as one line: stack a list of buttons in a column (<code class="lb-code">.lb-stack</code>), or the panel grows to 320px to fit them side by side. Near the edge of the screen, or of a scrolling container such as a main column, the panel shifts sideways so it is never cut.</p>
 
 <hr class="gallery-desc-divider">
 
 
 <h2 class="gallery-section__title">Popover Demo</h2>
+    <div class="gallery-label">Header and body</div>
     <div class="lb-popover-host" data-lb-popover>
       <button class="lb-popover-trigger lb-btn lb-btn--secondary lb-btn--medium">Show Popover</button>
       <div class="lb-popover lb-popover--bottom" style="display:none;">
         <div class="lb-popover__header">Popover Title</div>
         <div class="lb-popover__body">This is the popover content. Click the trigger or press Escape to close.</div>
+      </div>
+    </div>
+
+    <div class="gallery-label">Info note on an icon button</div>
+    <div class="lb-cluster" style="--gap: var(--lb-size-1x); align-items: center;">
+      <span class="lb-label">Sync interval</span>
+      <div class="lb-popover-host" data-lb-popover>
+        <button type="button" class="lb-popover-trigger lb-icon-btn lb-icon-btn--ghost lb-icon-btn--small" aria-label="About sync interval"><span data-lb-icon="info" aria-hidden="true"></span></button>
+        <div class="lb-popover lb-popover--bottom" style="display:none;">
+          <div class="lb-popover__body">How often the app checks for new data. A shorter interval keeps lists current but uses more battery. The default suits most people.</div>
+        </div>
       </div>
     </div>
   </section>

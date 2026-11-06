@@ -293,17 +293,21 @@
         <div class="lb-popover-host" data-lb-popover>
           <button class="lb-popover-trigger lb-btn lb-btn--secondary lb-btn--small" type="button"><span class="lb-btn__icon" aria-hidden="true" data-lb-icon="calendar"></span> Last 30 days <span class="lb-btn__icon" aria-hidden="true" data-lb-icon="chevron-down"></span></button>
           <div class="lb-popover lb-popover--bottom" style="display:none; min-width: 11rem; padding: var(--lb-size-1x);">
-            <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">Last 7 days</button>
-            <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">Last 30 days</button>
-            <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">Last 90 days</button>
+            <div class="lb-stack" style="--gap: 0;">
+              <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">Last 7 days</button>
+              <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">Last 30 days</button>
+              <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">Last 90 days</button>
+            </div>
           </div>
         </div>
         <div class="lb-popover-host" data-lb-popover>
           <button class="lb-popover-trigger lb-btn lb-btn--secondary lb-btn--small" type="button">vs Previous period <span class="lb-btn__icon" aria-hidden="true" data-lb-icon="chevron-down"></span></button>
           <div class="lb-popover lb-popover--bottom" style="display:none; min-width: 12rem; padding: var(--lb-size-1x);">
-            <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">vs Previous period</button>
-            <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">vs Same period last year</button>
-            <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">No comparison</button>
+            <div class="lb-stack" style="--gap: 0;">
+              <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">vs Previous period</button>
+              <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">vs Same period last year</button>
+              <button class="lb-btn lb-btn--ghost lb-btn--small" type="button" style="width: 100%; justify-content: flex-start;">No comparison</button>
+            </div>
           </div>
         </div>
         <div style="flex: 1;"></div>

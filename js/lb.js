@@ -1711,15 +1711,25 @@ const LB = (() => {
       // box (--bottom/--top/--right), margin-right (negated) moves a
       // right-anchored one (--left) — setting both covers either anchor
       // without sniffing the variant. Gutter mirrors --lb-size-2x (8px),
-      // the popover's own anchor gap.
+      // the popover's own anchor gap. The nearest ancestor that clips (a
+      // scrolling main column) narrows the bounds too, or it would cut
+      // the panel short of the screen edge.
       this.popover.style.marginLeft = '';
       this.popover.style.marginRight = '';
       const r = this.popover.getBoundingClientRect();
       const gutter = 8;
-      const vw = document.documentElement.clientWidth;
+      let lo = gutter;
+      let hi = document.documentElement.clientWidth - gutter;
+      for (let n = this.host.parentElement; n && n !== document.body; n = n.parentElement) {
+        if (getComputedStyle(n).overflowX === 'visible') continue;
+        const c = n.getBoundingClientRect();
+        lo = Math.max(lo, c.left + gutter);
+        hi = Math.min(hi, c.right - gutter);
+        break;
+      }
       let shift = 0;
-      if (r.left < gutter) shift = gutter - r.left;
-      else if (r.right > vw - gutter) shift = (vw - gutter) - r.right;
+      if (r.left < lo) shift = lo - r.left;
+      else if (r.right > hi) shift = hi - r.right;
       if (shift) {
         this.popover.style.marginLeft = `${shift}px`;
         this.popover.style.marginRight = `${-shift}px`;

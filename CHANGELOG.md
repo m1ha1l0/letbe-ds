@@ -13,6 +13,18 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   tint: the `[disabled]:hover` reset repainted it with the bookable
   slot's colour. The slot's hover now skips disabled slots and both
   reset rules are gone.
+- **A popover on a small trigger is no longer stuck at 200px.** The
+  panel sat inside its trigger's host, so it shrank to the host and
+  stopped at `min-width: 200px`: behind an icon button a 3-sentence
+  note became a tall, narrow box. `.lb-popover` now has
+  `width: max-content`, so the panel takes its content's width up to
+  the existing 320px cap (200 × 126 became 320 × 86). Content laid out
+  in a row is measured as one line, so the gallery's button menus now
+  stack in `.lb-stack` and keep their size. `LB.Popover`'s edge shift
+  also keeps the panel inside the nearest clipping ancestor, not only
+  the screen; the data-table filter and the composer trays at phone
+  width were cut by 9 to 24px before. The popover page has a new
+  info-note example.
 
 ## [1.21.1] — 2026-11-06
 
