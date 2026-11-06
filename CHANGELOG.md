@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.22.0] — 2026-11-06
+
+Minor: disabled controls keep the normal pointer (a visible change) and
+every `lb-*` event now bubbles (a change to event behaviour); popovers
+size to their content and tab sets can nest. No new tokens and no
+renames.
+
 - **Disabled controls keep the normal pointer.** The 35 disabled-state
   rules in components.css showed `cursor: not-allowed`, a prohibition
   sign that reads as an error; they now set `cursor: default`, as

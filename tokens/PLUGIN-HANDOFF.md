@@ -4,7 +4,7 @@
 
 **Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports.
 
-**Latest update**: 2026-11-06 (items 47–48 from v1.20.0–v1.21.1, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
+**Latest update**: 2026-11-06 (items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
 **Previous update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
 **First created**: 2026-05-03
 
@@ -1674,3 +1674,13 @@ hence minor), `<html>` at rest. v1.21.1: an open accordion panel's
 content keeps the panel's width (`min-width: 0` on the grid item), so
 wide content is no longer cut (a CSS layout fix). No tokens, no visual
 change in a static frame, so nothing to mirror.
+
+### 49. Disabled pointer, popover width, nested tabs, bubbling events (v1.22.0) 🟢 code-side only — no plugin or library action (2026-11-06)
+
+Disabled controls keep the normal pointer (`cursor: default`, was
+`not-allowed`) and a blocked calendar slot lost a hover tint; Figma has
+no cursor and the library models no hover on blocked slots. A popover
+now sizes to its content from 200px up to 320px instead of sticking at
+200px behind a small trigger; the library's popover is a fixed 280px
+example, already inside that range. Tab sets can nest and every `lb-*`
+event bubbles: JS behaviour only. No tokens, so nothing to mirror.
