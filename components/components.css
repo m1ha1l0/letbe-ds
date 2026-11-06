@@ -1359,10 +1359,14 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
 .lb-card__media > a:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: calc(-1 * var(--lb-border-width-medium)); }
 /* Media zoom (opt-in, --media-zoom): the picture eases in a touch while
    the card is hovered or focused, or a link inside it has keyboard
-   focus; the frame stays put (media clips). A linked picture zooms too. */
+   focus; the frame stays put (media clips). A linked picture zooms too.
+   Pace of its own on the card or a parent: --lb-card-zoom-dur and
+   --lb-card-zoom-ease, falling back to the expressive tokens it shares
+   with the menu and modal. Off scopes are skipped by selector, as a
+   site hook would outrank the zeroed L2. */
 @media (prefers-reduced-motion: no-preference) {
-  .lb-card--media-zoom .lb-card__media > :is(img, video),
-  .lb-card--media-zoom .lb-card__media > a > :is(img, video) { transition: scale var(--lb-animation-dur-expressive) var(--lb-animation-ease-expressive-in); }
+  .lb-card--media-zoom .lb-card__media > :is(img, video):not([data-lb-motion="off"] *),
+  .lb-card--media-zoom .lb-card__media > a > :is(img, video):not([data-lb-motion="off"] *) { transition: scale var(--lb-card-zoom-dur, var(--lb-animation-dur-expressive)) var(--lb-card-zoom-ease, var(--lb-animation-ease-expressive-in)); }
   .lb-card--media-zoom:is(:hover, :focus-visible, :has(:focus-visible)) .lb-card__media > :is(img, video),
   .lb-card--media-zoom:is(:hover, :focus-visible, :has(:focus-visible)) .lb-card__media > a > :is(img, video) { scale: 1.03; /* design-intent: hover zoom depth */ }
 }

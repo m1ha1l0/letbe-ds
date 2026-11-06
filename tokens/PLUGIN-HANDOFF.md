@@ -4,7 +4,7 @@
 
 **Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports.
 
-**Latest update**: 2026-11-05 (items 39–45 from the v1.13.0–v1.18.0 releases; plugin check above)
+**Latest update**: 2026-11-06 (item 47 from v1.20.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
 **Previous update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
 **First created**: 2026-05-03
 
@@ -1652,3 +1652,14 @@ Library work:
   bar 160); playlist now FILL (640 when shown), set re-gridded. With
   shuffle + repeat on the bar drops to 80, so the description says to
   widen the instance to 752 then
+
+### 47. Count-up format, accordion chevron, card zoom pace (v1.20.0) 🟢 code-side only — no plugin or library action (2026-11-06)
+
+`data-lb-count-up` keeps a number's format while it counts (thousands
+marks and decimals from the page `lang`, years stay as written, opt-out
+`data-lb-count-up="off"`, pace `--lb-count-up-dur`); the accordion
+chevron turns with its panel on `--lb-accordion-dur/-dur-close/-ease`
+(was 100ms by mistake); `.lb-card--media-zoom` takes
+`--lb-card-zoom-dur/-ease`. No new tokens: the hooks are component
+custom properties that fall back to existing L2 tokens. The library
+models no motion, so nothing to mirror.

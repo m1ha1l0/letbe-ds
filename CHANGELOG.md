@@ -27,6 +27,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   motion and `data-lb-motion="off"`. Other disclosure chevrons keep
   100ms.
 
+- **Card media zoom: a pace of its own.** `.lb-card--media-zoom` ran on
+  the expressive tokens it shares with the full-screen menu and modal,
+  so a site that wanted a slower zoom had to write its own rule. New:
+  `--lb-card-zoom-dur` and `--lb-card-zoom-ease` on the card, a section
+  or `:root` (default 700ms on the expressive curve, unchanged), the
+  same kind of setting as the reveal and accordion ones, not tokens.
+  `data-lb-motion="off"` still wins over them.
+
 ## [1.19.0] — 2026-11-05
 
 Minor: a visual retune of the accordion (20px under an open answer, was
