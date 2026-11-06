@@ -17,6 +17,16 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   `--lb-count-up-dur` on the number or a container sets the pace
   (default 1100ms), not a token.
 
+- **Accordion: the chevron turns with its panel** (visual retune,
+  review before bumping). Its own rule (200ms) never applied, because
+  the generic disclosure chevron rule outranked it, so it turned in
+  100ms, and a site rule on `.lb-accordion__chevron` lost the same way.
+  It now runs on the panel's timing (300ms open, 200ms close) and its
+  hooks: `--lb-accordion-dur`, `--lb-accordion-dur-close` and
+  `--lb-accordion-ease` slow the chevron too. Instant under reduced
+  motion and `data-lb-motion="off"`. Other disclosure chevrons keep
+  100ms.
+
 ## [1.19.0] — 2026-11-05
 
 Minor: a visual retune of the accordion (20px under an open answer, was

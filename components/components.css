@@ -2786,8 +2786,16 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 /* Right-side cluster: optional badge + chevron, grouped with tighter gap */
 .lb-accordion__indicators { display: inline-flex; align-items: center; gap: var(--lb-size-2x); flex-shrink: 0; }
 
-.lb-accordion__chevron { display: inline-flex; flex-shrink: 0; color: var(--lb-fg-muted); transition: transform var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); }
+.lb-accordion__chevron { display: inline-flex; flex-shrink: 0; color: var(--lb-fg-muted); }
 .lb-accordion__chevron--open { transform: rotate(180deg); }
+/* The chevron turns with its panel, on the same timing and its hooks
+   (see Motion below), so a site's accordion speeds reach it too. The
+   generic disclosure chevron rule leaves it alone. Off scopes are
+   skipped by selector, as a site hook would outrank the zeroed L2. */
+@media (prefers-reduced-motion: no-preference) {
+  .lb-accordion__chevron:not([data-lb-motion="off"], [data-lb-motion="off"] *) { transition: transform var(--lb-accordion-dur-close, var(--lb-animation-dur-gentle)) var(--lb-accordion-ease, var(--lb-animation-ease-ui)); }
+  .lb-accordion__chevron--open:not([data-lb-motion="off"], [data-lb-motion="off"] *) { transition-duration: var(--lb-accordion-dur, var(--lb-animation-dur-slow)); }
+}
 
 .lb-accordion__panel { overflow: hidden; }
 /* [hidden] handled by global rule near top of file */
@@ -10141,14 +10149,15 @@ img.lb-list__icon--round { object-fit: cover; }
 
 /* Disclosure chevron rotation — companion to the menu-indicator
    affordance policy: any expanded disclosure button flips its
-   chevron-down so open state is visible on the trigger itself. */
-button[aria-expanded] [data-lb-icon="chevron-down"] {
+   chevron-down so open state is visible on the trigger itself. The
+   accordion's chevron has its own timing (it turns with the panel). */
+button[aria-expanded] [data-lb-icon="chevron-down"]:not(.lb-accordion__chevron) {
   display: inline-flex;
   transition: transform var(--lb-animation-dur-fast) var(--lb-animation-ease-ui);
 }
 button[aria-expanded="true"] [data-lb-icon="chevron-down"] { transform: rotate(180deg); }
 @media (prefers-reduced-motion: reduce) {
-  button[aria-expanded] [data-lb-icon="chevron-down"] { transition: none; }
+  button[aria-expanded] [data-lb-icon="chevron-down"]:not(.lb-accordion__chevron) { transition: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════
