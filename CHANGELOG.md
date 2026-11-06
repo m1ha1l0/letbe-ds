@@ -5,6 +5,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Count-up no longer shows the final number first.** A number kept
+  its written value until 40% of it was in view, then dropped to 0 and
+  counted, so a number low in a tall block (a card's points) scrolled
+  in showing "584" and fell to 0 a moment later. It now shows its start
+  (0, in its format) when it comes within a quarter screen of the
+  viewport, above or below, and still counts at 40% in view. A number
+  the page never scrolls near keeps its written value, so find in page
+  still works.
+
 ## [1.20.0] — 2026-11-06
 
 Minor: count-up keeps a number's format, the accordion chevron turns

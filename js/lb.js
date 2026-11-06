@@ -6639,7 +6639,7 @@ const LB = (() => {
   // instant) reveals by hand.
   const Reveal = (() => {
     const can = typeof window !== 'undefined' && 'IntersectionObserver' in window;
-    let io = null, countIo = null;
+    let io = null, countIo = null, primeIo = null;
     // A timing setting in ms: the first of the names the element sees,
     // resolved by the CSS engine so calc() works too ("calc(var(--lb-
     // duration-500) * 2)"). NaN when unset or unreadable; 0ms is valid.
@@ -6704,9 +6704,14 @@ const LB = (() => {
       const [int, frac] = (x.to * k).toFixed(x.dec).split('.');
       return (x.group ? int.replace(/\B(?=(\d{3})+(?!\d))/g, x.group) : int) + (frac ? x.decimal + frac : '');
     }
-    function countUp(el) {
-      if (el._lbCounted) return;
-      el._lbCounted = true;
+    // A number is set to its start (0, in its format) just before it
+    // scrolls in, so it never shows its final value and then drops to 0,
+    // and counts once 40% of it is in view. A number the page never
+    // scrolls near keeps its written value (find in page). Returns the
+    // count's state, or null when there is nothing to count.
+    function prime(el) {
+      if (el._lbCount !== undefined) return el._lbCount;
+      el._lbCount = null;
       const { re, decimal } = numberRe(el);
       const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
         acceptNode: (t) => (t.parentElement.closest('[data-lb-count-up]') === el ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
@@ -6727,7 +6732,7 @@ const LB = (() => {
         parts.push(n.nodeValue.slice(last));
         nodes.push({ node: n, end: n.nodeValue, parts });
       }
-      if (!nodes.length || motion(el) !== 'full') return;
+      if (!nodes.length || motion(el) !== 'full') return null;
       const sr = document.createElement('span');
       sr.className = 'lb-visually-hidden';
       sr.textContent = el.textContent.trim().replace(/\s+/g, ' ');
@@ -6743,21 +6748,27 @@ const LB = (() => {
         el.style.whiteSpace = 'nowrap';
         if (cs.display === 'inline') el.style.display = 'inline-block';
       }
+      const at = (e) => nodes.forEach((x) => { x.node.nodeValue = x.parts.map((p) => (typeof p === 'string' ? p : formatNumber(p, e))).join(''); });
+      at(0);
+      return (el._lbCount = { nodes, at, inline, kept, started: false });
+    }
+    function countUp(el) {
+      const c = prime(el);
+      if (!c || c.started) return;
+      c.started = true;
       // --lb-count-up-dur on the number or a container sets the pace.
       const ms = timeMs(el, ['--lb-count-up-dur']);
       const dur = Number.isFinite(ms) ? ms : 1100; // design-intent: a count reads as counting, not as a flicker
-      const at = (e) => nodes.forEach((x) => { x.node.nodeValue = x.parts.map((p) => (typeof p === 'string' ? p : formatNumber(p, e))).join(''); });
       let t0 = null;
       const frame = (t) => {
         if (t0 === null) t0 = t;
         const p = dur > 0 ? Math.min(1, (t - t0) / dur) : 1;
-        if (p < 1) { at(1 - Math.pow(1 - p, 3)); requestAnimationFrame(frame); }
+        if (p < 1) { c.at(1 - Math.pow(1 - p, 3)); requestAnimationFrame(frame); }
         else {
-          nodes.forEach((x) => { x.node.nodeValue = x.end; });
-          if (inline) [el.style.width, el.style.whiteSpace, el.style.display] = kept;
+          c.nodes.forEach((x) => { x.node.nodeValue = x.end; });
+          if (c.inline) [el.style.width, el.style.whiteSpace, el.style.display] = c.kept;
         }
       };
-      at(0);
       requestAnimationFrame(frame);
     }
     function init(root) {
@@ -6784,8 +6795,13 @@ const LB = (() => {
         moving.forEach((el) => { if (!el._lbReveal && !el.classList.contains('lb-revealed')) { el._lbReveal = true; io.observe(el); } });
       }
       if (counts.length) {
-        if (!countIo) countIo = new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) { countIo.unobserve(en.target); countUp(en.target); } }), { threshold: 0.4 });
-        counts.forEach((el) => { if (!el._lbCountWatch) { el._lbCountWatch = true; countIo.observe(el); } });
+        // Primed within a quarter screen above or below the viewport;
+        // counted at 40% in view (which primes first if needed).
+        if (!countIo) {
+          primeIo = new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) { primeIo.unobserve(en.target); prime(en.target); } }), { rootMargin: '25% 0px' });
+          countIo = new IntersectionObserver((entries) => entries.forEach((en) => { if (en.isIntersecting) { countIo.unobserve(en.target); primeIo.unobserve(en.target); countUp(en.target); } }), { threshold: 0.4 });
+        }
+        counts.forEach((el) => { if (!el._lbCountWatch) { el._lbCountWatch = true; primeIo.observe(el); countIo.observe(el); } });
       }
     }
     return { init, show };
