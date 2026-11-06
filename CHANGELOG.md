@@ -25,6 +25,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   the screen; the data-table filter and the composer trays at phone
   width were cut by 9 to 24px before. The popover page has a new
   info-note example.
+- **Tab sets can nest.** `LB.Tabs` took every `.lb-tab` and
+  `.lb-tab-panel` under its root, nested sets included: the outer
+  set's 2nd tab pointed at the inner set's 1st panel, and clicking an
+  inner tab cleared the outer selection and showed the wrong panel.
+  Each set now takes only its own tabs, tab list and panels (paired by
+  order, as before), so a set inside another set's panel runs on its
+  own. No markup change. The tabs page has a nested example.
 
 ## [1.21.1] — 2026-11-06
 

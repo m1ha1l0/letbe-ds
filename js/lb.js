@@ -441,9 +441,19 @@ const LB = (() => {
     }
 
     _init() {
-      this.tabList = this.el.querySelector('[role="tablist"]') || this.el.querySelector('.lb-tab-list');
-      this.tabs = Array.from(this.el.querySelectorAll('.lb-tab'));
-      this.panels = Array.from(this.el.querySelectorAll('.lb-tab-panel'));
+      // Only this set's own parts: a set nested in one of its panels
+      // runs its own controller.
+      const own = (n) => {
+        for (let p = n.parentElement; p; p = p.parentElement) {
+          if (p === this.el) return true;
+          if (p.matches('[data-lb-tabs], .lb-tabs')) return false;
+        }
+        return false;
+      };
+      const mine = (sel) => Array.from(this.el.querySelectorAll(sel)).filter(own);
+      this.tabList = mine('[role="tablist"]')[0] || mine('.lb-tab-list')[0];
+      this.tabs = mine('.lb-tab');
+      this.panels = mine('.lb-tab-panel');
 
       this.tabs.forEach((tab, i) => {
         const tabId = tab.id || uid('tab');
