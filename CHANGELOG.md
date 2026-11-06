@@ -5,6 +5,11 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.20.1] — 2026-11-06
+
+Patch: count-up no longer flashes a number's final value before it
+counts. No new tokens and no renames.
+
 - **Count-up no longer shows the final number first.** A number kept
   its written value until 40% of it was in view, then dropped to 0 and
   counted, so a number low in a tall block (a card's points) scrolled
