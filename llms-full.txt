@@ -45,6 +45,11 @@ it instant (CSS and scripts); `LB.motion(el)` returns `'off'`, `'reduce'` or
 overlay entry/exit so your own animation plays on the same leaving hooks
 (the close waits for it). Retime with the `--lb-animation-*` tokens.
 
+Events: every `lb-*` event bubbles, like the browser's `change`, so one
+listener on a container or `document` serves components rendered later.
+A listener on an outer component also hears a nested one of the same
+kind (tabs in tabs): compare `e.target` with the element you mean.
+
 Class combos are contracts: copy the full combo from each demo (base +
 variant + size, e.g. `lb-btn lb-btn--secondary lb-btn--medium`; every table
 cell carries `lb-table__cell`). Base classes alone render unstyled.
@@ -532,7 +537,7 @@ Page: [/pagination/](/pagination/)
 
 Page-range selector for long lists. Use when you have more than 10–12 items that users need to browse rather than search. For open-ended feeds (social, news), prefer infinite scroll instead. Active page uses primary action styling.
 
-Usage: `<nav class="lb-pagination" data-lb-pagination data-lb-total-pages="12" data-lb-current-page="3" aria-label="Pagination"></nav>` — ship it EMPTY; the controller owns the contents and renders `.lb-pagination__btn` prev/page/next buttons (`--prev`, `--next`, `--active`) plus `.lb-pagination__ellipsis` gaps from those two attributes. Auto-inits via `data-lb-pagination`; instance at `el._lbPagination`. `siblingCount` (default 1) and `onChange` have no attribute form — pass them to `new LB.Pagination(el, { totalPages, currentPage, siblingCount, onChange })`. Every accepted change re-renders and dispatches `lb-page-change` with `detail.page`; out-of-range and same-page requests are silently ignored, and the ellipsis collapse only kicks in above 7 total pages. The component tracks the page number only — fetching and redrawing the list is the consumer's job, driven by that event or `onChange(page)`; jump programmatically with `el._lbPagination.goTo(page)`.
+Usage: `<nav class="lb-pagination" data-lb-pagination data-lb-total-pages="12" data-lb-current-page="3" aria-label="Pagination"></nav>` — ship it EMPTY; the controller owns the contents and renders `.lb-pagination__btn` prev/page/next buttons (`--prev`, `--next`, `--active`) plus `.lb-pagination__ellipsis` gaps from those two attributes. Auto-inits via `data-lb-pagination`; instance at `el._lbPagination`. `siblingCount` (default 1) and `onChange` have no attribute form — pass them to `new LB.Pagination(el, { totalPages, currentPage, siblingCount, onChange })`. Every accepted change re-renders and dispatches `lb-page-change` (it bubbles, so 1 listener on a container serves pagers rebuilt on each load) with `detail.page`; out-of-range and same-page requests are silently ignored, and the ellipsis collapse only kicks in above 7 total pages. The component tracks the page number only — fetching and redrawing the list is the consumer's job, driven by that event or `onChange(page)`; jump programmatically with `el._lbPagination.goTo(page)`.
 
 ### Popover
 
@@ -668,7 +673,7 @@ Page: [/tabs/](/tabs/)
 
 Switch between related views of the same data in a shared context. Supports label-only, label + count badge (for filters), label + notification dot, icon + label, icon-only, and icon + label + badge. Use for view filters, settings groups, or tabbed content blocks.
 
-Usage: Root gets `data-lb-tabs`. Each tab uses `aria-selected="true"` on the active button. Icon-only tabs need `aria-label` on the button. Sets can nest: a set inside another set's panel runs its own controller, and each set takes only its own tabs and panels, paired by order.
+Usage: Root gets `data-lb-tabs`. Each tab uses `aria-selected="true"` on the active button. Icon-only tabs need `aria-label` on the button. Sets can nest: a set inside another set's panel runs its own controller, and each set takes only its own tabs and panels, paired by order. Each change dispatches a bubbling `lb-tab-change` (`detail.index`, `detail.id`); a listener on an outer set also hears a nested set, so compare `e.target`.
 
 ### Time Picker
 

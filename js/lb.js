@@ -386,7 +386,7 @@ const LB = (() => {
       }
 
       this._set(item, opening);
-      this.el.dispatchEvent(new CustomEvent('lb-accordion-change', { detail: { id, open: opening } }));
+      this.el.dispatchEvent(new CustomEvent('lb-accordion-change', { bubbles: true, detail: { id, open: opening } }));
     }
 
     // Open or close one item. With motion 'full' the panel grows from and
@@ -491,7 +491,7 @@ const LB = (() => {
       });
       this._reveal(this.tabs[index]);
       if (this.onChange) this.onChange(this.tabs[index]?.id);
-      this.el.dispatchEvent(new CustomEvent('lb-tab-change', { detail: { index, id: this.tabs[index]?.id } }));
+      this.el.dispatchEvent(new CustomEvent('lb-tab-change', { bubbles: true, detail: { index, id: this.tabs[index]?.id } }));
     }
 
     // Bring the selected tab into a sideways-scrolled tab list (phones,
@@ -575,7 +575,7 @@ const LB = (() => {
       this.backdrop.setAttribute('aria-modal', 'true');
       lockScroll(this);
       this._releaseTrap = trapFocus(this.modal);
-      this.backdrop.dispatchEvent(new CustomEvent('lb-modal-open'));
+      this.backdrop.dispatchEvent(new CustomEvent('lb-modal-open', { bubbles: true }));
     }
 
     close() {
@@ -588,7 +588,7 @@ const LB = (() => {
         if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
         if (this._previousFocus) this._previousFocus.focus();
         if (this.onClose) this.onClose();
-        this.backdrop.dispatchEvent(new CustomEvent('lb-modal-close'));
+        this.backdrop.dispatchEvent(new CustomEvent('lb-modal-close', { bubbles: true }));
       });
     }
 
@@ -785,7 +785,7 @@ const LB = (() => {
       if (this.bar) this.bar.setAttribute('aria-expanded', 'true');
       lockScroll(this);
       this._releaseTrap = trapFocus(this.sheet);
-      this.root.dispatchEvent(new CustomEvent('lb-sheet-open'));
+      this.root.dispatchEvent(new CustomEvent('lb-sheet-open', { bubbles: true }));
     }
 
     _collapse() {
@@ -801,7 +801,7 @@ const LB = (() => {
       unlockScroll(this);
       if (hadFocus && this.bar) this.bar.focus();
       if (this.onClose) this.onClose();
-      this.root.dispatchEvent(new CustomEvent('lb-sheet-close'));
+      this.root.dispatchEvent(new CustomEvent('lb-sheet-close', { bubbles: true }));
     }
 
     // Same two-step close as Modal: .lb-sheet-root--leaving plays the
@@ -819,7 +819,7 @@ const LB = (() => {
       if (this.sheet) this._releaseTrap = trapFocus(this.sheet);
       const closeBtn = this.sheet?.querySelector('.lb-sheet__close');
       if (closeBtn) closeBtn.focus();
-      this.root.dispatchEvent(new CustomEvent('lb-sheet-open'));
+      this.root.dispatchEvent(new CustomEvent('lb-sheet-open', { bubbles: true }));
     }
 
     close() {
@@ -833,7 +833,7 @@ const LB = (() => {
         if (this._releaseTrap) { this._releaseTrap(); this._releaseTrap = null; }
         if (this._previousFocus) this._previousFocus.focus();
         if (this.onClose) this.onClose();
-        this.root.dispatchEvent(new CustomEvent('lb-sheet-close'));
+        this.root.dispatchEvent(new CustomEvent('lb-sheet-close', { bubbles: true }));
       });
     }
 
@@ -937,7 +937,7 @@ const LB = (() => {
         this._syncClear();
         if (this._open) this._filter();
         if (this.onChange) this.onChange('');
-        this.field.dispatchEvent(new CustomEvent('lb-dropdown-change', { detail: { value: '', label: '' } }));
+        this.field.dispatchEvent(new CustomEvent('lb-dropdown-change', { bubbles: true, detail: { value: '', label: '' } }));
       });
     }
 
@@ -1002,7 +1002,7 @@ const LB = (() => {
       this._syncClear();
       this._hide();
       if (this.onChange) this.onChange(option.value);
-      this.field.dispatchEvent(new CustomEvent('lb-dropdown-change', { detail: option }));
+      this.field.dispatchEvent(new CustomEvent('lb-dropdown-change', { bubbles: true, detail: option }));
     }
 
     // Move active index forward (dir=+1) or back (dir=-1), skipping any
@@ -1539,7 +1539,7 @@ const LB = (() => {
         if (!item || !this.menu.contains(item)) return;
         if (item.classList.contains('lb-list__item--disabled') || item.getAttribute('aria-disabled') === 'true') return;
         if (this.onSelect) this.onSelect(item.dataset.lbId || item.textContent.trim());
-        this.wrapper.dispatchEvent(new CustomEvent('lb-menu-select', { detail: { item } }));
+        this.wrapper.dispatchEvent(new CustomEvent('lb-menu-select', { bubbles: true, detail: { item } }));
         // Consumer handlers ran synchronously above and may have moved
         // .lb-list__item--checked — re-mirror before closing.
         this._syncChecked();
@@ -1869,7 +1869,7 @@ const LB = (() => {
       if (this.fill) this.fill.style.width = `${pct}%`;
       if (this.valueDisplay) this.valueDisplay.textContent = val;
       this.input.setAttribute('aria-valuenow', val);
-      this.field.dispatchEvent(new CustomEvent('lb-slider-change', { detail: { value: val } }));
+      this.field.dispatchEvent(new CustomEvent('lb-slider-change', { bubbles: true, detail: { value: val } }));
     }
 
     set value(v) {
@@ -5219,7 +5219,7 @@ const LB = (() => {
       this.currentPage = page;
       this.render();
       if (this.onChange) this.onChange(page);
-      this.el.dispatchEvent(new CustomEvent('lb-page-change', { detail: { page } }));
+      this.el.dispatchEvent(new CustomEvent('lb-page-change', { bubbles: true, detail: { page } }));
     }
 
     _btn(content, label, disabled) {
@@ -5865,6 +5865,7 @@ const LB = (() => {
       if (this.onChange) this.onChange(this._selected);
       this._updateTriggerText();
       this.el.dispatchEvent(new CustomEvent('lb-datepicker-change', {
+        bubbles: true,
         detail: { mode: 'month', value: this._selected },
       }));
       this._closePopover();
@@ -5968,6 +5969,7 @@ const LB = (() => {
       }
       if (this.onChange) this.onChange(this._timeSelected);
       this.el.dispatchEvent(new CustomEvent('lb-datepicker-change', {
+        bubbles: true,
         detail: { mode: 'time', value: this._timeSelected },
       }));
     }
@@ -6010,6 +6012,7 @@ const LB = (() => {
         // Date (single/week/month) or `{rangeStart, rangeEnd}` (range)
         // or the time string (time).
         this.el.dispatchEvent(new CustomEvent('lb-datepicker-change', {
+          bubbles: true,
           detail: { mode: 'single', value: date, date },
         }));
         this._closePopover();
@@ -6023,6 +6026,7 @@ const LB = (() => {
         if (this.onChange) this.onChange(weekStart);
         this._updateTriggerText();
         this.el.dispatchEvent(new CustomEvent('lb-datepicker-change', {
+          bubbles: true,
           detail: { mode: 'week', value: weekStart, weekStart, weekEnd },
         }));
         this._closePopover();
@@ -6043,6 +6047,7 @@ const LB = (() => {
           if (this.onRangeChange) this.onRangeChange(this._rangeStart, this._rangeEnd);
           this._updateTriggerText();
           this.el.dispatchEvent(new CustomEvent('lb-datepicker-change', {
+            bubbles: true,
             detail: { mode: 'range', value: { rangeStart: this._rangeStart, rangeEnd: this._rangeEnd }, rangeStart: this._rangeStart, rangeEnd: this._rangeEnd },
           }));
           this._closePopover();
@@ -7262,7 +7267,7 @@ const LB = (() => {
         const banner = btn.closest('.lb-banner');
         if (banner) {
           banner.style.display = 'none';
-          banner.dispatchEvent(new CustomEvent('lb-banner-dismiss'));
+          banner.dispatchEvent(new CustomEvent('lb-banner-dismiss', { bubbles: true }));
         }
       });
     });
@@ -8021,7 +8026,7 @@ const LB = (() => {
     }
 
     _emit(v) {
-      this.wrap.dispatchEvent(new CustomEvent('lb-number-change', { detail: { value: v } }));
+      this.wrap.dispatchEvent(new CustomEvent('lb-number-change', { bubbles: true, detail: { value: v } }));
     }
 
     /** Current value as a number, or null when the input is empty. */
@@ -8428,6 +8433,7 @@ const LB = (() => {
         const err = this._validate(file);
         if (err) {
           this.root.dispatchEvent(new CustomEvent('lb-file-error', {
+            bubbles: true,
             detail: { file, error: err },
           }));
           // Still render the row so user sees what was rejected + why
@@ -8445,6 +8451,7 @@ const LB = (() => {
         const entry = this._renderRow(file, { status: 'pending' });
         this._files.push(entry);
         this.root.dispatchEvent(new CustomEvent('lb-file-added', {
+          bubbles: true,
           detail: { file, id: entry.id },
         }));
       }
@@ -8565,6 +8572,7 @@ const LB = (() => {
       const [entry] = this._files.splice(idx, 1);
       entry.row.remove();
       this.root.dispatchEvent(new CustomEvent('lb-file-removed', {
+        bubbles: true,
         detail: { file: entry.file, id },
       }));
     }
@@ -8671,6 +8679,7 @@ const LB = (() => {
       if (this.resultsList) {
         this.resultsList.addEventListener('lb-list-select', (e) => {
           this.backdrop.dispatchEvent(new CustomEvent('lb-cmdk-select', {
+            bubbles: true,
             detail: e.detail,
           }));
           this.close();
@@ -8751,7 +8760,7 @@ const LB = (() => {
 
         requestAnimationFrame(() => this.search.focus());
       }
-      this.backdrop.dispatchEvent(new CustomEvent('lb-cmdk-open'));
+      this.backdrop.dispatchEvent(new CustomEvent('lb-cmdk-open', { bubbles: true }));
     }
 
     close() {
@@ -8761,7 +8770,7 @@ const LB = (() => {
       unlockScroll(this);
       if (this._releaseTrap) this._releaseTrap();
       if (this._previousFocus) this._previousFocus.focus();
-      this.backdrop.dispatchEvent(new CustomEvent('lb-cmdk-close'));
+      this.backdrop.dispatchEvent(new CustomEvent('lb-cmdk-close', { bubbles: true }));
     }
 
     destroy() {
@@ -8829,6 +8838,7 @@ const LB = (() => {
 
       item.focus();
       this.el.dispatchEvent(new CustomEvent('lb-segmented-change', {
+        bubbles: true,
         detail: {
           value: item.dataset.lbValue ?? item.textContent.trim(),
           index: this.items.indexOf(item),
@@ -9057,6 +9067,7 @@ const LB = (() => {
       // Fire so consumers (e.g. CommandPalette) can keep an external
       // combobox input's aria-activedescendant in sync with the highlight.
       this.el.dispatchEvent(new CustomEvent('lb-list-active-change', {
+        bubbles: true,
         detail: { item, id: item ? item.id : null },
       }));
     }
@@ -9255,6 +9266,7 @@ const LB = (() => {
       });
       this.selectAll.indeterminate = false;
       this.el.dispatchEvent(new CustomEvent('lb-table-select', {
+        bubbles: true,
         detail: { all: true, checked, selectedCount: this._selectedCount() },
       }));
     }
@@ -9264,6 +9276,7 @@ const LB = (() => {
       if (tr) tr.classList.toggle('lb-table__row--selected', cb.checked);
       this._updateSelectAllState();
       this.el.dispatchEvent(new CustomEvent('lb-table-select', {
+        bubbles: true,
         detail: { all: false, row: tr, checked: cb.checked, selectedCount: this._selectedCount() },
       }));
     }
@@ -9325,6 +9338,7 @@ const LB = (() => {
       }
 
       this.el.dispatchEvent(new CustomEvent('lb-table-sort', {
+        bubbles: true,
         detail: { key, direction },
       }));
     }
@@ -9392,6 +9406,7 @@ const LB = (() => {
       detail.hidden = !expanded;
       btn.setAttribute('aria-expanded', String(expanded));
       this.el.dispatchEvent(new CustomEvent('lb-table-expand', {
+        bubbles: true,
         detail: { row: tr, detailRow: detail, expanded },
       }));
     }

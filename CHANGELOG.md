@@ -32,6 +32,20 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   Each set now takes only its own tabs, tab list and panels (paired by
   order, as before), so a set inside another set's panel runs on its
   own. No markup change. The tabs page has a nested example.
+- **Every `lb-*` event now bubbles.** 24 events, dispatched from 32
+  places in lb.js, did not bubble, so 1 delegated listener could not
+  serve components rebuilt on each data load (a pager redrawn with
+  every table page). They now bubble like `lb-select-change` and the
+  browser's `change`: `lb-accordion-change`, `lb-tab-change`,
+  `lb-modal-open`/`-close`, `lb-sheet-open`/`-close`,
+  `lb-dropdown-change`, `lb-menu-select`, `lb-slider-change`,
+  `lb-page-change`, `lb-datepicker-change`, `lb-banner-dismiss`,
+  `lb-number-change`, `lb-file-error`/`-added`/`-removed`,
+  `lb-cmdk-select`/`-open`/`-close`, `lb-segmented-change`,
+  `lb-list-active-change`, `lb-table-select`/`-sort`/`-expand`.
+  Listeners on the component itself and capture listeners fire once,
+  as before. A listener on an outer component now also hears a nested
+  one of the same kind, so compare `e.target`.
 
 ## [1.21.1] — 2026-11-06
 

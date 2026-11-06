@@ -44,6 +44,11 @@ it instant (CSS and scripts); `LB.motion(el)` returns `'off'`, `'reduce'` or
 overlay entry/exit so your own animation plays on the same leaving hooks
 (the close waits for it). Retime with the `--lb-animation-*` tokens.
 
+Events: every `lb-*` event bubbles, like the browser's `change`, so one
+listener on a container or `document` serves components rendered later.
+A listener on an outer component also hears a nested one of the same
+kind (tabs in tabs): compare `e.target` with the element you mean.
+
 Class combos are contracts: copy the full combo from each demo (base +
 variant + size, e.g. `lb-btn lb-btn--secondary lb-btn--medium`; every table
 cell carries `lb-table__cell`). Base classes alone render unstyled.

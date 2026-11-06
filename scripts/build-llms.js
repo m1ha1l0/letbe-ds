@@ -80,6 +80,11 @@ function build(full) {
   push('overlay entry/exit so your own animation plays on the same leaving hooks');
   push('(the close waits for it). Retime with the `--lb-animation-*` tokens.');
   push();
+  push('Events: every `lb-*` event bubbles, like the browser\'s `change`, so one');
+  push('listener on a container or `document` serves components rendered later.');
+  push('A listener on an outer component also hears a nested one of the same');
+  push('kind (tabs in tabs): compare `e.target` with the element you mean.');
+  push();
   push('Class combos are contracts: copy the full combo from each demo (base +');
   push('variant + size, e.g. `lb-btn lb-btn--secondary lb-btn--medium`; every table');
   push('cell carries `lb-table__cell`). Base classes alone render unstyled.');

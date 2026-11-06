@@ -311,7 +311,7 @@
     "pagination": {
       "name": "Pagination",
       "description": "Page-range selector for long lists. Use when you have more than 10–12 items that users need to browse rather than search. For open-ended feeds (social, news), prefer infinite scroll instead. Active page uses primary action styling.",
-      "usage": "`<nav class=\"lb-pagination\" data-lb-pagination data-lb-total-pages=\"12\" data-lb-current-page=\"3\" aria-label=\"Pagination\"></nav>` — ship it EMPTY; the controller owns the contents and renders `.lb-pagination__btn` prev/page/next buttons (`--prev`, `--next`, `--active`) plus `.lb-pagination__ellipsis` gaps from those two attributes. Auto-inits via `data-lb-pagination`; instance at `el._lbPagination`. `siblingCount` (default 1) and `onChange` have no attribute form — pass them to `new LB.Pagination(el, { totalPages, currentPage, siblingCount, onChange })`. Every accepted change re-renders and dispatches `lb-page-change` with `detail.page`; out-of-range and same-page requests are silently ignored, and the ellipsis collapse only kicks in above 7 total pages. The component tracks the page number only — fetching and redrawing the list is the consumer's job, driven by that event or `onChange(page)`; jump programmatically with `el._lbPagination.goTo(page)`."
+      "usage": "`<nav class=\"lb-pagination\" data-lb-pagination data-lb-total-pages=\"12\" data-lb-current-page=\"3\" aria-label=\"Pagination\"></nav>` — ship it EMPTY; the controller owns the contents and renders `.lb-pagination__btn` prev/page/next buttons (`--prev`, `--next`, `--active`) plus `.lb-pagination__ellipsis` gaps from those two attributes. Auto-inits via `data-lb-pagination`; instance at `el._lbPagination`. `siblingCount` (default 1) and `onChange` have no attribute form — pass them to `new LB.Pagination(el, { totalPages, currentPage, siblingCount, onChange })`. Every accepted change re-renders and dispatches `lb-page-change` (it bubbles, so 1 listener on a container serves pagers rebuilt on each load) with `detail.page`; out-of-range and same-page requests are silently ignored, and the ellipsis collapse only kicks in above 7 total pages. The component tracks the page number only — fetching and redrawing the list is the consumer's job, driven by that event or `onChange(page)`; jump programmatically with `el._lbPagination.goTo(page)`."
     },
     "playbar": {
       "name": "Playbar",
@@ -441,7 +441,7 @@
     "tabs": {
       "name": "Tabs",
       "description": "Switch between related views of the same data in a shared context. Supports label-only, label + count badge (for filters), label + notification dot, icon + label, icon-only, and icon + label + badge. Use for view filters, settings groups, or tabbed content blocks.",
-      "usage": "Root gets `data-lb-tabs`. Each tab uses `aria-selected=\"true\"` on the active button. Icon-only tabs need `aria-label` on the button. Sets can nest: a set inside another set's panel runs its own controller, and each set takes only its own tabs and panels, paired by order."
+      "usage": "Root gets `data-lb-tabs`. Each tab uses `aria-selected=\"true\"` on the active button. Icon-only tabs need `aria-label` on the button. Sets can nest: a set inside another set's panel runs its own controller, and each set takes only its own tabs and panels, paired by order. Each change dispatches a bubbling `lb-tab-change` (`detail.index`, `detail.id`); a listener on an outer set also hears a nested set, so compare `e.target`."
     },
     "time-picker": {
       "name": "Time Picker",
