@@ -4,7 +4,7 @@
 
 **Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports.
 
-**Latest update**: 2026-11-06 (items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
+**Latest update**: 2026-11-12 (item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
 **Previous update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
 **First created**: 2026-05-03
 
@@ -1684,3 +1684,19 @@ now sizes to its content from 200px up to 320px instead of sticking at
 200px behind a small trigger; the library's popover is a fixed 280px
 example, already inside that range. Tab sets can nest and every `lb-*`
 event bubbles: JS behaviour only. No tokens, so nothing to mirror.
+
+### 50. 17 new outlined icons (v1.23.0) — library relay — no plugin action, no new tokens
+
+Library work:
+
+- **Icons:** 17 new outlined Lucide icons (1.72.0, unchanged), 281 in
+  the set, was 264; filled stays 15. Add them to the icon library like
+  the rest of the outlined set (same 2-layer recipe, stroke weight
+  `size/theme`, ink `field/fg/default`, keywords + Docs link):
+  `lightbulb`, `trophy`, `bone` (a consumer site uses these 3 now), then
+  `award`, `medal`, `graduation-cap`, `book-open`, `quote`,
+  `handshake`, `route`, `milestone`, `wrench`, `pen-tool`, `gamepad-2`,
+  `wallet`, `shopping-bag`, `building-complex`. Lucide renamed
+  `building-2` to `building-complex`; code resolves the old name, the
+  library needs only `icons/building-complex` (put `building-2` in its
+  keywords). Verify Light + Dark.
