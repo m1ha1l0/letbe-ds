@@ -5,6 +5,9 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **3 new outlined icons: `lightbulb`, `trophy`, `bone`.** From Lucide
+  1.72.0, unchanged, in the set's format (267 icons, was 264).
+
 ## [1.22.0] — 2026-11-06
 
 Minor: disabled controls keep the normal pointer (a visible change) and
