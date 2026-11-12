@@ -7,6 +7,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 - **3 new outlined icons: `lightbulb`, `trophy`, `bone`.** From Lucide
   1.72.0, unchanged, in the set's format (267 icons, was 264).
+- **14 more outlined icons.** `award`, `medal`, `graduation-cap`,
+  `book-open`, `quote`, `handshake`, `route`, `milestone`, `wrench`,
+  `pen-tool`, `gamepad-2`, `wallet`, `shopping-bag` and
+  `building-complex`, also from Lucide 1.72.0 (281 icons). Lucide
+  renamed `building-2` to `building-complex`, so the set ships the new
+  name and the loader resolves `building-2` to it, as it does for the
+  circle family.
 
 ## [1.22.0] — 2026-11-06
 

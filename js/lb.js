@@ -7087,6 +7087,7 @@ const LB = (() => {
     'circle-pause': 'pause-circle', 'circle-play': 'play-circle',
     'circle-plus': 'plus-circle', 'circle-user': 'user-circle',
     'circle-x': 'x-circle', 'circle-x-filled': 'x-circle-filled',
+    'building-2': 'building-complex', // Lucide's former name, kept upstream as an alias
   };
 
   // Detect base path from script src so assets/icons/ resolves correctly
