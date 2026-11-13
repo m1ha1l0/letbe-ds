@@ -15,6 +15,10 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   and third accent slots. The default theme is unchanged. The slot
   engine is now 1.1.0 with a new `computeAccentBorderStep`, and the
   contrast audit checks "selected indicator on page" (at least 3:1).
+- **Tab labels keep one text colour.** The selected tab's label and
+  icon no longer take the accent colour. They use the default text
+  colour like the other tabs, and the underline alone marks the
+  selected tab.
 
 ## [1.23.0] — 2026-11-12
 
