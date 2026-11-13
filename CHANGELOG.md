@@ -5,6 +5,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.24.0] — 2026-11-13
+
+Minor: under Theme Editor presets the accent line (selected tab, active
+nav, selected card, "today") now holds 3:1 against the page, tab labels
+keep one text colour and the tab underline slides. Intentional visual
+changes. Slot engine 1.1.0. No new tokens and no renames.
+
 - **Accent line holds 3:1 in generated themes.** Under a Theme Editor
   preset or a custom brand colour, `--lb-border-accent` (the selected
   tab underline, active nav bar, selected card and media card, "today"

@@ -2,9 +2,9 @@
 
 **Status (trued up 2026-09-15, owner-confirmed)**: All plugin-side work is DELIVERED through plugin v1.0.3 (live on Community 2026-09-02) and the Figma library is PUBLISHED through the second-accent republish (+16 variants, 2026-09-02) — items 1–30 closed. **Open queue is library-only**: 🔵 items 27 (toast neutral+action), 31 (header active indicator), 32 (segmented inset-ring parity check), 34 (Lightbox set), 36 (stepper dots). 🟢 items 12–14/33/35 are mapping references / code-side only — no action unless a build reveals a gap. **No new colour tokens are planned** — components build entirely from existing L2/L3 (user decision 2026-05-27); new tokens get minted ONLY if a built component looks visually off, and then only via the plugin.
 
-**Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports.
+**Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports. **v1.24.0 is such a change** (`slot-engine.js`, `theme-editor.js` and `source-tokens.json`): see item 51.
 
-**Latest update**: 2026-11-12 (item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
+**Latest update**: 2026-11-13 (item 51 from v1.24.0: slot engine 1.1.0 for the plugin, tab label relay for the library; item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
 **Previous update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
 **First created**: 2026-05-03
 
@@ -1700,3 +1700,43 @@ Library work:
   `building-2` to `building-complex`; code resolves the old name, the
   library needs only `icons/building-complex` (put `building-2` in its
   keywords). Verify Light + Dark.
+
+### 51. Accent line held at 3:1, neutral tab label, sliding tab underline (v1.24.0) — plugin update + library relay — no new tokens
+
+Plugin work (do this first):
+
+- **Slot engine 1.1.0.** Vendor `js/slot-engine.js` verbatim
+  (`ENGINE_VERSION` 1.0.0 to 1.1.0). `computeAccentRemap` now returns
+  the filled accent's step for `border-accent` (light: the emphasis
+  step, was the 200 wash; dark: the dark emphasis step, was 2 steps
+  away from it, toward the page for most seeds). New `computeAccentBorderStep(palette, startStep,
+  themeMode, hexes?)` starts at the planned `bg-accent` step and walks
+  toward more contrast until it clears 3:1 against the page (light
+  `CANON.inkLight`, dark `CANON.pageDark`). `js/theme-editor.js` calls
+  it right after the `bg-accent` plan overrides, for slot 1 and for
+  filled slots 2 and 3 (next to `computeValueFillStep`). Mirror that in
+  the plugin's caller; dormant slots copy accent as before.
+- **Expected `border-accent` steps (light / dark):** Mono 600/400, Neon
+  600/400, Candy 500/500, Terra 500/500, Ocean 600/400, Editorial
+  600/400, Ink 700/300, all between 3.95:1 and 10.78:1 against the
+  page. Every other engine output stays byte-identical, so regenerate
+  only what these steps touch in the fixture.
+- **WCAG manifest:** `$schema.wcag_pairs` gains `border/accent` on
+  `bg/default`, "selected indicator on page (tab, nav, card, today)",
+  min 3 (79 entries). The factory theme passes at 7.06 / 8.48.
+- **Descriptions:** `border.accent` light and dark `$description` are
+  reworded (role: the accent line for selected and active states).
+- Rebake presets (`npm run bake-presets`), run the tests, release. The
+  owner publishes.
+
+Library work (after the plugin release):
+
+- **Tabs:** the selected tab's label and icon now use the same text
+  colour as the unselected tabs (it was `action/fg/selected`). The
+  underline stays `action/border/selected`, 2px, and alone marks the
+  selected tab.
+- **Presets:** if the library carries preset values imported from the
+  plugin, re-import them after the plugin release, as after v1.0.4. The
+  factory theme's values don't change.
+- The sliding underline is code-only; nothing to build.
+- Verify Light + Dark.
