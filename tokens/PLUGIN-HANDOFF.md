@@ -1701,7 +1701,21 @@ Library work:
   library needs only `icons/building-complex` (put `building-2` in its
   keywords). Verify Light + Dark.
 
-### 51. Accent line held at 3:1, neutral tab label, sliding tab underline (v1.24.0) — plugin update + library relay — no new tokens
+### 51. Accent line held at 3:1, neutral tab label, sliding tab underline (v1.24.0) ✅ PLUGIN DONE in v1.0.5 2026-11-13 (f6632dd engine 1.1.0 + presets, adc3a6c release; built, the owner publishes) — library relay open — no new tokens
+
+**Resolved in the plugin 2026-11-13:** plugin v1.0.5 is built and tested,
+not yet published (the owner publishes on Figma Community; the library
+part below starts after that). `slot-engine.js` is vendored byte-identical
+(engine 1.1.0). The plugin's slot fill (`computeSlotFill`, accent-2 and
+accent-3) sets `border-accent` from `computeAccentBorderStep` right after
+the `bg-accent` plan overrides, the same order as `theme-editor.js`; slot 1
+reaches the plugin through the baked presets. The fixture moved only in
+`engineVersion` and 13 `border-accent` steps. Presets rebaked; `border.accent`
+light/dark: Mono 600/400, Neon 600/400, Candy 500/500, Terra 500/500,
+Ocean 600/400, Editorial 600/400, Ink 700/300, and dormant accent-2/-3
+still mirror it. The factory preset changes only in the two reworded
+descriptions. The 79-pair manifest is read from the JSON, so the new
+`border/accent` pair needed no plugin code. 156 tests on both bundles.
 
 Plugin work (do this first):
 
