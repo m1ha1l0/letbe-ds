@@ -5,6 +5,17 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Accent line holds 3:1 in generated themes.** Under a Theme Editor
+  preset or a custom brand colour, `--lb-border-accent` (the selected
+  tab underline, active nav bar, selected card and media card, "today"
+  marker, drag-over borders) was the pale 200 wash in light mode
+  (1.3:1 against the page) and walked toward the page in dark mode. It
+  now takes the filled accent's step and steps toward more contrast
+  until it clears 3:1 against the page, in both modes and in the second
+  and third accent slots. The default theme is unchanged. The slot
+  engine is now 1.1.0 with a new `computeAccentBorderStep`, and the
+  contrast audit checks "selected indicator on page" (at least 3:1).
+
 ## [1.23.0] — 2026-11-12
 
 Minor: 17 new outlined icons from Lucide 1.72.0 (281 in the set, was

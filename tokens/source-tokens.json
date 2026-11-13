@@ -109,6 +109,7 @@
       {"fg":"field/fg-error","bg":"bg/default","what":"field error text","min":4.5},
       {"fg":"border/focus","bg":"bg/default","what":"focus ring on page","min":3},
       {"fg":"border/focus","bg":"surface/bg-default","what":"focus ring on card","min":3},
+      {"fg":"border/accent","bg":"bg/default","what":"selected indicator on page (tab, nav, card, today)","min":3},
       {"fg":"field/border-focus","bg":"bg/default","what":"field focus border","min":3},
       {"fg":"field/border-default","bg":"bg/default","what":"field boundary","min":3},
       {"fg":"field/border-error","bg":"bg/default","what":"field error border","min":3},
@@ -1908,7 +1909,7 @@
         "accent": {
           "$value": "{violet.600}",
           "$type": "color",
-          "$description": "Accent borders — matches fg.accent for coherent brand expression (secondary buttons, chip outlines, tab indicators, default badges)."
+          "$description": "Accent line for selected and active states (tab indicator, active nav bar, selected card, today marker). Follows the filled accent and stays at least 3:1 against the page (WCAG 1.4.11); the theme editor keeps that floor for generated themes."
         },
         "accent-2": {
           "$value": "{violet.600}",
@@ -2445,7 +2446,7 @@
         "accent": {
           "$value": "{violet.400}",
           "$type": "color",
-          "$description": "Accent borders — matches dark fg.accent for coherent brand expression."
+          "$description": "Accent line for selected and active states, dark theme. A step light enough to stay at least 3:1 against the dark page; the theme editor keeps that floor for generated themes."
         },
         "accent-2": {
           "$value": "{violet.400}",

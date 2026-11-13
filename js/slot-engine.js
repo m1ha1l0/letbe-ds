@@ -16,6 +16,7 @@
  *   computeAccentRemap(emphasisStep, themeMode, palette?, hexes?)
  *   planBrandPrimary(palette, emphasisStep, hexes?)
  *   computeValueFillStep(palette, themeMode, hexes?) — value fill vs track
+ *   computeAccentBorderStep(palette, startStep, themeMode, hexes?) — accent line vs page
  *   auditAccentPairs(wcagPairs, mergedJson)          — pure pair evaluation
  *
  * The hexes parameter defaults to CANON (the canonical letbe-ds neutrals:
@@ -26,7 +27,7 @@
   'use strict';
 
   // Bump on ANY output-affecting change; the plugin pins against this.
-  const ENGINE_VERSION = '1.0.0'; // 2026-08-31 · letbe-ds post-a9aa8bf extraction
+  const ENGINE_VERSION = '1.1.0'; // 2026-11-13 · border-accent follows the filled accent, 3:1 vs page
 
   // Canonical neutral anchors (letbe-ds factory values).
   const CANON = {
@@ -197,7 +198,10 @@
         'bg-accent':          darkEmphasis,
         'bg-accent-strong':   shiftStep(darkEmphasis, -darkDir * 1),
         'bg-accent-bolder':   shiftStep(darkEmphasis, -darkDir * 2),
-        'border-accent':      shiftStep(darkEmphasis, +darkDir * 2),
+        // The accent line (selected tab, active nav, selected card) wears
+        // the filled accent's step. The old walk went 2 steps toward the
+        // page (2.7:1-class); computeAccentBorderStep adds the 3:1 floor.
+        'border-accent':      darkEmphasis,
         'border-focus':       darkEmphasis,
       };
     }
@@ -215,7 +219,8 @@
       'bg-accent':          emphasisStep,
       'bg-accent-strong':   bold,
       'bg-accent-bolder':   boldest,
-      'border-accent':      softer,
+      // Filled accent's step, not the 200 wash (1.3:1-class on the page).
+      'border-accent':      emphasisStep,
       'border-focus':       emphasisStep,
     };
   }
@@ -287,6 +292,24 @@
       contrastRatio(palette[a], TRACK) >= contrastRatio(palette[b], TRACK) ? a : b);
   }
 
+  // ── Accent line — measured vs the page ──
+  // border.accent draws state indicators (selected tab, active nav, selected
+  // card, today), so it needs 3:1 against the page (WCAG 1.4.11). Start at
+  // the filled accent's step (the badge / primary fill) and walk toward the
+  // page's opposite end until it clears; light walks darker, dark lighter.
+  function computeAccentBorderStep(palette, startStep, themeMode, hexes) {
+    const H = hexes || CANON;
+    const PAGE = themeMode === 'dark' ? H.pageDark : H.inkLight;
+    const dir = themeMode === 'dark' ? -1 : +1;
+    let best = startStep;
+    for (let i = stepIndex(startStep); i >= 0 && i < STEPS.length; i += dir) {
+      const s = STEPS[i];
+      if (contrastRatio(palette[s], PAGE) >= 3) return s;
+      if (contrastRatio(palette[s], PAGE) > contrastRatio(palette[best], PAGE)) best = s;
+    }
+    return best;
+  }
+
   // ── Pure manifest-pair audit for the accent families ──
   // Evaluates the shipped $schema.wcag_pairs entries that involve accent /
   // accent-2 / accent-3 against a fully-merged DTCG theme, both modes.
@@ -340,6 +363,6 @@
     hexToRgb, rgbToHex, rgbToOklch, oklchToRgb, srgbToLinear,
     contrastRatio, generatePalette,
     computeAccentRemap, planBrandPrimary, computeValueFillStep,
-    auditAccentPairs,
+    computeAccentBorderStep, auditAccentPairs,
   };
 })();

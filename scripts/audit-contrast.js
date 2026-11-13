@@ -142,6 +142,7 @@ const PAIRS = [
   // Focus + functional boundaries (non-text, 3:1)
   { fg: 'border-focus', bg: 'bg-default', what: 'focus ring on page', min: UI },
   { fg: 'border-focus', bg: 'surface-bg-default', what: 'focus ring on card', min: UI },
+  { fg: 'border-accent', bg: 'bg-default', what: 'selected indicator on page (tab, nav, card, today)', min: UI },
   { fg: 'field-border-focus', bg: 'bg-default', what: 'field focus border', min: UI },
   { fg: 'field-border-default', bg: 'bg-default', what: 'field boundary', min: UI },
   { fg: 'field-border-error', bg: 'bg-default', what: 'field error border', min: UI },

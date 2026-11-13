@@ -41,6 +41,7 @@
     STEPS, PALETTE_STEPS, snapToStep, shiftStep,
     hexToRgb, rgbToOklch, contrastRatio, generatePalette,
     computeAccentRemap, planBrandPrimary, computeValueFillStep,
+    computeAccentBorderStep,
   } = window.LetbeSlotEngine;
   const _engineAuditAccentPairs = window.LetbeSlotEngine.auditAccentPairs;
   const INK_LIGHT = window.LetbeSlotEngine.CANON.inkLight,
@@ -762,6 +763,8 @@
         remap['bg-accent'] = primaryPlan[themeMode].steps.default;
         remap['bg-accent-strong'] = primaryPlan[themeMode].steps.strong;
         remap['bg-accent-bolder'] = primaryPlan[themeMode].steps.bolder;
+        // The accent line follows the filled accent, floored at 3:1 vs page.
+        remap['border-accent'] = computeAccentBorderStep(palette, remap['bg-accent'], themeMode);
         const themeBucket = patch.semantic[themeMode];
         for (const [key, step] of Object.entries(remap)) {
           // key is e.g. 'bg-accent-subtle' or 'bg-accent' → split on first dash group prefix.
@@ -904,6 +907,7 @@
           remap['bg-accent'] = planN[themeMode].steps.default;
           remap['bg-accent-strong'] = planN[themeMode].steps.strong;
           remap['bg-accent-bolder'] = planN[themeMode].steps.bolder;
+          remap['border-accent'] = computeAccentBorderStep(paletteN, remap['bg-accent'], themeMode);
           delete remap['border-focus'];
           const themeBucket = patch.semantic[themeMode];
           for (const [key, step] of Object.entries(remap)) {

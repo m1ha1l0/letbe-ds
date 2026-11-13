@@ -69,6 +69,7 @@ but are tracked so drift stays visible. Regenerate after any token change.
 | ✓ | `field-fg-error` on `bg-default` | field error text | 6.11 | 4.5 |
 | ✓ | `border-focus` on `bg-default` | focus ring on page | 3.99 | 3 |
 | ✓ | `border-focus` on `surface-bg-default` | focus ring on card | 3.99 | 3 |
+| ✓ | `border-accent` on `bg-default` | selected indicator on page (tab, nav, card, today) | 7.06 | 3 |
 | ✓ | `field-border-focus` on `bg-default` | field focus border | 3.99 | 3 |
 | ✓ | `field-border-default` on `bg-default` | field boundary | 3.37 | 3 |
 | ✓ | `field-border-error` on `bg-default` | field error border | 3.72 | 3 |
@@ -152,6 +153,7 @@ but are tracked so drift stays visible. Regenerate after any token change.
 | ✓ | `field-fg-error` on `bg-default` | field error text | 8.24 | 4.5 |
 | ✓ | `border-focus` on `bg-default` | focus ring on page | 8.77 | 3 |
 | ✓ | `border-focus` on `surface-bg-default` | focus ring on card | 8.77 | 3 |
+| ✓ | `border-accent` on `bg-default` | selected indicator on page (tab, nav, card, today) | 8.48 | 3 |
 | ✓ | `field-border-focus` on `bg-default` | field focus border | 8.77 | 3 |
 | ✓ | `field-border-default` on `bg-default` | field boundary | 3.41 | 3 |
 | ✓ | `field-border-error` on `bg-default` | field error border | 5.03 | 3 |
