@@ -19,6 +19,13 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   icon no longer take the accent colour. They use the default text
   colour like the other tabs, and the underline alone marks the
   selected tab.
+- **Tab underline slides.** On each change `LB.Tabs` slides the
+  underline from the previous tab to the new one (transform only,
+  `--lb-animation-dur-gentle`, picking up mid-slide on quick clicks).
+  Reduced motion and `data-lb-motion="off"` move it at once. The line
+  is now the selected tab's `::after`, drawn over the same reserved
+  bottom border, so tab sizes don't change and it still shows without
+  `lb.js` and in forced-colors mode.
 
 ## [1.23.0] — 2026-11-12
 

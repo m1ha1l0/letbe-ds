@@ -2854,8 +2854,14 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    instead of pushing wide variants (icon + label + badge) off the page.
    Focus rings stay visible: .lb-tab uses a negative outline-offset. */
 .lb-tab-list { display: flex; gap: 0; overflow-x: auto; }
-.lb-tab { display: inline-flex; align-items: center; gap: var(--lb-size-2x); background: none; border: none; border-bottom: var(--lb-border-width-medium) solid transparent; padding: var(--lb-size-2x) var(--lb-size-3x); font-family: var(--lb-t-action-m-font-family); font-size: var(--lb-t-action-m-font-size); font-weight: var(--lb-t-action-m-font-weight); line-height: var(--lb-t-action-m-line-height); letter-spacing: var(--lb-t-action-m-letter-spacing); color: var(--lb-fg-default); /* one text colour for every tab; the underline alone marks the selected one */ cursor: pointer; white-space: nowrap; transition: color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), border-color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
-.lb-tab[aria-selected="true"] { border-bottom-color: var(--lb-action-border-selected); }
+.lb-tab { position: relative; display: inline-flex; align-items: center; gap: var(--lb-size-2x); background: none; border: none; border-bottom: var(--lb-border-width-medium) solid transparent; padding: var(--lb-size-2x) var(--lb-size-3x); font-family: var(--lb-t-action-m-font-family); font-size: var(--lb-t-action-m-font-size); font-weight: var(--lb-t-action-m-font-weight); line-height: var(--lb-t-action-m-line-height); letter-spacing: var(--lb-t-action-m-letter-spacing); color: var(--lb-fg-default); /* one text colour for every tab; the underline alone marks the selected one */ cursor: pointer; white-space: nowrap; transition: color var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+/* Selected underline. ::after draws it over the tab's reserved bottom
+   border, so no tab changes size. Without lb.js it sits under the
+   selected tab; LB.Tabs slides it in from the previous tab by setting
+   --lb-tab-slide-x / --lb-tab-slide-scale for one frame (transform only).
+   A border, not a background, so forced-colors mode keeps it visible. */
+.lb-tab[aria-selected="true"]::after { content: ''; position: absolute; left: 0; right: 0; bottom: calc(-1 * var(--lb-border-width-medium)); border-bottom: var(--lb-border-width-medium) solid var(--lb-action-border-selected); transform: translateX(var(--lb-tab-slide-x, 0px)) scaleX(var(--lb-tab-slide-scale, 1)); transform-origin: left center; transition: transform var(--lb-animation-dur-gentle) var(--lb-animation-ease-ui); pointer-events: none; }
+.lb-tab[aria-selected="true"].lb-tab--slide-start::after { transition: none; }
 .lb-tab:focus-visible { outline: var(--lb-border-width-medium) solid var(--lb-border-focus); outline-offset: calc(-1 * var(--lb-size-0-5x)); border-radius: var(--lb-radius-interactive) var(--lb-radius-interactive) 0 0; }
 .lb-tab:disabled { opacity: 0.4; cursor: default; }
 

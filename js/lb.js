@@ -481,6 +481,11 @@ const LB = (() => {
     }
 
     select(index) {
+      // The underline slides from where it is now (mid-slide included) to
+      // the new tab, so measure before the switch. Reduced or off motion:
+      // the line just moves.
+      const prev = this.tabs.find((t) => t.getAttribute('aria-selected') === 'true');
+      const from = prev && prev !== this.tabs[index] && motion(this.el) === 'full' ? this._lineBox(prev) : null;
       this.tabs.forEach((tab, i) => {
         const active = i === index;
         tab.setAttribute('aria-selected', String(active));
@@ -490,6 +495,7 @@ const LB = (() => {
         }
       });
       this._reveal(this.tabs[index]);
+      if (from) this._slide(this.tabs[index], from);
       if (this.onChange) this.onChange(this.tabs[index]?.id);
       this.el.dispatchEvent(new CustomEvent('lb-tab-change', { bubbles: true, detail: { index, id: this.tabs[index]?.id } }));
     }
@@ -504,6 +510,29 @@ const LB = (() => {
       const t = tab.getBoundingClientRect();
       if (t.left < l.left) list.scrollLeft += t.left - l.left;
       else if (t.right > l.right) list.scrollLeft += t.right - l.right;
+    }
+
+    // Where a tab's underline is drawn now: the tab's box, moved and
+    // scaled by any slide still running on its ::after.
+    _lineBox(tab) {
+      const r = tab.getBoundingClientRect();
+      const m = getComputedStyle(tab, '::after').transform.match(/^matrix\(([^)]+)\)$/);
+      const [sx, , , , tx] = m ? m[1].split(',').map(parseFloat) : [1, 0, 0, 0, 0];
+      return { x: r.left + tx, w: r.width * sx };
+    }
+
+    // FLIP: start the new tab's line on the old line's box for one frame,
+    // then let the CSS transition carry it home.
+    _slide(tab, from) {
+      const r = tab.getBoundingClientRect();
+      if (!r.width || !from.w) return;
+      tab.classList.add('lb-tab--slide-start');
+      tab.style.setProperty('--lb-tab-slide-x', `${from.x - r.left}px`);
+      tab.style.setProperty('--lb-tab-slide-scale', String(from.w / r.width));
+      getComputedStyle(tab, '::after').transform; // commit the start frame
+      tab.classList.remove('lb-tab--slide-start');
+      tab.style.removeProperty('--lb-tab-slide-x');
+      tab.style.removeProperty('--lb-tab-slide-scale');
     }
 
     _onKeydown(e) {

@@ -441,7 +441,7 @@
     "tabs": {
       "name": "Tabs",
       "description": "Switch between related views of the same data in a shared context. Supports label-only, label + count badge (for filters), label + notification dot, icon + label, icon-only, and icon + label + badge. Use for view filters, settings groups, or tabbed content blocks.",
-      "usage": "Root gets `data-lb-tabs`. Each tab uses `aria-selected=\"true\"` on the active button. Icon-only tabs need `aria-label` on the button. Sets can nest: a set inside another set's panel runs its own controller, and each set takes only its own tabs and panels, paired by order. Each change dispatches a bubbling `lb-tab-change` (`detail.index`, `detail.id`); a listener on an outer set also hears a nested set, so compare `e.target`."
+      "usage": "Root gets `data-lb-tabs`. Each tab uses `aria-selected=\"true\"` on the active button. Icon-only tabs need `aria-label` on the button. Sets can nest: a set inside another set's panel runs its own controller, and each set takes only its own tabs and panels, paired by order. Each change dispatches a bubbling `lb-tab-change` (`detail.index`, `detail.id`); a listener on an outer set also hears a nested set, so compare `e.target`. On each change the underline slides from the previous tab (transform only, `--lb-animation-dur-gentle`); reduced motion or `data-lb-motion=\"off\"` moves it at once, and without `lb.js` it still sits under the selected tab."
     },
     "time-picker": {
       "name": "Time Picker",
