@@ -4,7 +4,7 @@
 
 **Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports. **v1.24.0 is such a change** (`slot-engine.js`, `theme-editor.js` and `source-tokens.json`): see item 51.
 
-**Latest update**: 2026-11-13 (item 51 from v1.24.0: slot engine 1.1.0 for the plugin, tab label relay for the library; item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
+**Latest update**: 2026-11-25 (item 52 for v1.25.0, not yet tagged: compact phone video player + 5 icons, library relay only; item 51 from v1.24.0: slot engine 1.1.0 for the plugin, tab label relay for the library; item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
 **Previous update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
 **First created**: 2026-05-03
 
@@ -1754,3 +1754,67 @@ Library work (after the plugin release):
   factory theme's values don't change.
 - The sliding underline is code-only; nothing to build.
 - Verify Light + Dark.
+
+### 52. Compact phone video player, video scrubber and scrims, 5 icons (v1.25.0) — library relay — no plugin action, no new tokens
+
+letbe-ds work is pushed to main and live on letbe.design/media-player;
+the v1.25.0 tag follows the owner's phone test. Every value below is an
+existing token. Source: CHANGELOG [Unreleased] (later [1.25.0]),
+`components/components.css` (MEDIA PLAYER block) and the research report
+the owner approved (Option C; the poster before play shows the full band).
+
+Library work:
+
+- **Video scrims (existing `video` layout, top and bottom).** The bottom
+  scrim is `bg/overlay` at 85% at the bottom edge, 70% at the inner
+  edge of the controls' 24px top padding (`size/6x`), then fades to 0
+  across that padding (it was an even 88% to 0). The top bar's scrim
+  mirrors it: 85% at the top, 70% at the inner edge of its 24px bottom
+  padding, 0 at its outer edge (it was 80% to 0). Raw gradient stops as
+  before (stops cannot bind variables).
+- **Scrubber (`media/scrubber`).** The strip (hit area) is 24 tall
+  (`size/6x`, was 20 / `size/5x`) in both tones. Inverse tone (video
+  only): the rail is 4 (`size/1x`, was `border-width/action`), the thumb
+  is a plain 12 dot (`size/3x`, was 16) filled `fg/inverse-strong`, no
+  ring and no accent. The played fill stays `bg/accent-value`; rail and
+  buffered keep their 30% / 45% inverse layers. Default tone (audio)
+  keeps its rail and its 16 accent thumb.
+- **New layout `video-phone` (360 wide, 16:9 stage 360 × 203).** What
+  every video player 480 wide or less now shows:
+  - Band at the bottom, 80 tall: an 8 gap (`size/2x`), a 48 row
+    (`size/12x` buttons), then the 24 scrubber strip flush with the
+    bottom, 12 side padding (`size/3x`).
+  - Row: the time as 1 label "0:12 / 2:19" on the left (`body/s`,
+    `fg/inverse-strong`, the "/" joins the 2 times), mute and fullscreen
+    icon-btn M (48) on the right, 8 apart. No volume slider.
+  - Scrubber: inverse tone as above, full width inside the padding.
+  - Scrim: `bg/overlay` 85% at the bottom, 70% at the band's row top,
+    0 at 24 above the band.
+  - Play: a 48 round disc (`radius/full`) with `bg/overlay` at 70%
+    (node-opacity idiom), the inverse play icon at 24, centred in the
+    picture above the band.
+  - Variant `controls=shown / hidden`: shown = band + disc (also the
+    poster state before play); hidden = no band, no disc, a 4 line
+    (`size/1x`, `bg/accent-value`) along the bottom edge as progress
+    (draw it at about 40%).
+  - Optional top bar (show, default off): 1 row, buttons 32
+    (`size/8x`) with 20 icons (`size/5x`), speed and quality pills
+    min-width 32, padding 8 top / 12 sides / 24 bottom.
+- **Icons (5 new, 286 in the set, was 281).** Outlined `rocket` (Lucide
+  1.72.0, the 2-layer recipe of items 42 and 50). Brand `claude`,
+  `suno`, `kdenlive`, `linux` (Simple Icons 16.38.1, filled single path,
+  the existing brand recipe). Keywords: rocket "launch, live, ship,
+  start"; claude "anthropic, ai, assistant"; suno "ai, music"; kdenlive
+  "video, editor"; linux "tux, os, open source".
+- **Check only:** icon buttons that carry the icon themselves now draw
+  it at 24 / 16 / 32 in code (they stretched to the button). The
+  library's icon-button sets should already be 24 / 16 / 32; confirm,
+  no change expected.
+- Verify Light + Dark. Relabel to v1.25 only once letbe-ds tags v1.25.0.
+
+Code-only, nothing to build: the touch tap (shows / hides the
+controls), hide timing, the spoken seek time, focus waking the
+controls, the player's role and name, the loading ring, captions
+moving above the controls, forced colours, the crowded-row steps
+(`--tight-1/2/3`, `--top-tight`, `--no-disc`), the iPhone fullscreen
+fallback and the round hover on video menu buttons.
