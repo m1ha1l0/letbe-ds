@@ -37,6 +37,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   (touch fires `pointerleave` on lift), and after a touch they hide 3s
   after the last activity (2.5s for a mouse). Hold-to-skip keeps
   working, its short tap following the same rules.
+- **Video controls are 1 band on phones.** On a video player 480px
+  wide or less, the 2 control rows (116px on touch, two thirds of a
+  phone's picture) become 1 band of 80px (72px with a mouse): the
+  buttons in 1 row with the time as 1 label, "0:12 / 2:19", and the
+  scrubber on its own full-width line along the bottom. The "/" is
+  hidden from screen readers. When a crowded row would wrap, LB.Media
+  drops the total time (`.lb-media--tight-1`), then both times
+  (`.lb-media--tight-2`). Audio players keep their 2-row narrow layout.
+  Intentional visual change.
 - **Fullscreen on iPhone.** iPhone Safari cannot put a page element
   into fullscreen, so the fullscreen button now opens the phone's own
   video player there (`webkitEnterFullscreen`). Older Safari uses the

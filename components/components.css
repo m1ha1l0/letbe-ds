@@ -3424,7 +3424,9 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    L2/L3 tokens only — no media-specific tokens (PLUGIN-HANDOFF 12).
    ═══════════════════════════════════════════════════════════ */
 
-.lb-media { container-type: inline-size; display: flex; flex-direction: column; gap: var(--lb-size-3x); background: var(--lb-surface-bg-elevated); border: var(--lb-border-width-thin) solid var(--lb-surface-border-elevated); border-radius: var(--lb-radius-overlay); padding: var(--lb-size-3x) var(--lb-size-4x); font-family: var(--lb-t-body-m-font-family); }
+/* --lb-media-btn: the player's button size, 40px, 48px on touch screens
+   (see the touch-target block below). */
+.lb-media { --lb-media-btn: var(--lb-size-10x); container-type: inline-size; display: flex; flex-direction: column; gap: var(--lb-size-3x); background: var(--lb-surface-bg-elevated); border: var(--lb-border-width-thin) solid var(--lb-surface-border-elevated); border-radius: var(--lb-radius-overlay); padding: var(--lb-size-3x) var(--lb-size-4x); font-family: var(--lb-t-body-m-font-family); }
 .lb-media--audio audio { display: none; } /* native chrome hidden; we drive it */
 
 /* Optional now-playing block — cover art + title/artist. Opt-in: only
@@ -3544,6 +3546,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   /* video top bar (like/dislike · utility actions) wraps too instead of
      pushing the actions cluster out of the frame on very narrow players */
   .lb-media__top { flex-wrap: wrap; }
+
 }
 /* The same 2 rows on a wider player whose controls don't fit 1 row.
    How wide 1 row must be depends on which controls a page includes and
@@ -3574,6 +3577,7 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    reason — only the hit area grows. */
 @media (pointer: coarse) {
   .lb-media .lb-icon-btn--medium { width: var(--lb-size-12x); height: var(--lb-size-12x); }
+  .lb-media { --lb-media-btn: var(--lb-size-12x); }
 }
 
 /* Card / now-playing layout — apply .lb-media--card. Large cover on top,
@@ -3704,13 +3708,46 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media--video.lb-media--idle { cursor: none; }
 .lb-media--video.lb-media--idle .lb-media__controls,
 .lb-media--video.lb-media--idle .lb-media__top { opacity: 0; pointer-events: none; }
+/* The phone band's controls opt back into pointer events one by one,
+   so they opt out again while hidden. */
+.lb-media--video.lb-media--idle .lb-media__controls > * { pointer-events: none; }
 /* A keyboard-focused control is never hidden (WCAG 2.4.7). LB.Media
    also wakes the bar on focus; this is the backstop. */
 .lb-media--video.lb-media--idle:has(.lb-media__controls :focus-visible) .lb-media__controls,
-.lb-media--video.lb-media--idle:has(.lb-media__top :focus-visible) .lb-media__top { opacity: 1; pointer-events: auto; }
+.lb-media--video.lb-media--idle:has(.lb-media__top :focus-visible) .lb-media__top { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   .lb-media--video .lb-media__controls,
   .lb-media--video .lb-media__top { transition: none; }
+}
+
+@container (max-width: 480px) {
+  /* Video band (phones). One row of buttons with the time as a single
+     "0:12 / 2:19" label, and the scrubber on its own full-width line along
+     the bottom, instead of the 2 rows above (116px on touch, two thirds
+     of a phone's picture). The controls box covers the whole picture and
+     lets pointer events through, so its rows sit at the bottom and the
+     play button can centre in the picture; --lb-media-band is the band's
+     height: a gap, the button row and the 24px scrubber strip. The scrim
+     is 70% or more over the band and fades out over the gap and 24px
+     above it. */
+  .lb-media--video .lb-media__controls { --lb-media-band: calc(var(--lb-size-2x) + var(--lb-media-btn) + var(--lb-size-6x)); top: 0; align-content: flex-end; row-gap: 0; padding: 0 var(--lb-size-3x); pointer-events: none; background: linear-gradient(to top, color-mix(in srgb, var(--lb-bg-overlay) 85%, transparent), color-mix(in srgb, var(--lb-bg-overlay) 70%, transparent) calc(var(--lb-media-band) - var(--lb-size-2x)), transparent calc(var(--lb-media-band) + var(--lb-size-6x))); }
+  .lb-media--video .lb-media__controls > * { order: 0; margin-block-end: 0; pointer-events: auto; }
+  .lb-media--video .lb-media__controls:has(> .lb-media__scrubber)::after { content: none; }
+  .lb-media--video .lb-media__controls > .lb-media__scrubber { order: 1; flex: 1 0 100%; }
+  .lb-media--video .lb-media__controls > :has(+ [data-lb-media-current]) { margin-inline-end: 0; }
+  .lb-media--video .lb-media__controls > :is([data-lb-media-current], [data-lb-media-duration]) { min-width: 0; text-align: start; }
+  /* "/" joins the 2 times into 1 label; empty alt text, so a screen
+     reader does not say "slash". The label then pushes the rest right. */
+  .lb-media--video .lb-media__controls > [data-lb-media-duration] { margin-inline-start: calc(var(--lb-size-1x) - var(--lb-size-2x)); margin-inline-end: auto; }
+  .lb-media--video .lb-media__controls > [data-lb-media-duration]::before { content: "/\00a0"; content: "/\00a0" / ""; }
+  .lb-media--video .lb-media__controls:not(:has(> [data-lb-media-duration])) > [data-lb-media-current] { margin-inline-end: auto; }
+  /* Crowded rows (many buttons, long times, very narrow players): LB.Media
+     adds --tight-1 to drop the total time, then --tight-2 to drop both
+     times, when the row would otherwise wrap. The buttons then sit right. */
+  .lb-media--tight-1 .lb-media__controls > [data-lb-media-duration],
+  .lb-media--tight-2 .lb-media__controls > [data-lb-media-current] { display: none; }
+  .lb-media--tight-1 .lb-media__controls > [data-lb-media-current] { margin-inline-end: auto; }
+  .lb-media--tight-2 .lb-media__controls { justify-content: flex-end; }
 }
 /* Native subtitle cue styling — light text on a translucent dark pill
    so it reads on any footage. Uses existing tokens via color-mix. */

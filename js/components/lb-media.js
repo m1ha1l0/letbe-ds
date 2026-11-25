@@ -510,6 +510,28 @@
       const over = c.scrollWidth > c.clientWidth;
       this.el.classList.remove('lb-media--measuring');
       this.el.classList.toggle('lb-media--stacked', over);
+      // Phone band (video at 480px or less, where the CSS sets
+      // --lb-media-band): when the button row would wrap, drop the total
+      // time (--tight-1), then both times (--tight-2), so the band stays
+      // 1 row.
+      if (this.isVideo) {
+        this.el.classList.remove('lb-media--tight-1', 'lb-media--tight-2');
+        if (getComputedStyle(c).getPropertyValue('--lb-media-band').trim() && this._bandWraps()) {
+          this.el.classList.add('lb-media--tight-1');
+          if (this._bandWraps()) this.el.classList.add('lb-media--tight-2');
+        }
+      }
+    }
+
+    // True when the band's row items (not the scrubber line, not the
+    // centred play button) take more than 1 line.
+    _bandWraps() {
+      const rs = Array.from(this.controls.children)
+        .filter((k) => k !== this.seekWrap && getComputedStyle(k).position !== 'absolute')
+        .map((k) => k.getBoundingClientRect())
+        .filter((r) => r.width > 0);
+      if (rs.length < 2) return false;
+      return Math.max(...rs.map((r) => r.top)) >= Math.min(...rs.map((r) => r.bottom)) - 0.5;
     }
 
     // Collect every marquee box in the player (now-playing title +
@@ -1149,6 +1171,8 @@
     _reflectDuration() {
       if (this.durTime) this.durTime.textContent = fmtTime(this.media.duration);
       if (this.seek && document.activeElement !== this.seek) this._seekText(true);
+      // A longer time label ("50:39") can tip the phone band into 2 lines.
+      if (this.isVideo) this._fitControls();
     }
 
     // VBR MP3s without a Xing/Info header report duration === Infinity,
@@ -1177,7 +1201,13 @@
       const pct = m.duration ? (m.currentTime / m.duration) * 100 : 0;
       if (this.played) this.played.style.width = pct + '%';
       if (this.seek) this.seek.value = pct;
-      if (this.curTime) this.curTime.textContent = fmtTime(m.currentTime);
+      if (this.curTime) {
+        const t = fmtTime(m.currentTime);
+        // 9:59 → 10:00 widens the label: re-check the phone band's fit.
+        const grew = this.isVideo && this.curTime.textContent.length !== t.length;
+        this.curTime.textContent = t;
+        if (grew) this._fitControls();
+      }
       // Kept current for the next focus, but not rewritten while focused:
       // a screen reader would read every tick of playback.
       if (this.seek && document.activeElement !== this.seek) this._seekText(true);
