@@ -5,6 +5,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **5 new icons (286 in the set, was 281).** Outlined `rocket` from
+  Lucide 1.72.0, unchanged (mihailo.net finding 70). Brand glyphs
+  `claude`, `suno`, `kdenlive` and `linux` from Simple Icons 16.38.1,
+  in the set's single-path `fill: currentColor` format (finding 71).
+  Google Flow (Veo) has no free square glyph in either source, so it is
+  not in the set. Brand logos stay subject to each brand's guidelines
+  (Kdenlive publishes trademark rules at kdenlive.org/trademark-logo).
+
 - **Icon buttons draw their icon at the documented size.** When
   `data-lb-icon` sits on the `.lb-icon-btn` itself (the media player,
   chat and timeline markup), the SVG stretched to the button: 26px in a
