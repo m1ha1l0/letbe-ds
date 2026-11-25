@@ -5,6 +5,22 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Icon buttons draw their icon at the documented size.** When
+  `data-lb-icon` sits on the `.lb-icon-btn` itself (the media player,
+  chat and timeline markup), the SVG stretched to the button: 26px in a
+  medium button, 34px in the media player's 48px touch button, 18px in
+  a small one. It is now 24px, 16px and 32px (large), the same as the
+  `.lb-icon-btn__icon` form. Intentional visual change.
+- **Video controls read on light frames.** The scrim behind the video
+  controls and the top bar is at least 70% overlay wherever controls
+  and time sit (the time was 2:1 on a light poster, now over 6.5:1 on
+  white) and fades out only across the top padding. The scrubber strip
+  is 24px tall for every player (WCAG 2.5.8, was 20px). On video the
+  rail is 4px and the thumb is a light dot with a dark ring, 12px at
+  rest and 16px while held, so it no longer depends on the theme's
+  accent. Reduced motion drops the controls' fade, and a
+  keyboard-focused control is never hidden.
+
 ## [1.24.0] — 2026-11-13
 
 Minor: under Theme Editor presets the accent line (selected tab, active

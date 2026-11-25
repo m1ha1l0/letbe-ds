@@ -578,6 +578,14 @@ svg[stroke-width] { stroke-width: var(--lb-stroke-icon); }
    carries the weight of the text beside it. */
 .lb-icon-btn--large .lb-icon-btn__icon,
 .lb-icon-btn--large > [data-lb-icon] { width: var(--lb-size-8x); height: var(--lb-size-8x); }
+/* The same sizes when [data-lb-icon] sits on the button itself and the
+   SVG lands straight inside it. Without these the global
+   "[data-lb-icon] svg { 100% }" rule stretched the glyph to the button's
+   box: 26px in a medium button, 34px in the media player's 48px touch
+   button, 18px in a small one. */
+.lb-icon-btn[data-lb-icon] > svg { flex: none; width: 1.5rem; height: 1.5rem; }
+.lb-icon-btn--small[data-lb-icon] > svg { width: 1rem; height: 1rem; }
+.lb-icon-btn--large[data-lb-icon] > svg { width: var(--lb-size-8x); height: var(--lb-size-8x); }
 
 /* Primary */
 .lb-icon-btn--primary { background-color: var(--lb-action-bg-primary-default); border-color: var(--lb-action-border-primary-default); color: var(--lb-action-fg-primary-default); }
@@ -3470,7 +3478,9 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 /* Scrubber + volume share the same rail/fill structure. The native
    range input sits transparent on top for keyboard + drag; the visible
    rail/fill below is painted from the media events. */
-.lb-media__scrubber { position: relative; flex: 1 1 auto; display: flex; align-items: center; height: var(--lb-size-5x); min-width: var(--lb-size-16x); }
+/* The scrubber strip is the touch target, 24px tall (WCAG 2.5.8); the
+   painted rail inside it stays thin. */
+.lb-media__scrubber { position: relative; flex: 1 1 auto; display: flex; align-items: center; height: var(--lb-size-6x); min-width: var(--lb-size-16x); }
 .lb-media__volume   { position: relative; flex: none; width: var(--lb-size-24x); display: flex; align-items: center; height: var(--lb-size-5x); }
 
 .lb-media__rail { position: absolute; left: 0; right: 0; height: var(--lb-border-width-action); background: var(--lb-border-muted); border-radius: var(--lb-radius-full); overflow: hidden; pointer-events: none; }
@@ -3638,11 +3648,15 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    bg, matching the music player's playlist. */
 .lb-media--video .lb-media__stage { position: relative; overflow: hidden; background: var(--lb-bg-overlay); }
 .lb-media--video video { display: block; width: 100%; height: auto; }
-.lb-media--video .lb-media__controls { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--lb-size-6x) var(--lb-size-3x) var(--lb-size-3x); background: linear-gradient(to top, color-mix(in srgb, var(--lb-bg-overlay) 88%, transparent), transparent); transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); }
+/* Scrim: at least 70% overlay wherever controls and time sit, fading to
+   clear only across the top padding. 70% keeps the 14px time 6.5:1 on a
+   white frame (60% is the 4.5:1 floor); the old even fade was about 27%
+   at the time's height, 2:1 on a light poster. */
+.lb-media--video .lb-media__controls { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--lb-size-6x) var(--lb-size-3x) var(--lb-size-3x); background: linear-gradient(to top, color-mix(in srgb, var(--lb-bg-overlay) 85%, transparent), color-mix(in srgb, var(--lb-bg-overlay) 70%, transparent) calc(100% - var(--lb-size-6x)), transparent); transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); }
 /* Top bar — mirrors the bottom scrim. Two slots: left (like/dislike) and
    right (speed, share, more). Children must explicitly opt into pointer
    events so the underlying video can still be clicked through the gaps. */
-.lb-media--video .lb-media__top { position: absolute; left: 0; right: 0; top: 0; padding: var(--lb-size-3x) var(--lb-size-3x) var(--lb-size-6x); display: flex; justify-content: space-between; align-items: center; gap: var(--lb-size-2x); background: linear-gradient(to bottom, color-mix(in srgb, var(--lb-bg-overlay) 80%, transparent), transparent); transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); pointer-events: none; }
+.lb-media--video .lb-media__top { position: absolute; left: 0; right: 0; top: 0; padding: var(--lb-size-3x) var(--lb-size-3x) var(--lb-size-6x); display: flex; justify-content: space-between; align-items: center; gap: var(--lb-size-2x); background: linear-gradient(to bottom, color-mix(in srgb, var(--lb-bg-overlay) 85%, transparent), color-mix(in srgb, var(--lb-bg-overlay) 70%, transparent) calc(100% - var(--lb-size-6x)), transparent); transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); pointer-events: none; }
 .lb-media--video .lb-media__top > * { pointer-events: auto; }
 .lb-media__top-left, .lb-media__top-right { display: flex; align-items: center; gap: var(--lb-size-1x); }
 /* Active reaction (like / dislike) — accent the icon. */
@@ -3675,12 +3689,29 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media--video .lb-media__time { color: var(--lb-fg-inverse-strong); }
 .lb-media--video .lb-media__speed { color: var(--lb-fg-inverse-strong); background: color-mix(in srgb, var(--lb-fg-inverse-strong) 16%, transparent); }
 .lb-media--video .lb-media__speed:hover { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 28%, transparent); }
-.lb-media--video .lb-media__rail { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 30%, transparent); }
+.lb-media--video .lb-media__rail { height: var(--lb-size-1x); background: color-mix(in srgb, var(--lb-fg-inverse-strong) 30%, transparent); }
 .lb-media--video .lb-media__buffered { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 45%, transparent); }
+/* Thumb over footage: a light dot with a dark ring, so it reads on any
+   frame and does not depend on the theme's accent (a dark accent on the
+   dark scrim is about 2:1). 12px at rest, 16px while it is held. */
+.lb-media--video .lb-media__range::-webkit-slider-thumb { width: var(--lb-size-3x); height: var(--lb-size-3x); background: var(--lb-fg-inverse-strong); box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-bg-overlay); transition: width var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), height var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-media--video .lb-media__range::-moz-range-thumb { width: var(--lb-size-3x); height: var(--lb-size-3x); background: var(--lb-fg-inverse-strong); box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-bg-overlay); transition: width var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), height var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-media--video .lb-media__range:active::-webkit-slider-thumb { width: var(--lb-size-4x); height: var(--lb-size-4x); }
+.lb-media--video .lb-media__range:active::-moz-range-thumb { width: var(--lb-size-4x); height: var(--lb-size-4x); }
+.lb-media--video .lb-media__range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-bg-overlay), 0 0 0 calc(2 * var(--lb-border-width-medium)) var(--lb-border-focus); }
+.lb-media--video .lb-media__range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-bg-overlay), 0 0 0 calc(2 * var(--lb-border-width-medium)) var(--lb-border-focus); }
 /* idle: hide controls + top bar + cursor during playback */
 .lb-media--video.lb-media--idle { cursor: none; }
 .lb-media--video.lb-media--idle .lb-media__controls,
 .lb-media--video.lb-media--idle .lb-media__top { opacity: 0; pointer-events: none; }
+/* A keyboard-focused control is never hidden (WCAG 2.4.7). LB.Media
+   also wakes the bar on focus; this is the backstop. */
+.lb-media--video.lb-media--idle:has(.lb-media__controls :focus-visible) .lb-media__controls,
+.lb-media--video.lb-media--idle:has(.lb-media__top :focus-visible) .lb-media__top { opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .lb-media--video .lb-media__controls,
+  .lb-media--video .lb-media__top { transition: none; }
+}
 /* Native subtitle cue styling — light text on a translucent dark pill
    so it reads on any footage. Uses existing tokens via color-mix. */
 .lb-media--video video::cue { background: color-mix(in srgb, var(--lb-bg-overlay) 75%, transparent); color: var(--lb-fg-inverse-strong); font-family: var(--lb-t-body-m-font-family); font-size: var(--lb-t-body-m-font-size); line-height: var(--lb-t-body-m-line-height); }
