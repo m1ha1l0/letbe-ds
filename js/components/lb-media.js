@@ -262,6 +262,7 @@
       if (this.fsBtn) {
         this.fsBtn.addEventListener('click', () => this.toggleFullscreen());
         document.addEventListener('fullscreenchange', () => this._reflectFullscreen());
+        document.addEventListener('webkitfullscreenchange', () => this._reflectFullscreen());
       }
 
       // Like / Dislike — mutually exclusive toggle buttons; filled icons
@@ -363,8 +364,11 @@
           // and show the accumulated total in the side badge. Release
           // before 0.5s = it was a click → play/pause.
           let downTime = 0, side = 0, holdTimer = null, intervalId = null, holding = false, accum = 0;
+          let tapTouch = false, tapWasIdle = false;
           const start = (e) => {
             if (e.button !== undefined && e.button !== 0) return; // primary only
+            tapTouch = e.pointerType === 'touch';
+            tapWasIdle = this.el.classList.contains('lb-media--idle');
             const rect = this.media.getBoundingClientRect();
             side = (e.clientX - rect.left) < rect.width / 2 ? -1 : 1;
             downTime = Date.now();
@@ -390,7 +394,9 @@
             if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
             if (intervalId) { clearInterval(intervalId); intervalId = null; }
             this.el.classList.remove('lb-media--rewinding', 'lb-media--ffwding');
-            if (!wasHolding && downTime && elapsed < 500) this.toggle();
+            if (!wasHolding && downTime && elapsed < 500) {
+              if (tapTouch) this._tapFrame(tapWasIdle); else this.toggle();
+            }
             downTime = 0; holding = false; accum = 0;
           };
           this.media.addEventListener('pointerdown', start);
@@ -398,11 +404,28 @@
           this.media.addEventListener('pointercancel', end);
           this.media.addEventListener('pointerleave', end);
         } else {
-          m.addEventListener('click', () => this.toggle());
+          // A mouse click on the picture plays or pauses; a touch tap
+          // shows or hides the controls (_tapFrame). The state is read on
+          // pointerdown, before the player's own pointerdown wakes them.
+          let tapTouch = false, tapWasIdle = false;
+          m.addEventListener('pointerdown', (e) => {
+            tapTouch = e.pointerType === 'touch';
+            tapWasIdle = this.el.classList.contains('lb-media--idle');
+          });
+          m.addEventListener('click', () => { if (tapTouch) this._tapFrame(tapWasIdle); else this.toggle(); });
         }
-        const wake = () => this._wake();
+        // The last input decides the hide delay: 3s after touch, 2.5s
+        // after a mouse or a key.
+        const wake = (e) => { if (e && e.pointerType) this._touch = e.pointerType === 'touch'; this._wake(); };
         this.el.addEventListener('pointermove', wake);
-        this.el.addEventListener('pointerleave', () => { if (!m.paused && !this._holdAwake()) this.el.classList.add('lb-media--idle'); });
+        this.el.addEventListener('pointerdown', wake);
+        this.el.addEventListener('keydown', () => { this._touch = false; });
+        // A touch lifting off fires pointerleave too; only a mouse leaving
+        // the player hides the controls at once.
+        this.el.addEventListener('pointerleave', (e) => {
+          if (e.pointerType === 'touch') return;
+          if (!m.paused && !this._holdAwake()) this.el.classList.add('lb-media--idle');
+        });
         // Keyboard focus wakes the controls (a hidden focused control
         // fails WCAG 2.4.7); a mouse click's focus does not count.
         this.el.addEventListener('focusin', (e) => { if (this._focusVisible(e.target)) this._wake(); });
@@ -574,13 +597,23 @@
     _wake() {
       this.el.classList.remove('lb-media--idle');
       clearTimeout(this._idleT);
-      if (!this.media.paused) this._idleT = setTimeout(() => this._sleep(), 2500);
+      if (!this.media.paused) this._idleT = setTimeout(() => this._sleep(), this._idleDelay());
     }
+    _idleDelay() { return this._touch ? 3000 : 2500; }
     // Hides the controls unless something still needs them, then checks
     // again after the same delay.
     _sleep() {
       if (this.media.paused) return;
-      if (this._holdAwake()) { this._idleT = setTimeout(() => this._sleep(), 2500); return; }
+      if (this._holdAwake()) { this._idleT = setTimeout(() => this._sleep(), this._idleDelay()); return; }
+      this.el.classList.add('lb-media--idle');
+    }
+    // A touch tap on the picture. A paused video plays (its controls are
+    // already showing). On a playing video the tap shows the controls,
+    // or hides them when they were showing.
+    _tapFrame(wasIdle) {
+      if (this.media.paused) { this.toggle(); return; }
+      if (wasIdle) { this._wake(); return; }
+      clearTimeout(this._idleT);
       this.el.classList.add('lb-media--idle');
     }
     // Keyboard focus inside the player, an open menu or a scrubber drag.
@@ -973,10 +1006,24 @@
     }
 
     toggleFullscreen() {
-      if (document.fullscreenElement) {
-        document.exitFullscreen && document.exitFullscreen();
-      } else if (this.el.requestFullscreen) {
-        this.el.requestFullscreen();
+      const d = document;
+      if (d.fullscreenElement || d.webkitFullscreenElement) {
+        if (d.exitFullscreen) d.exitFullscreen();
+        else if (d.webkitExitFullscreen) d.webkitExitFullscreen();
+        return;
+      }
+      // iPhone Safari cannot put a page element into fullscreen, only its
+      // own video player can, so a video falls back to that player.
+      const native = () => {
+        if (this.isVideo && this.media.webkitEnterFullscreen) this.media.webkitEnterFullscreen();
+      };
+      if (this.el.requestFullscreen) {
+        const p = this.el.requestFullscreen();
+        if (p && p.catch) p.catch(native);
+      } else if (this.el.webkitRequestFullscreen) {
+        this.el.webkitRequestFullscreen();
+      } else {
+        native();
       }
     }
 
@@ -1023,7 +1070,7 @@
     }
 
     _reflectFullscreen() {
-      const fs = document.fullscreenElement === this.el;
+      const fs = (document.fullscreenElement || document.webkitFullscreenElement) === this.el;
       this.el.classList.toggle('lb-media--fullscreen', fs);
       if (fs) {
         if (this.plToggleBtn) this._mountPlaylistPanel();

@@ -29,6 +29,18 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   now-playing title, else "Video player" / "Audio player". On video,
   keyboard focus wakes the hidden controls, and they stay up while
   focus is inside, a menu is open or the scrubber is held.
+- **Video on touch screens.** A touch tap on a playing video now shows
+  the controls, or hides them when they are showing, instead of
+  pausing, so a phone user no longer has to pause to reach them. A tap
+  on a paused video still plays it, and a mouse click still plays or
+  pauses. A touch lifting off no longer hides the controls at once
+  (touch fires `pointerleave` on lift), and after a touch they hide 3s
+  after the last activity (2.5s for a mouse). Hold-to-skip keeps
+  working, its short tap following the same rules.
+- **Fullscreen on iPhone.** iPhone Safari cannot put a page element
+  into fullscreen, so the fullscreen button now opens the phone's own
+  video player there (`webkitEnterFullscreen`). Older Safari uses the
+  prefixed fullscreen API.
 
 ## [1.24.0] — 2026-11-13
 
