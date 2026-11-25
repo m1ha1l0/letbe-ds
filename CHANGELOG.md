@@ -51,6 +51,18 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   row would wrap, LB.Media drops the total time (`.lb-media--tight-1`),
   then both times (`.lb-media--tight-2`). Wider players and audio
   players keep their layouts. Intentional visual change.
+- **Video top bar on phones, menu-button hover.** In the phone band
+  the optional top bar stays 1 row of 32px buttons with 20px icons and
+  slimmer pills (2 wrapped rows of 40px buttons took 116px of a 190px
+  16:9 picture and the play disc landed on them). When that row still
+  overflows, LB.Media hides its left group (`.lb-media--top-tight`;
+  like / dislike in the demo), as YouTube's phone player does. When the
+  picture is too short for the disc between the top bar and the band,
+  play goes back to the start of the band's row (`.lb-media--no-disc`),
+  and a thumbnail-size row that still wraps drops mute
+  (`.lb-media--tight-3`). On every video player the menu buttons
+  (captions picker, ⋮) take the round, see-through hover of the other
+  video buttons instead of the page's grey menu chip.
 - **Video loading ring, captions clear of the controls, forced
   colours.** While a video waits for data, a ring turns around the play
   button (the centre disc on phones) and the controls stay up

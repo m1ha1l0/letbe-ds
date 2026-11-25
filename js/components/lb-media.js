@@ -525,27 +525,59 @@
       const over = c.scrollWidth > c.clientWidth;
       this.el.classList.remove('lb-media--measuring');
       this.el.classList.toggle('lb-media--stacked', over);
-      // Phone band (video at 480px or less, where the CSS sets
-      // --lb-media-band): when the button row would wrap, drop the total
-      // time (--tight-1), then both times (--tight-2), so the band stays
-      // 1 row.
-      if (this.isVideo) {
-        this.el.classList.remove('lb-media--tight-1', 'lb-media--tight-2');
-        const band = !!getComputedStyle(c).getPropertyValue('--lb-media-band').trim();
-        if (band && this._bandWraps()) {
-          this.el.classList.add('lb-media--tight-1');
-          if (this._bandWraps()) this.el.classList.add('lb-media--tight-2');
-        }
-        // The centred play disc keeps clear of a top bar's controls.
-        const top = band && this.el.querySelector('.lb-media__top');
-        let h = 0;
-        if (top && top.getClientRects().length) {
-          const y = top.getBoundingClientRect().top;
-          Array.from(top.children).forEach((k) => { h = Math.max(h, k.getBoundingClientRect().bottom - y); });
-        }
-        c.style.setProperty('--lb-media-top', Math.round(h) + 'px');
-        this._liftCaptions();
+      if (this.isVideo) this._fitBand();
+    }
+
+    // Phone band (video at 480px or less, where the CSS sets
+    // --lb-media-band), measured in this order:
+    //  1. the top bar stays 1 row; when it overflows, its left group
+    //     leaves (--top-tight);
+    //  2. when the band's row would wrap, it drops the total time
+    //     (--tight-1), then both times (--tight-2), then mute (--tight-3,
+    //     a thumbnail-size player: phones have volume keys);
+    //  3. the play disc centres between the top bar and the band
+    //     (--lb-media-top); when the picture is too short for it, play
+    //     goes back into the band's row (--no-disc) and step 2 runs on.
+    _fitBand() {
+      const c = this.controls;
+      const el = this.el;
+      el.classList.remove('lb-media--tight-1', 'lb-media--tight-2', 'lb-media--tight-3', 'lb-media--top-tight', 'lb-media--no-disc');
+      const band = !!getComputedStyle(c).getPropertyValue('--lb-media-band').trim();
+      const top = band ? el.querySelector('.lb-media__top') : null;
+      const shown = (n) => !!n && n.getClientRects().length > 0;
+      if (shown(top) && top.scrollWidth > top.clientWidth + 1) el.classList.add('lb-media--top-tight');
+      let h = 0;
+      if (shown(top)) {
+        const y = top.getBoundingClientRect().top;
+        Array.from(top.children).forEach((k) => { if (shown(k)) h = Math.max(h, k.getBoundingClientRect().bottom - y); });
       }
+      c.style.setProperty('--lb-media-top', Math.round(h) + 'px');
+      if (band) {
+        // Each step drops 1 more item while the row still wraps.
+        const tighten = () => {
+          for (const step of ['lb-media--tight-1', 'lb-media--tight-2', 'lb-media--tight-3']) {
+            if (el.classList.contains(step)) continue;
+            if (!this._bandWraps()) break;
+            el.classList.add(step);
+          }
+        };
+        tighten();
+        const disc = this.playBtn && this.playBtn.parentElement === c && getComputedStyle(this.playBtn).position === 'absolute' ? this.playBtn : null;
+        if (disc) {
+          const stage = (el.querySelector('.lb-media__stage') || el).getBoundingClientRect();
+          const rows = Array.from(c.children)
+            .filter((k) => k !== disc && shown(k) && getComputedStyle(k).position !== 'absolute')
+            .map((k) => k.getBoundingClientRect().top);
+          const bandTop = rows.length ? Math.min(...rows) : stage.bottom;
+          // Room above the band (less its 8px gap) and below the top bar.
+          const free = (bandTop - 8) - (stage.top + h);
+          if (free < disc.offsetHeight + 8) {
+            el.classList.add('lb-media--no-disc');
+            tighten(); // play now shares the row
+          }
+        }
+      }
+      this._liftCaptions();
     }
 
     // True when the band's row items (not the scrubber line, not the

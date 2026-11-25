@@ -3690,6 +3690,10 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 /* light controls over the scrim */
 .lb-media--video .lb-icon-btn { color: var(--lb-fg-inverse-strong); background: transparent; border-color: transparent; }
 .lb-media--video .lb-icon-btn:hover { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 20%, transparent); }
+/* Menu triggers (captions picker, ⋮) take the same round, see-through
+   hover as the other video buttons, not the page's grey menu chip. */
+.lb-media--video .lb-menu__trigger.lb-icon-btn { border-radius: var(--lb-radius-full); color: var(--lb-fg-inverse-strong); }
+.lb-media--video .lb-menu__trigger.lb-icon-btn:hover:not(:disabled) { background-color: color-mix(in srgb, var(--lb-fg-inverse-strong) 20%, transparent); color: var(--lb-fg-inverse-strong); }
 .lb-media--video .lb-media__time { color: var(--lb-fg-inverse-strong); }
 .lb-media--video .lb-media__speed { color: var(--lb-fg-inverse-strong); background: color-mix(in srgb, var(--lb-fg-inverse-strong) 16%, transparent); }
 .lb-media--video .lb-media__speed:hover { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 28%, transparent); }
@@ -3772,11 +3776,26 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   .lb-media--video .lb-media__controls:not(:has(> [data-lb-media-duration])) > [data-lb-media-current] { margin-inline-end: auto; }
   /* Crowded rows (many buttons, long times, very narrow players): LB.Media
      adds --tight-1 to drop the total time, then --tight-2 to drop both
-     times, when the row would otherwise wrap. The buttons then sit right. */
+     times, then --tight-3 to drop mute (thumbnail-size players), when
+     the row would otherwise wrap. The buttons then sit right. */
   .lb-media--tight-1 .lb-media__controls > [data-lb-media-duration],
-  .lb-media--tight-2 .lb-media__controls > [data-lb-media-current] { display: none; }
+  .lb-media--tight-2 .lb-media__controls > [data-lb-media-current],
+  .lb-media--tight-3 .lb-media__controls > [data-lb-media-mute] { display: none; }
   .lb-media--tight-1 .lb-media__controls > [data-lb-media-current] { margin-inline-end: auto; }
   .lb-media--tight-2 .lb-media__controls { justify-content: flex-end; }
+  /* Top bar: 1 row of 32px buttons with 20px icons and slimmer pills, so
+     on a short 16:9 picture it leaves room for the play disc (2 rows of
+     40px buttons took 116px of a 190px picture). When even that row
+     does not fit, LB.Media adds --top-tight and the left group (like /
+     dislike in the demo) leaves the picture, as on YouTube's phone
+     player. */
+  .lb-media--video .lb-media__top { flex-wrap: nowrap; padding: var(--lb-size-2x) var(--lb-size-3x) var(--lb-size-6x); }
+  .lb-media--video .lb-media__top .lb-icon-btn { width: var(--lb-size-8x); height: var(--lb-size-8x); }
+  .lb-media--video .lb-media__top .lb-icon-btn > svg,
+  .lb-media--video .lb-media__top .lb-icon-btn__icon { width: var(--lb-size-5x); height: var(--lb-size-5x); }
+  .lb-media--video .lb-media__top .lb-media__speed { min-width: var(--lb-size-8x); }
+  .lb-media--top-tight .lb-media__top-left { display: none; }
+  .lb-media--top-tight .lb-media__top { justify-content: flex-end; }
   /* Play leaves the band for a 48px disc centred in the picture above
      it, the shape phone players share (YouTube, iOS, Android). It is the
      same button moved, so there is no second play control. A dark
@@ -3786,6 +3805,10 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
      the band when the picture is too short for both. */
   .lb-media--video .lb-media__controls > [data-lb-media-playpause] { position: absolute; left: 50%; top: min(calc(var(--lb-media-top, 0px) + (100% - var(--lb-media-band) - var(--lb-media-top, 0px)) / 2), calc(100% - var(--lb-media-band) - var(--lb-size-6x) - var(--lb-size-1x))); translate: -50% -50%; width: var(--lb-size-12x); height: var(--lb-size-12x); background: color-mix(in srgb, var(--lb-bg-overlay) 70%, transparent); }
   .lb-media--video .lb-media__controls > [data-lb-media-playpause]:hover { background: color-mix(in srgb, var(--lb-bg-overlay) 85%, transparent); }
+  /* A picture too short for the disc between the top bar and the band
+     (LB.Media adds --no-disc): play goes back to the start of the row. */
+  .lb-media--no-disc .lb-media__controls > [data-lb-media-playpause] { position: relative; top: auto; left: auto; translate: none; width: var(--lb-media-btn); height: var(--lb-media-btn); background: transparent; }
+  .lb-media--no-disc .lb-media__controls > [data-lb-media-playpause]:hover { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 20%, transparent); }
   /* While the controls are hidden, a thin progress line stays along the
      bottom edge. LB.Media keeps --lb-media-progress (0 to 1) current. */
   .lb-media--video .lb-media__stage::after { content: ""; position: absolute; left: 0; bottom: 0; width: calc(var(--lb-media-progress, 0) * 100%); height: var(--lb-size-1x); background: var(--lb-bg-accent-value); opacity: 0; pointer-events: none; transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); }
