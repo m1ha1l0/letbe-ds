@@ -3699,15 +3699,15 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 .lb-media--video .lb-media__speed:hover { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 28%, transparent); }
 .lb-media--video .lb-media__rail { height: var(--lb-size-1x); background: color-mix(in srgb, var(--lb-fg-inverse-strong) 30%, transparent); }
 .lb-media--video .lb-media__buffered { background: color-mix(in srgb, var(--lb-fg-inverse-strong) 45%, transparent); }
-/* Thumb over footage: a light dot with a dark ring, so it reads on any
-   frame and does not depend on the theme's accent (a dark accent on the
-   dark scrim is about 2:1). 12px at rest, 16px while it is held. */
-.lb-media--video .lb-media__range::-webkit-slider-thumb { width: var(--lb-size-3x); height: var(--lb-size-3x); background: var(--lb-fg-inverse-strong); box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-bg-overlay); transition: width var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), height var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
-.lb-media--video .lb-media__range::-moz-range-thumb { width: var(--lb-size-3x); height: var(--lb-size-3x); background: var(--lb-fg-inverse-strong); box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-bg-overlay); transition: width var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), height var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+/* Thumb over footage: a plain light dot, 12px at rest and 16px while it
+   is held. It always sits on the scrim (70% or more overlay), where the
+   light dot is over 6:1, so it needs no ring and no theme accent (a dark
+   accent on the dark scrim is about 2:1). Keyboard focus keeps the
+   shared ring (.lb-media__range:focus-visible). */
+.lb-media--video .lb-media__range::-webkit-slider-thumb { width: var(--lb-size-3x); height: var(--lb-size-3x); background: var(--lb-fg-inverse-strong); transition: width var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), height var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), box-shadow var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
+.lb-media--video .lb-media__range::-moz-range-thumb { width: var(--lb-size-3x); height: var(--lb-size-3x); background: var(--lb-fg-inverse-strong); transition: width var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), height var(--lb-animation-dur-fast) var(--lb-animation-ease-ui), box-shadow var(--lb-animation-dur-fast) var(--lb-animation-ease-ui); }
 .lb-media--video .lb-media__range:active::-webkit-slider-thumb { width: var(--lb-size-4x); height: var(--lb-size-4x); }
 .lb-media--video .lb-media__range:active::-moz-range-thumb { width: var(--lb-size-4x); height: var(--lb-size-4x); }
-.lb-media--video .lb-media__range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-bg-overlay), 0 0 0 calc(2 * var(--lb-border-width-medium)) var(--lb-border-focus); }
-.lb-media--video .lb-media__range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 var(--lb-border-width-medium) var(--lb-bg-overlay), 0 0 0 calc(2 * var(--lb-border-width-medium)) var(--lb-border-focus); }
 /* idle: hide controls + top bar + cursor during playback */
 .lb-media--video.lb-media--idle { cursor: none; }
 .lb-media--video.lb-media--idle .lb-media__controls,

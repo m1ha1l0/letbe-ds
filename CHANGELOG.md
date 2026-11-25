@@ -16,9 +16,9 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   and time sit (the time was 2:1 on a light poster, now over 6.5:1 on
   white) and fades out only across the top padding. The scrubber strip
   is 24px tall for every player (WCAG 2.5.8, was 20px). On video the
-  rail is 4px and the thumb is a light dot with a dark ring, 12px at
-  rest and 16px while held, so it no longer depends on the theme's
-  accent. Reduced motion drops the controls' fade, and a
+  rail is 4px and the thumb is a plain light dot, 12px at rest and
+  16px while held: it always sits on the scrim (over 6:1 there), so it
+  no longer depends on the theme's accent. Reduced motion drops the controls' fade, and a
   keyboard-focused control is never hidden.
 - **Media player speaks the time and has a name.** The seek slider's
   `aria-valuetext` is the time in words: "1 minute 5 seconds of 2
