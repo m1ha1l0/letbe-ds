@@ -5,6 +5,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.25.0] — 2026-11-25
+
+Minor: a compact video player on phones (1 band of 80px with the time as
+1 label, play as a centre disc, a progress line while the controls
+hide), touch taps that show the controls, a spoken seek time and other
+media player accessibility fixes, icons drawn at their documented size,
+and 5 new icons (286). Intentional visual changes. No new tokens and no
+renames.
+
 - **5 new icons (286 in the set, was 281).** Outlined `rocket` from
   Lucide 1.72.0, unchanged (mihailo.net finding 70). Brand glyphs
   `claude`, `suno`, `kdenlive` and `linux` from Simple Icons 16.38.1,

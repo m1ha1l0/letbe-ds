@@ -4,7 +4,7 @@
 
 **Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports. **v1.24.0 is such a change** (`slot-engine.js`, `theme-editor.js` and `source-tokens.json`): see item 51.
 
-**Latest update**: 2026-11-25 (item 52 for v1.25.0, not yet tagged: compact phone video player + 5 icons, library relay only; item 51 from v1.24.0: slot engine 1.1.0 for the plugin, tab label relay for the library; item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
+**Latest update**: 2026-11-25 (item 52 from v1.25.0: compact phone video player + 5 icons, library relay only; item 51 from v1.24.0: slot engine 1.1.0 for the plugin, tab label relay for the library; item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
 **Previous update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
 **First created**: 2026-05-03
 
@@ -1757,9 +1757,9 @@ Library work (after the plugin release):
 
 ### 52. Compact phone video player, video scrubber and scrims, 5 icons (v1.25.0) — library relay — no plugin action, no new tokens
 
-letbe-ds work is pushed to main and live on letbe.design/media-player;
-the v1.25.0 tag follows the owner's phone test. Every value below is an
-existing token. Source: CHANGELOG [Unreleased] (later [1.25.0]),
+Released in letbe-ds v1.25.0 (2026-11-25), live on
+letbe.design/media-player. Every value below is an existing token.
+Source: CHANGELOG [1.25.0],
 `components/components.css` (MEDIA PLAYER block) and the research report
 the owner approved (Option C; the poster before play shows the full band).
 
@@ -1810,7 +1810,8 @@ Library work:
   it at 24 / 16 / 32 in code (they stretched to the button). The
   library's icon-button sets should already be 24 / 16 / 32; confirm,
   no change expected.
-- Verify Light + Dark. Relabel to v1.25 only once letbe-ds tags v1.25.0.
+- Verify Light + Dark. The library label can move to v1.25 (letbe-ds
+  v1.25.0 is tagged).
 
 Code-only, nothing to build: the touch tap (shows / hides the
 controls), hide timing, the spoken seek time, focus waking the
