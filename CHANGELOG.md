@@ -20,6 +20,15 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   rest and 16px while held, so it no longer depends on the theme's
   accent. Reduced motion drops the controls' fade, and a
   keyboard-focused control is never hidden.
+- **Media player speaks the time and has a name.** The seek slider's
+  `aria-valuetext` is the time in words: "1 minute 5 seconds of 2
+  minutes 19 seconds" on focus, only the new position while it moves,
+  and no rewrite on each playback tick while it has focus (it was a
+  bare percentage). The focusable player root gets `role="group"` and a
+  name: the page's own `aria-label` / `aria-labelledby` wins, else the
+  now-playing title, else "Video player" / "Audio player". On video,
+  keyboard focus wakes the hidden controls, and they stay up while
+  focus is inside, a menu is open or the scrubber is held.
 
 ## [1.24.0] — 2026-11-13
 

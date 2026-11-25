@@ -34,9 +34,11 @@
   // never bundle a streaming engine (see memory
   // reference_letbe_ds_pluggable_engines.md).
   //
-  // Slice 1 — audio core: play/pause, seek (played + buffered + drag),
-  // current/duration time, volume + mute, keyboard a11y. Video chrome,
-  // speed, skip, captions, and playlist land in later slices.
+  // Play/pause, seek (played + buffered + drag, the time spoken in words),
+  // current/duration time, volume + mute, keyboard a11y, speed, skip,
+  // previous/next with shuffle and repeat, captions, quality, picture-in-
+  // picture, fullscreen and a playlist. A <video> adds the overlay chrome:
+  // scrims, auto-hiding controls and the optional top bar.
   //
   // Markup (audio):
   //   <div class="lb-media" data-lb-media>
@@ -47,6 +49,20 @@
   // tokens (see PLUGIN-HANDOFF items 12–14).
 
   // (fmtTime is imported from LB at the top of the IIFE.)
+
+  // Time in words for the seek slider's aria-valuetext ("1 minute 5
+  // seconds"), so assistive tech reads a time, not the range's percent.
+  function spokenTime(s) {
+    s = isFinite(s) && s > 0 ? Math.floor(s) : 0;
+    const h = Math.floor(s / 3600), min = Math.floor((s % 3600) / 60), sec = s % 60;
+    const part = (n, unit) => n + ' ' + unit + (n === 1 ? '' : 's');
+    const out = [];
+    if (h) out.push(part(h, 'hour'));
+    if (min) out.push(part(min, 'minute'));
+    if (sec || !out.length) out.push(part(sec, 'second'));
+    return out.join(' ');
+  }
+  let uid = 0;
 
   class Media {
     constructor(el) {
@@ -136,6 +152,19 @@
       this.titleBox = this.title ? this.title.closest('.lb-media__title') : null;
       this.artist  = el.querySelector('[data-lb-media-artist]');
 
+      // The root is focusable (keyboard shortcuts), so it carries a role
+      // and a name: the page's own label wins, else the now-playing title,
+      // else "Video player" / "Audio player".
+      if (!el.hasAttribute('role')) el.setAttribute('role', 'group');
+      if (!el.hasAttribute('aria-label') && !el.hasAttribute('aria-labelledby')) {
+        if (this.title) {
+          if (!this.title.id) this.title.id = 'lb-media-title-' + (++uid);
+          el.setAttribute('aria-labelledby', this.title.id);
+        } else {
+          el.setAttribute('aria-label', this.isVideo ? 'Video player' : 'Audio player');
+        }
+      }
+
       // Preload the icons we hot-swap so the first toggle doesn't flash.
       if (window.LB && window.LB.iconPreload) {
         window.LB.iconPreload(['play', 'pause', 'volume-2', 'volume-x', 'maximize', 'minimize', 'thumbs-up', 'thumbs-up-filled', 'thumbs-down', 'thumbs-down-filled', 'chevrons-left', 'chevrons-right', 'picture-in-picture-2', 'captions', 'x', 'grip-vertical']);
@@ -172,7 +201,11 @@
           }
         };
         const endScrub = () => { this._scrubbing = false; };
-        this.seek.addEventListener('input',     () => { this._scrubbing = true; applySeek(); });
+        this.seek.addEventListener('input',     () => { this._scrubbing = true; applySeek(); this._seekText(false); });
+        // On focus the slider says where it is and how long the media is;
+        // while it moves (drag, keys, a seek) only the new position.
+        this.seek.addEventListener('focus', () => this._seekText(true));
+        m.addEventListener('seeked', () => { if (document.activeElement === this.seek) this._seekText(false); });
         this.seek.addEventListener('change',     endScrub);
         this.seek.addEventListener('pointerup',  endScrub);
         this.seek.addEventListener('pointercancel', endScrub);
@@ -367,13 +400,12 @@
         } else {
           m.addEventListener('click', () => this.toggle());
         }
-        const wake = () => {
-          this.el.classList.remove('lb-media--idle');
-          clearTimeout(this._idleT);
-          if (!m.paused) this._idleT = setTimeout(() => this.el.classList.add('lb-media--idle'), 2500);
-        };
+        const wake = () => this._wake();
         this.el.addEventListener('pointermove', wake);
-        this.el.addEventListener('pointerleave', () => { if (!m.paused) this.el.classList.add('lb-media--idle'); });
+        this.el.addEventListener('pointerleave', () => { if (!m.paused && !this._holdAwake()) this.el.classList.add('lb-media--idle'); });
+        // Keyboard focus wakes the controls (a hidden focused control
+        // fails WCAG 2.4.7); a mouse click's focus does not count.
+        this.el.addEventListener('focusin', (e) => { if (this._focusVisible(e.target)) this._wake(); });
         m.addEventListener('play', wake);
         m.addEventListener('pause', () => { this.el.classList.remove('lb-media--idle'); clearTimeout(this._idleT); });
       }
@@ -534,6 +566,42 @@
           box.style.removeProperty('--lb-title-shift');
         }
       });
+    }
+
+    // ── video controls: wake, then hide while playing ──
+    // Shows the controls and, while playing, hides them again after a
+    // pause in activity.
+    _wake() {
+      this.el.classList.remove('lb-media--idle');
+      clearTimeout(this._idleT);
+      if (!this.media.paused) this._idleT = setTimeout(() => this._sleep(), 2500);
+    }
+    // Hides the controls unless something still needs them, then checks
+    // again after the same delay.
+    _sleep() {
+      if (this.media.paused) return;
+      if (this._holdAwake()) { this._idleT = setTimeout(() => this._sleep(), 2500); return; }
+      this.el.classList.add('lb-media--idle');
+    }
+    // Keyboard focus inside the player, an open menu or a scrubber drag.
+    _holdAwake() {
+      const a = document.activeElement;
+      return this._scrubbing
+        || !!this.el.querySelector('[aria-expanded="true"]')
+        || (!!a && this.el.contains(a) && this._focusVisible(a));
+    }
+    _focusVisible(node) {
+      try { return !!node && node.matches(':focus-visible'); } catch (e) { return false; }
+    }
+
+    // aria-valuetext of the seek slider: the position in words, plus the
+    // length when full is true. While dragging, the slider value leads.
+    _seekText(full) {
+      if (!this.seek) return;
+      const m = this.media;
+      const dur = isFinite(m.duration) ? m.duration : 0;
+      const cur = this._scrubbing && dur ? (parseFloat(this.seek.value) / 100) * dur : m.currentTime;
+      this.seek.setAttribute('aria-valuetext', spokenTime(cur) + (full && dur ? ' of ' + spokenTime(dur) : ''));
     }
 
     // ── public API ──
@@ -1033,6 +1101,7 @@
 
     _reflectDuration() {
       if (this.durTime) this.durTime.textContent = fmtTime(this.media.duration);
+      if (this.seek && document.activeElement !== this.seek) this._seekText(true);
     }
 
     // VBR MP3s without a Xing/Info header report duration === Infinity,
@@ -1062,6 +1131,9 @@
       if (this.played) this.played.style.width = pct + '%';
       if (this.seek) this.seek.value = pct;
       if (this.curTime) this.curTime.textContent = fmtTime(m.currentTime);
+      // Kept current for the next focus, but not rewritten while focused:
+      // a screen reader would read every tick of playback.
+      if (this.seek && document.activeElement !== this.seek) this._seekText(true);
     }
 
     _reflectBuffered() {
