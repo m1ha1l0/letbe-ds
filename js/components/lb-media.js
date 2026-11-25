@@ -425,13 +425,27 @@
         // the player hides the controls at once.
         this.el.addEventListener('pointerleave', (e) => {
           if (e.pointerType === 'touch') return;
-          if (!m.paused && !this._holdAwake()) this.el.classList.add('lb-media--idle');
+          if (!m.paused && !this._holdAwake()) this._setIdle(true);
         });
         // Keyboard focus wakes the controls (a hidden focused control
         // fails WCAG 2.4.7); a mouse click's focus does not count.
         this.el.addEventListener('focusin', (e) => { if (this._focusVisible(e.target)) this._wake(); });
         m.addEventListener('play', wake);
-        m.addEventListener('pause', () => { this.el.classList.remove('lb-media--idle'); clearTimeout(this._idleT); });
+        m.addEventListener('pause', () => { this._setIdle(false); clearTimeout(this._idleT); });
+        // Loading: a ring turns around the play button while the video
+        // waits for data, and the controls stay up until it plays on.
+        const waiting = (on) => this.el.classList.toggle('lb-media--waiting', on);
+        m.addEventListener('waiting', () => { waiting(true); this._wake(); });
+        ['playing', 'canplay', 'pause', 'ended', 'error', 'emptied'].forEach((ev) => m.addEventListener(ev, () => waiting(false)));
+        // Captions: each cue that comes up is placed clear of the controls.
+        const wireTrack = (t) => { if (t && !t._lbCaptionsWired) { t._lbCaptionsWired = true; t.addEventListener('cuechange', () => this._placeCues(t)); } };
+        if (m.textTracks) {
+          Array.from(m.textTracks).forEach(wireTrack);
+          if (m.textTracks.addEventListener) {
+            m.textTracks.addEventListener('addtrack', (e) => wireTrack(e.track));
+            m.textTracks.addEventListener('change', () => this._liftCaptions());
+          }
+        }
       }
 
       // Playlist: click-to-play + auto-advance on ended. The index is
@@ -530,6 +544,7 @@
           Array.from(top.children).forEach((k) => { h = Math.max(h, k.getBoundingClientRect().bottom - y); });
         }
         c.style.setProperty('--lb-media-top', Math.round(h) + 'px');
+        this._liftCaptions();
       }
     }
 
@@ -627,7 +642,7 @@
     // Shows the controls and, while playing, hides them again after a
     // pause in activity.
     _wake() {
-      this.el.classList.remove('lb-media--idle');
+      this._setIdle(false);
       clearTimeout(this._idleT);
       if (!this.media.paused) this._idleT = setTimeout(() => this._sleep(), this._idleDelay());
     }
@@ -637,7 +652,7 @@
     _sleep() {
       if (this.media.paused) return;
       if (this._holdAwake()) { this._idleT = setTimeout(() => this._sleep(), this._idleDelay()); return; }
-      this.el.classList.add('lb-media--idle');
+      this._setIdle(true);
     }
     // A touch tap on the picture. A paused video plays (its controls are
     // already showing). On a playing video the tap shows the controls,
@@ -646,12 +661,52 @@
       if (this.media.paused) { this.toggle(); return; }
       if (wasIdle) { this._wake(); return; }
       clearTimeout(this._idleT);
-      this.el.classList.add('lb-media--idle');
+      this._setIdle(true);
     }
-    // Keyboard focus inside the player, an open menu or a scrubber drag.
+    // Hidden or shown; captions follow the controls (_liftCaptions).
+    _setIdle(on) {
+      if (this.el.classList.contains('lb-media--idle') === on) return;
+      this.el.classList.toggle('lb-media--idle', on);
+      this._liftCaptions();
+    }
+
+    // Captions keep clear of the controls. While the controls show, each
+    // showing cue without a position of its own sits just above them;
+    // when they hide, it goes back to the bottom. Cues the captions file
+    // places itself (a line setting) are left alone.
+    _liftCaptions() {
+      if (!this.isVideo || !this.controls) return;
+      let line = null;
+      if (!this.el.classList.contains('lb-media--idle')) {
+        const v = this.media.getBoundingClientRect();
+        const tops = Array.from(this.controls.children)
+          .filter((k) => getComputedStyle(k).position !== 'absolute')
+          .map((k) => k.getBoundingClientRect())
+          .filter((r) => r.width > 0)
+          .map((r) => r.top);
+        if (tops.length && v.height) line = Math.max(0, Math.min(100, ((Math.min(...tops) - 4 - v.top) / v.height) * 100));
+      }
+      this._capLine = line;
+      const tracks = this.media.textTracks || [];
+      for (let k = 0; k < tracks.length; k++) this._placeCues(tracks[k]);
+    }
+    _placeCues(track) {
+      if (track.mode !== 'showing' || !track.activeCues) return;
+      for (let i = 0; i < track.activeCues.length; i++) {
+        const cue = track.activeCues[i];
+        if (cue._lbOwn === undefined) cue._lbOwn = cue.line !== 'auto';
+        if (cue._lbOwn || !('snapToLines' in cue)) continue;
+        if (this._capLine == null) { cue.snapToLines = true; cue.line = 'auto'; }
+        else { cue.snapToLines = false; cue.line = this._capLine; cue.lineAlign = 'end'; }
+      }
+    }
+
+    // Keyboard focus inside the player, an open menu, a scrubber drag or
+    // a video still loading.
     _holdAwake() {
       const a = document.activeElement;
       return this._scrubbing
+        || this.el.classList.contains('lb-media--waiting')
         || !!this.el.querySelector('[aria-expanded="true"]')
         || (!!a && this.el.contains(a) && this._focusVisible(a));
     }

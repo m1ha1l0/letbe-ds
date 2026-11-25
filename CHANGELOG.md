@@ -51,6 +51,18 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
   row would wrap, LB.Media drops the total time (`.lb-media--tight-1`),
   then both times (`.lb-media--tight-2`). Wider players and audio
   players keep their layouts. Intentional visual change.
+- **Video loading ring, captions clear of the controls, forced
+  colours.** While a video waits for data, a ring turns around the play
+  button (the centre disc on phones) and the controls stay up
+  (`.lb-media--waiting`; slower under reduced motion, as `.lb-spinner`).
+  While the controls show, each showing caption without a position of
+  its own sits just above them, and drops back to the bottom when they
+  hide; cues the captions file positions itself are left alone. In
+  forced-colours mode the bars get a plain Canvas ground, the phone band
+  sits at the bottom with play back in its row, and the scrubber, thumb
+  and progress line take system colours (they had vanished). The
+  media-player demo video now has `crossorigin="anonymous"`, without
+  which its English and Spanish subtitle files never loaded.
 - **Fullscreen on iPhone.** iPhone Safari cannot put a page element
   into fullscreen, so the fullscreen button now opens the phone's own
   video player there (`webkitEnterFullscreen`). Older Safari uses the

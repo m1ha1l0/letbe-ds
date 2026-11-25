@@ -3718,6 +3718,31 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
 /* The phone band's progress line shows while the controls are hidden
    (drawn in the band's container block below). */
 .lb-media--video.lb-media--idle .lb-media__stage::after { opacity: 1; }
+/* Loading: while the video waits for data (LB.Media adds --waiting), a
+   ring turns around the play button, the centre disc on phones. The
+   .lb-spinner ring and speeds. */
+.lb-media--video [data-lb-media-playpause] { position: relative; }
+.lb-media--video.lb-media--waiting [data-lb-media-playpause]::after { content: ""; position: absolute; inset: 0; border-radius: var(--lb-radius-full); border: var(--lb-border-width-medium) solid transparent; border-top-color: var(--lb-fg-inverse-strong); animation: lb-spin 0.65s linear infinite; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .lb-media--video.lb-media--waiting [data-lb-media-playpause]::after { animation-duration: 2.4s; }
+}
+[data-lb-motion="off"] .lb-media--video.lb-media--waiting [data-lb-media-playpause]::after { animation-duration: 2.4s; }
+/* Forced colours drop the scrims (gradients) and paint backgrounds as
+   the page colour. The bars get a plain Canvas ground, the phone band
+   sits back at the bottom with play in its row, and the scrubber, thumb
+   and progress line take system colours. */
+@media (forced-colors: active) {
+  .lb-media.lb-media--video .lb-media__controls,
+  .lb-media.lb-media--video .lb-media__top { background-color: Canvas; }
+  .lb-media__rail { forced-color-adjust: none; background: GrayText; }
+  .lb-media__buffered { display: none; }
+  .lb-media__fill,
+  .lb-media--video .lb-media__stage::after { forced-color-adjust: none; background: Highlight; }
+  .lb-media .lb-media__range { forced-color-adjust: none; }
+  .lb-media .lb-media__range::-webkit-slider-thumb { background: ButtonText; border: var(--lb-border-width-medium) solid Canvas; }
+  .lb-media .lb-media__range::-moz-range-thumb { background: ButtonText; border: var(--lb-border-width-medium) solid Canvas; }
+  .lb-media .lb-media__range:focus-visible { outline: var(--lb-border-width-medium) solid Highlight; outline-offset: var(--lb-size-0-5x); }
+}
 @media (prefers-reduced-motion: reduce) {
   .lb-media--video .lb-media__controls,
   .lb-media--video .lb-media__top,
@@ -3764,6 +3789,11 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   /* While the controls are hidden, a thin progress line stays along the
      bottom edge. LB.Media keeps --lb-media-progress (0 to 1) current. */
   .lb-media--video .lb-media__stage::after { content: ""; position: absolute; left: 0; bottom: 0; width: calc(var(--lb-media-progress, 0) * 100%); height: var(--lb-size-1x); background: var(--lb-bg-accent-value); opacity: 0; pointer-events: none; transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); }
+  @media (forced-colors: active) {
+    .lb-media--video .lb-media__controls { top: auto; padding-top: var(--lb-size-2x); }
+    .lb-media--video .lb-media__controls > [data-lb-media-playpause] { position: relative; top: auto; left: auto; translate: none; width: var(--lb-media-btn); height: var(--lb-media-btn); }
+    .lb-media--video .lb-media__stage::after { background: Highlight; }
+  }
 }
 /* Native subtitle cue styling — light text on a translucent dark pill
    so it reads on any footage. Uses existing tokens via color-mix. */
