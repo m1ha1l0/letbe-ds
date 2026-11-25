@@ -5,6 +5,10 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+## [1.25.1] — 2026-11-25
+
+Patch: the phone video player's play disc sits at the picture's centre.
+
 - **Phone video play disc sits at the picture's centre.** The disc was
   centred in the space above the band, so on a player without a top
   bar it sat high (on a 312px, 16:9 player 40px above the middle). It

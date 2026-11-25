@@ -4,7 +4,7 @@
 
 **Plugin check (2026-11-05)**: checked against letbe-ds v1.18.0 (a4a567a): no plugin update needed, plugin v1.0.4 stays current (Community "Version 5", 2026-11-05). None of the files the plugin reads (`tokens/source-tokens.json`, `tokens/google-fonts-catalog.json`, `js/theme-editor.js`, `js/slot-engine.js`) changed since v1.14.1, and v1.18.1 leaves them alone too. All 153 plugin tests pass; library variables need no re-import (tokens match the 2026-11-04 import). The next plugin release comes only with a change to `source-tokens.json` or to `THEME_PRESETS` in `theme-editor.js`: open a new item, the plugin rebakes its presets (`npm run bake-presets`) and publishes, then the library re-imports. **v1.24.0 is such a change** (`slot-engine.js`, `theme-editor.js` and `source-tokens.json`): see item 51.
 
-**Latest update**: 2026-11-25 (item 52 from v1.25.0: compact phone video player + 5 icons, library relay only; item 51 from v1.24.0: slot engine 1.1.0 for the plugin, tab label relay for the library; item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
+**Latest update**: 2026-11-25 (item 52 from v1.25.0 and v1.25.1: compact phone video player + 5 icons, library relay only; item 51 from v1.24.0: slot engine 1.1.0 for the plugin, tab label relay for the library; item 50 from v1.23.0, 17 icons, library relay; items 47–49 from v1.20.0–v1.22.0, code-side only; items 39–46 from the v1.13.0–v1.19.0 releases; plugin check above)
 **Previous update**: 2026-11-04 (item 37: expressive motion tokens for the plugin; item 38: library relay for the v1.5.0–v1.9.0 visuals)
 **First created**: 2026-05-03
 
@@ -1791,8 +1791,10 @@ Library work:
   - Scrim: `bg/overlay` 85% at the bottom, 70% at the band's row top,
     0 at 24 above the band.
   - Play: a 48 round disc (`radius/full`) with `bg/overlay` at 70%
-    (node-opacity idiom), the inverse play icon at 24, centred in the
-    picture above the band.
+    (node-opacity idiom), the inverse play icon at 24, at the picture's
+    centre, moved up only as far as it must to stay 4 clear of the band
+    (v1.25.1). On the 360 × 203 stage its centre sits at y 95, its bottom
+    12 above the button row.
   - Variant `controls=shown / hidden`: shown = band + disc (also the
     poster state before play); hidden = no band, no disc, a 4 line
     (`size/1x`, `bg/accent-value`) along the bottom edge as progress
