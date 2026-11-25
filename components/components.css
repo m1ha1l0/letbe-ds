@@ -3799,11 +3799,12 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   /* Play leaves the band for a 48px disc centred in the picture above
      it, the shape phone players share (YouTube, iOS, Android). It is the
      same button moved, so there is no second play control. A dark
-     backing keeps it readable on a white frame. With a top bar it
-     centres between the bar's controls and the band (LB.Media sets
-     --lb-media-top to the bar's height), and never lower than just above
-     the band when the picture is too short for both. */
-  .lb-media--video .lb-media__controls > [data-lb-media-playpause] { position: absolute; left: 50%; top: min(calc(var(--lb-media-top, 0px) + (100% - var(--lb-media-band) - var(--lb-media-top, 0px)) / 2), calc(100% - var(--lb-media-band) - var(--lb-size-6x) - var(--lb-size-1x))); translate: -50% -50%; width: var(--lb-size-12x); height: var(--lb-size-12x); background: color-mix(in srgb, var(--lb-bg-overlay) 70%, transparent); }
+     backing keeps it readable on a white frame. It sits at the
+     picture's true centre, moved up only as far as it must to keep 4px
+     clear of the band, and down to keep clear of a top bar's controls
+     (LB.Media sets --lb-media-top to the bar's height). A picture too
+     short for both gets --no-disc (below). */
+  .lb-media--video .lb-media__controls > [data-lb-media-playpause] { position: absolute; left: 50%; top: clamp(calc(var(--lb-media-top, 0px) + var(--lb-size-6x) + var(--lb-size-1x)), 50%, calc(100% - var(--lb-media-band) - var(--lb-size-6x) - var(--lb-size-1x))); translate: -50% -50%; width: var(--lb-size-12x); height: var(--lb-size-12x); background: color-mix(in srgb, var(--lb-bg-overlay) 70%, transparent); }
   .lb-media--video .lb-media__controls > [data-lb-media-playpause]:hover { background: color-mix(in srgb, var(--lb-bg-overlay) 85%, transparent); }
   /* A picture too short for the disc between the top bar and the band
      (LB.Media adds --no-disc): play goes back to the start of the row. */

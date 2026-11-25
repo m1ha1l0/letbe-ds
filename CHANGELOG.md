@@ -5,6 +5,14 @@ All notable changes to letbe-ds. Follows [Semantic Versioning](https://semver.or
 
 ## [Unreleased]
 
+- **Phone video play disc sits at the picture's centre.** The disc was
+  centred in the space above the band, so on a player without a top
+  bar it sat high (on a 312px, 16:9 player 40px above the middle). It
+  now takes the picture's true centre and moves up only as far as it
+  must to stay 4px clear of the band (and down to clear a top bar's
+  controls), so a square or tall picture shows it exactly in the
+  middle and a short 16:9 one as low as the band allows.
+
 ## [1.25.0] — 2026-11-25
 
 Minor: a compact video player on phones (1 band of 80px with the time as
