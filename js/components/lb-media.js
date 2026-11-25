@@ -195,6 +195,7 @@
         const applySeek = () => {
           const pct = parseFloat(this.seek.value) || 0;
           if (this.played) this.played.style.width = pct + '%';
+          if (this.isVideo) this.el.style.setProperty('--lb-media-progress', String(pct / 100));
           if (isFinite(m.duration)) m.currentTime = (pct / 100) * m.duration;
           if (this.curTime && isFinite(m.duration)) {
             this.curTime.textContent = fmtTime((pct / 100) * m.duration);
@@ -516,10 +517,19 @@
       // 1 row.
       if (this.isVideo) {
         this.el.classList.remove('lb-media--tight-1', 'lb-media--tight-2');
-        if (getComputedStyle(c).getPropertyValue('--lb-media-band').trim() && this._bandWraps()) {
+        const band = !!getComputedStyle(c).getPropertyValue('--lb-media-band').trim();
+        if (band && this._bandWraps()) {
           this.el.classList.add('lb-media--tight-1');
           if (this._bandWraps()) this.el.classList.add('lb-media--tight-2');
         }
+        // The centred play disc keeps clear of a top bar's controls.
+        const top = band && this.el.querySelector('.lb-media__top');
+        let h = 0;
+        if (top && top.getClientRects().length) {
+          const y = top.getBoundingClientRect().top;
+          Array.from(top.children).forEach((k) => { h = Math.max(h, k.getBoundingClientRect().bottom - y); });
+        }
+        c.style.setProperty('--lb-media-top', Math.round(h) + 'px');
       }
     }
 
@@ -1200,6 +1210,8 @@
       if (this._scrubbing) return;
       const pct = m.duration ? (m.currentTime / m.duration) * 100 : 0;
       if (this.played) this.played.style.width = pct + '%';
+      // The phone band's progress line (shown while the controls hide).
+      if (this.isVideo) this.el.style.setProperty('--lb-media-progress', String(pct / 100));
       if (this.seek) this.seek.value = pct;
       if (this.curTime) {
         const t = fmtTime(m.currentTime);

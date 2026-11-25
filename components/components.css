@@ -3715,9 +3715,13 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
    also wakes the bar on focus; this is the backstop. */
 .lb-media--video.lb-media--idle:has(.lb-media__controls :focus-visible) .lb-media__controls,
 .lb-media--video.lb-media--idle:has(.lb-media__top :focus-visible) .lb-media__top { opacity: 1; }
+/* The phone band's progress line shows while the controls are hidden
+   (drawn in the band's container block below). */
+.lb-media--video.lb-media--idle .lb-media__stage::after { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   .lb-media--video .lb-media__controls,
-  .lb-media--video .lb-media__top { transition: none; }
+  .lb-media--video .lb-media__top,
+  .lb-media--video .lb-media__stage::after { transition: none; }
 }
 
 @container (max-width: 480px) {
@@ -3748,6 +3752,18 @@ button.lb-select { display: flex; align-items: center; gap: var(--lb-size-2x); t
   .lb-media--tight-2 .lb-media__controls > [data-lb-media-current] { display: none; }
   .lb-media--tight-1 .lb-media__controls > [data-lb-media-current] { margin-inline-end: auto; }
   .lb-media--tight-2 .lb-media__controls { justify-content: flex-end; }
+  /* Play leaves the band for a 48px disc centred in the picture above
+     it, the shape phone players share (YouTube, iOS, Android). It is the
+     same button moved, so there is no second play control. A dark
+     backing keeps it readable on a white frame. With a top bar it
+     centres between the bar's controls and the band (LB.Media sets
+     --lb-media-top to the bar's height), and never lower than just above
+     the band when the picture is too short for both. */
+  .lb-media--video .lb-media__controls > [data-lb-media-playpause] { position: absolute; left: 50%; top: min(calc(var(--lb-media-top, 0px) + (100% - var(--lb-media-band) - var(--lb-media-top, 0px)) / 2), calc(100% - var(--lb-media-band) - var(--lb-size-6x) - var(--lb-size-1x))); translate: -50% -50%; width: var(--lb-size-12x); height: var(--lb-size-12x); background: color-mix(in srgb, var(--lb-bg-overlay) 70%, transparent); }
+  .lb-media--video .lb-media__controls > [data-lb-media-playpause]:hover { background: color-mix(in srgb, var(--lb-bg-overlay) 85%, transparent); }
+  /* While the controls are hidden, a thin progress line stays along the
+     bottom edge. LB.Media keeps --lb-media-progress (0 to 1) current. */
+  .lb-media--video .lb-media__stage::after { content: ""; position: absolute; left: 0; bottom: 0; width: calc(var(--lb-media-progress, 0) * 100%); height: var(--lb-size-1x); background: var(--lb-bg-accent-value); opacity: 0; pointer-events: none; transition: opacity var(--lb-animation-dur-slow) var(--lb-animation-ease-ui); }
 }
 /* Native subtitle cue styling — light text on a translucent dark pill
    so it reads on any footage. Uses existing tokens via color-mix. */
